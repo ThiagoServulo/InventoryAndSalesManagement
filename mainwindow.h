@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QtSql>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -14,7 +15,11 @@ class MainWindow : public QMainWindow
 public:
     QIcon lockedPadlock;
     QIcon unlockedPadlock;
-    bool block;
+    bool userLogged;
+    QString name_collaborator, access_collaborator;
+
+    QSqlDatabase database = QSqlDatabase::addDatabase("QSQLITE");
+
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 

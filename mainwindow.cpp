@@ -9,10 +9,6 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-    QString path = qApp->applicationDirPath();
-    QString db = path + "/database/InventoryManagement.db";
-    database.setDatabaseName(db);
-
     userLogged=false;
     lockedPadlock.addFile(":/images/lock.png");
     unlockedPadlock.addFile(":/images/unlock.png");
@@ -20,11 +16,6 @@ MainWindow::MainWindow(QWidget *parent)
     ui->pushButton_Block->setText("");
     ui->pushButton_Block->setIcon(lockedPadlock);
     ui->statusbar->addWidget(ui->pushButton_Block);
-
-    if(!database.open())
-    {
-        QMessageBox::warning(this, "Error", "Unable to connect database");
-    }
 }
 
 MainWindow::~MainWindow()

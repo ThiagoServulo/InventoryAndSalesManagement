@@ -13,13 +13,13 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
+    // Properties
     QIcon lockedPadlock;
     QIcon unlockedPadlock;
     bool userLogged;
     QString name_collaborator, access_collaborator;
 
-    QSqlDatabase database = QSqlDatabase::addDatabase("QSQLITE");
-
+    // Functions
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 

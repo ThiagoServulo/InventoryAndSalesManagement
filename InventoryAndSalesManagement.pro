@@ -9,19 +9,31 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    collaboratosmanagementwindow.cpp \
     databaseconnection.cpp \
+    inventorymanagementwindow.cpp \
     loginwindow.cpp \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    salesmanagementwindow.cpp \
+    saleswindow.cpp
 
 HEADERS += \
+    collaboratosmanagementwindow.h \
     databaseconnection.h \
+    inventorymanagementwindow.h \
     loginwindow.h \
-    mainwindow.h
+    mainwindow.h \
+    salesmanagementwindow.h \
+    saleswindow.h
 
 FORMS += \
+    collaboratosmanagementwindow.ui \
+    inventorymanagementwindow.ui \
     loginwindow.ui \
-    mainwindow.ui
+    mainwindow.ui \
+    salesmanagementwindow.ui \
+    saleswindow.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

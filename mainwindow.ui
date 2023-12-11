@@ -77,7 +77,7 @@ border-radius:10px;</string>
     <property name="title">
      <string>Management</string>
     </property>
-    <addaction name="actionStorage"/>
+    <addaction name="actionInventory"/>
     <addaction name="actionCollaborators"/>
     <addaction name="actionSales"/>
    </widget>
@@ -93,9 +93,9 @@ border-radius:10px;</string>
    <addaction name="menuSystem"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
-  <action name="actionStorage">
+  <action name="actionInventory">
    <property name="text">
-    <string>Storage</string>
+    <string>Inventory</string>
    </property>
   </action>
   <action name="actionCollaborators">

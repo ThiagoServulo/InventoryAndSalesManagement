@@ -1,6 +1,10 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "loginwindow.h"
+#include "saleswindow.h"
+#include "salesmanagementwindow.h"
+#include "inventorymanagementwindow.h"
+#include "collaboratosmanagementwindow.h"
 #include <QMessageBox>
 
 MainWindow::MainWindow(QWidget *parent)
@@ -46,6 +50,62 @@ void MainWindow::on_pushButton_Block_clicked()
         userLogged = false;
         ui->label_name->setText("No user logged in");
         ui->pushButton_Block->setIcon(lockedPadlock);
+    }
+}
+
+
+void MainWindow::on_pushButton_NewSale_clicked()
+{
+    if(userLogged)
+    {
+        SalesWindow salesWindow;
+        salesWindow.exec();
+    }
+    else
+    {
+        QMessageBox::information(this, "Information", "No collaborators logged in yet");
+    }
+}
+
+
+void MainWindow::on_actionInventory_triggered()
+{
+    if(userLogged && access_collaborator == 'A')
+    {
+        InventoryManagementWindow inventoryManagementWindow;
+        inventoryManagementWindow.exec();
+    }
+    else
+    {
+        QMessageBox::information(this, "Information", "Unauthorized access");
+    }
+}
+
+
+void MainWindow::on_actionCollaborators_triggered()
+{
+    if(userLogged && access_collaborator == 'A')
+    {
+        CollaboratosManagementWindow collaboratorsManagementWindow;
+        collaboratorsManagementWindow.exec();
+    }
+    else
+    {
+        QMessageBox::information(this, "Information", "Unauthorized access");
+    }
+}
+
+
+void MainWindow::on_actionSales_triggered()
+{
+    if(userLogged && access_collaborator == 'A')
+    {
+        SalesManagementWindow salesManagementWindow;
+        salesManagementWindow.exec();
+    }
+    else
+    {
+        QMessageBox::information(this, "Information", "Unauthorized access");
     }
 }
 

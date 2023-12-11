@@ -9,13 +9,15 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-    userLogged=false;
+    userLogged = false;
+    ui->label_name->setText("No user logged in");
     lockedPadlock.addFile(":/images/lock.png");
     unlockedPadlock.addFile(":/images/unlock.png");
 
     ui->pushButton_Block->setText("");
     ui->pushButton_Block->setIcon(lockedPadlock);
     ui->statusbar->addWidget(ui->pushButton_Block);
+    ui->statusbar->addWidget(ui->label_name);
 }
 
 MainWindow::~MainWindow()
@@ -30,11 +32,20 @@ void MainWindow::on_pushButton_Block_clicked()
     {
         LoginWindow loginWindow;
         loginWindow.exec();
+        userLogged = loginWindow.isLogged();
+        name_collaborator = loginWindow.getName();
+        access_collaborator = loginWindow.getAccess();
+        if(userLogged)
+        {
+            ui->pushButton_Block->setIcon(unlockedPadlock);
+            ui->label_name->setText(name_collaborator);
+        }
     }
     else
     {
-        userLogged = true;
-        ui->pushButton_Block->setIcon(unlockedPadlock);
+        userLogged = false;
+        ui->label_name->setText("No user logged in");
+        ui->pushButton_Block->setIcon(lockedPadlock);
     }
 }
 

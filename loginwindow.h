@@ -14,15 +14,20 @@ class LoginWindow : public QDialog
 
 public:
     // Properties
+    bool logged;
     DatabaseConnection dbConnection;
+    QString name, access;
 
     // Functions
+    QString getName();
+    QString getAccess();
+    bool isLogged();
     explicit LoginWindow(QWidget *parent = nullptr);
     ~LoginWindow();
-    bool logged();
 
 private slots:
     void on_pushButton_Login_clicked();
+    void on_pushButton_Cancel_clicked();
 
 private:
     Ui::LoginWindow *ui;

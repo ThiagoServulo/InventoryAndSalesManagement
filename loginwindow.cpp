@@ -7,6 +7,7 @@ LoginWindow::LoginWindow(QWidget *parent) :
     ui(new Ui::LoginWindow)
 {
     ui->setupUi(this);
+    logged = false;
 }
 
 LoginWindow::~LoginWindow()
@@ -29,9 +30,46 @@ void LoginWindow::on_pushButton_Login_clicked()
                       "' AND password = '" + password + "'");
         if(query.exec())
         {
-            // Create verification
+            query.first();
+            if(query.value(1).toString() != "")
+            {
+                logged = true;
+                name = query.value(1).toString();
+                access = query.value(5).toString();
+                dbConnection.close();
+                close();
+            }
+            else
+            {
+                QMessageBox::warning(this, "Error", "Collaborator not found");
+            }
+        }
+        else
+        {
+            QMessageBox::warning(this, "Error", "The query returned empty");
         }
     }
     dbConnection.close();
 }
 
+
+void LoginWindow::on_pushButton_Cancel_clicked()
+{
+    logged = false;
+    close();
+}
+
+bool LoginWindow::isLogged()
+{
+    return logged;
+}
+
+QString LoginWindow::getName()
+{
+    return name;
+}
+
+QString LoginWindow::getAccess()
+{
+    return access;
+}

@@ -1,5 +1,6 @@
 #include "loginwindow.h"
 #include "ui_loginwindow.h"
+#include "mainwindow.h"
 #include <QMessageBox>
 
 LoginWindow::LoginWindow(QWidget *parent) :
@@ -33,9 +34,10 @@ void LoginWindow::on_pushButton_Login_clicked()
             query.first();
             if(query.value(1).toString() != "")
             {
-                logged = true;
-                name = query.value(1).toString();
-                access = query.value(5).toString();
+                MainWindow::userLogged = true;
+                MainWindow::id_collaborator = query.value(0).toInt();
+                MainWindow::name_collaborator = query.value(1).toString();
+                MainWindow::access_collaborator = query.value(5).toString();
                 dbConnection.close();
                 close();
             }
@@ -52,24 +54,8 @@ void LoginWindow::on_pushButton_Login_clicked()
     dbConnection.close();
 }
 
-
 void LoginWindow::on_pushButton_Cancel_clicked()
 {
-    logged = false;
+    MainWindow::userLogged = false;
     close();
-}
-
-bool LoginWindow::isLogged()
-{
-    return logged;
-}
-
-QString LoginWindow::getName()
-{
-    return name;
-}
-
-QString LoginWindow::getAccess()
-{
-    return access;
 }

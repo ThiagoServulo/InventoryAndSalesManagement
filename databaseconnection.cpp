@@ -18,3 +18,8 @@ bool DatabaseConnection::open()
 
     return database.open();
 }
+
+bool DatabaseConnection::isOpen()
+{
+    return database.isOpen();
+}

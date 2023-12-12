@@ -12,6 +12,7 @@ public:
     DatabaseConnection();
     void close();
     bool open();
+    bool isOpen();
 };
 
 

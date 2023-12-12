@@ -14,14 +14,12 @@ class LoginWindow : public QDialog
 
 public:
     // Properties
+    int id;
     bool logged;
-    DatabaseConnection dbConnection;
     QString name, access;
+    DatabaseConnection dbConnection;
 
     // Functions
-    QString getName();
-    QString getAccess();
-    bool isLogged();
     explicit LoginWindow(QWidget *parent = nullptr);
     ~LoginWindow();
 

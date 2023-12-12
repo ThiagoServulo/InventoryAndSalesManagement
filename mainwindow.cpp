@@ -7,6 +7,13 @@
 #include "collaboratosmanagementwindow.h"
 #include <QMessageBox>
 
+// Globals variables
+int MainWindow::id_collaborator;
+QString MainWindow::name_collaborator;
+QString MainWindow::access_collaborator;
+QString MainWindow::username_collaborator;
+bool MainWindow::userLogged;
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -36,9 +43,7 @@ void MainWindow::on_pushButton_Block_clicked()
     {
         LoginWindow loginWindow;
         loginWindow.exec();
-        userLogged = loginWindow.isLogged();
-        name_collaborator = loginWindow.getName();
-        access_collaborator = loginWindow.getAccess();
+
         if(userLogged)
         {
             ui->pushButton_Block->setIcon(unlockedPadlock);

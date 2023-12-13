@@ -15,6 +15,10 @@ public:
     explicit InventoryManagementWindow(QWidget *parent = nullptr);
     ~InventoryManagementWindow();
 
+private slots:
+    void on_pushButton_newProduct_clicked();
+    void on_pushButton_saveNewProduct_clicked();
+
 private:
     Ui::InventoryManagementWindow *ui;
 };

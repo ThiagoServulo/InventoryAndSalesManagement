@@ -25,6 +25,8 @@ private slots:
 
     void on_pushButton_cancel_clicked();
 
+    void on_tabWidget_currentChanged(int index);
+
 private:
     Ui::InventoryManagementWindow *ui;
 };

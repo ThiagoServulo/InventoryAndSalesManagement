@@ -30,7 +30,16 @@ InventoryManagementWindow::InventoryManagementWindow(QWidget *parent) :
         }
     }
     */
+
+    ui->tabWidget->setCurrentIndex(0);
     ui->tableWidget_im_inventory->setColumnCount(2);
+    ui->tableWidget_im_inventory->setColumnWidth(0, 100);
+    ui->tableWidget_im_inventory->setColumnWidth(1, 200);
+    ui->tableWidget_im_inventory->setHorizontalHeaderLabels({"Id", "Description"});
+    ui->tableWidget_im_inventory->setStyleSheet("QTableView {selection-background-color: red}");
+    ui->tableWidget_im_inventory->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    ui->tableWidget_im_inventory->setSelectionBehavior(QAbstractItemView::SelectRows);
+    ui->tableWidget_im_inventory->verticalHeader()->setVisible(false);
 
     QValidator *validatorSalePrice = new QRegularExpressionValidator(
         QRegularExpression("[0-9]*\\.?[0-9]*"), ui->lineEdit_salePrice);
@@ -61,7 +70,6 @@ InventoryManagementWindow::~InventoryManagementWindow()
 
 void InventoryManagementWindow::on_pushButton_saveNewProduct_clicked()
 {
-
     int id = ui->lineEdit_id->text().toInt();
     QString description = ui->lineEdit_description->text();
     int id_supplier = ui->lineEdit_supplier->text().toInt();
@@ -109,6 +117,7 @@ void InventoryManagementWindow::on_tabWidget_currentChanged(int index)
 {
     if(index == 1)
     {
+        CleanTableWidget(ui->tableWidget_im_inventory);
         int line = 0;
         QSqlQuery query;
         query.prepare("SELECT id, description FROM tb_inventory ORDER BY id");
@@ -122,19 +131,40 @@ void InventoryManagementWindow::on_tabWidget_currentChanged(int index)
                 ui->tableWidget_im_inventory->setRowHeight(line, 20);
                 line++;
             }
-            ui->tableWidget_im_inventory->setColumnWidth(0, 100);
-            ui->tableWidget_im_inventory->setColumnWidth(1, 300);
-            QStringList header = {"Id", "Description"};
-            ui->tableWidget_im_inventory->setHorizontalHeaderLabels(header);
-            ui->tableWidget_im_inventory->setStyleSheet("QTableView {selection-background-color: red}");
-            ui->tableWidget_im_inventory->setEditTriggers(QAbstractItemView::NoEditTriggers);
-            ui->tableWidget_im_inventory->setSelectionBehavior(QAbstractItemView::SelectRows);
-            ui->tableWidget_im_inventory->verticalHeader()->setVisible(false);
         }
         else
         {
             QMessageBox::warning(this, "Error", "Unable to read inventory from database");
         }
+    }
+}
+
+void InventoryManagementWindow::CleanTableWidget(QTableWidget *tableWidget)
+{
+    while(tableWidget->rowCount())
+    {
+        tableWidget->removeRow(0);
+    }
+}
+
+void InventoryManagementWindow::on_tableWidget_im_inventory_itemSelectionChanged()
+{
+    int id = ui->tableWidget_im_inventory->item(ui->tableWidget_im_inventory->currentRow(), 0)->text().toInt();
+    QSqlQuery query;
+    query.prepare("SELECT * FROM tb_inventory WHERE id = " + QString::number(id));
+    if(query.exec())
+    {
+        query.first();
+        ui->lineEdit_im_id->setText(query.value(0).toString());
+        ui->lineEdit_im_description->setText(query.value(1).toString());
+        ui->lineEdit_im_supplier->setText(query.value(2).toString());
+        ui->lineEdit_im_quantity->setText(query.value(3).toString());
+        ui->lineEdit_im_purchasePrice->setText(query.value(4).toString());
+        ui->lineEdit_im_salePrice->setText(query.value(5).toString());
+    }
+    else
+    {
+        QMessageBox::warning(this, "Error", "Unable to read product information from database");
     }
 }
 

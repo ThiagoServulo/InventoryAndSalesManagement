@@ -2,6 +2,7 @@
 #define INVENTORYMANAGEMENTWINDOW_H
 
 #include <QDialog>
+#include <QTableWidget>
 #include "databaseconnection.h"
 
 namespace Ui {
@@ -19,13 +20,14 @@ public:
     // Functions
     explicit InventoryManagementWindow(QWidget *parent = nullptr);
     ~InventoryManagementWindow();
+    void CleanTableWidget(QTableWidget *tableWidget);
 
 private slots:
     void on_pushButton_saveNewProduct_clicked();
-
     void on_pushButton_cancel_clicked();
-
     void on_tabWidget_currentChanged(int index);
+
+    void on_tableWidget_im_inventory_itemSelectionChanged();
 
 private:
     Ui::InventoryManagementWindow *ui;

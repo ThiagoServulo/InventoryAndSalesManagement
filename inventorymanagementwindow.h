@@ -26,8 +26,9 @@ private slots:
     void on_pushButton_saveNewProduct_clicked();
     void on_pushButton_cancel_clicked();
     void on_tabWidget_currentChanged(int index);
-
+    void UpdateIMTableWidget();
     void on_tableWidget_im_inventory_itemSelectionChanged();
+    void on_pushButton_im_save_clicked();
 
 private:
     Ui::InventoryManagementWindow *ui;

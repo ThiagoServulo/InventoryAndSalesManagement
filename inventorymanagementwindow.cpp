@@ -15,21 +15,6 @@ InventoryManagementWindow::InventoryManagementWindow(QWidget *parent) :
     {
         QMessageBox::warning(this, "Error", "Unable to connect database");
     }
-    /*
-    else
-    {
-        QSqlQuery query;
-        query.prepare("SELECT * FROM tb_inventory");
-        if(query.exec())
-        {
-
-        }
-        else
-        {
-            QMessageBox::warning(this, "Error", "Unable to read inventory from database");
-        }
-    }
-    */
 
     ui->tabWidget->setCurrentIndex(0);
     ui->tableWidget_im_inventory->setColumnCount(2);
@@ -41,25 +26,19 @@ InventoryManagementWindow::InventoryManagementWindow(QWidget *parent) :
     ui->tableWidget_im_inventory->setSelectionBehavior(QAbstractItemView::SelectRows);
     ui->tableWidget_im_inventory->verticalHeader()->setVisible(false);
 
-    QValidator *validatorSalePrice = new QRegularExpressionValidator(
-        QRegularExpression("[0-9]*\\.?[0-9]*"), ui->lineEdit_salePrice);
-    ui->lineEdit_salePrice->setValidator(validatorSalePrice);
+    QValidator *validatorFloat = new QRegularExpressionValidator(QRegularExpression("[0-9]*\\.?[0-9]*"));
+    ui->lineEdit_salePrice->setValidator(validatorFloat);
+    ui->lineEdit_purchasePrice->setValidator(validatorFloat);
+    ui->lineEdit_im_salePrice->setValidator(validatorFloat);
+    ui->lineEdit_im_purchasePrice->setValidator(validatorFloat);
 
-    QValidator *validatorPurchasePrice = new QRegularExpressionValidator(
-        QRegularExpression("[0-9]*\\.?[0-9]*"), ui->lineEdit_purchasePrice);
-    ui->lineEdit_purchasePrice->setValidator(validatorPurchasePrice);
-
-    QValidator *validatorQuantity = new QRegularExpressionValidator(
-        QRegularExpression("[0-9]*"), ui->lineEdit_quantity);
-    ui->lineEdit_quantity->setValidator(validatorQuantity);
-
-    QValidator *validatorSupplier = new QRegularExpressionValidator(
-        QRegularExpression("[0-9]*"), ui->lineEdit_supplier);
-    ui->lineEdit_supplier->setValidator(validatorSupplier);
-
-    QValidator *validatorIdProduct = new QRegularExpressionValidator(
-        QRegularExpression("[0-9]*"), ui->lineEdit_id);
-    ui->lineEdit_id->setValidator(validatorIdProduct);
+    QValidator *validatorInt = new QRegularExpressionValidator(QRegularExpression("[0-9]*"));
+    ui->lineEdit_quantity->setValidator(validatorInt);
+    ui->lineEdit_supplier->setValidator(validatorInt);
+    ui->lineEdit_id->setValidator(validatorInt);
+    ui->lineEdit_im_quantity->setValidator(validatorInt);
+    ui->lineEdit_im_supplier->setValidator(validatorInt);
+    ui->lineEdit_im_id->setValidator(validatorInt);
 }
 
 InventoryManagementWindow::~InventoryManagementWindow()
@@ -82,9 +61,6 @@ void InventoryManagementWindow::on_pushButton_saveNewProduct_clicked()
                   "VALUES (" + QString::number(id) + ", '" + description + "', " + QString::number(id_supplier) + ", "
                   + QString::number(quantity) + ", " + QString::number(purchasePrice) + ", " + QString::number(salePrice) + ")");
 
-    qDebug() << "INSERT INTO tb_inventory (id, description, supplier, quantity, purchase_price, sale_price) "
-                  "VALUES (" + QString::number(id) + ", '" + description + "', " + QString::number(id_supplier) + ", "
-                  + QString::number(quantity) + ", " + QString::number(purchasePrice) + ", " + QString::number(salePrice) + ")";
     if(!query.exec())
     {
         QMessageBox::warning(this, "Error", "Unable to save the product into database");
@@ -117,25 +93,30 @@ void InventoryManagementWindow::on_tabWidget_currentChanged(int index)
 {
     if(index == 1)
     {
-        CleanTableWidget(ui->tableWidget_im_inventory);
-        int line = 0;
-        QSqlQuery query;
-        query.prepare("SELECT id, description FROM tb_inventory ORDER BY id");
-        if(query.exec())
+        UpdateIMTableWidget();
+    }
+}
+
+void InventoryManagementWindow::UpdateIMTableWidget()
+{
+    CleanTableWidget(ui->tableWidget_im_inventory);
+    int line = 0;
+    QSqlQuery query;
+    query.prepare("SELECT id, description FROM tb_inventory ORDER BY id");
+    if(query.exec())
+    {
+        while(query.next())
         {
-            while(query.next())
-            {
-                ui->tableWidget_im_inventory->insertRow(line);
-                ui->tableWidget_im_inventory->setItem(line, 0, new QTableWidgetItem(query.value(0).toString()));
-                ui->tableWidget_im_inventory->setItem(line, 1, new QTableWidgetItem(query.value(1).toString()));
-                ui->tableWidget_im_inventory->setRowHeight(line, 20);
-                line++;
-            }
+            ui->tableWidget_im_inventory->insertRow(line);
+            ui->tableWidget_im_inventory->setItem(line, 0, new QTableWidgetItem(query.value(0).toString()));
+            ui->tableWidget_im_inventory->setItem(line, 1, new QTableWidgetItem(query.value(1).toString()));
+            ui->tableWidget_im_inventory->setRowHeight(line, 20);
+            line++;
         }
-        else
-        {
-            QMessageBox::warning(this, "Error", "Unable to read inventory from database");
-        }
+    }
+    else
+    {
+        QMessageBox::warning(this, "Error", "Unable to read inventory from database");
     }
 }
 
@@ -165,6 +146,40 @@ void InventoryManagementWindow::on_tableWidget_im_inventory_itemSelectionChanged
     else
     {
         QMessageBox::warning(this, "Error", "Unable to read product information from database");
+    }
+}
+
+void InventoryManagementWindow::on_pushButton_im_save_clicked()
+{
+    if(ui->lineEdit_im_id->text() == "")
+    {
+        QMessageBox::warning(this, "Error", "Select a product");
+    }
+    else
+    {
+        int idNew = ui->lineEdit_im_id->text().toInt();
+        int idOld = ui->tableWidget_im_inventory->item(ui->tableWidget_im_inventory->currentRow(), 0)->text().toInt();
+        QString description = ui->lineEdit_im_description->text();
+        int id_supplier = ui->lineEdit_im_supplier->text().toInt();
+        float purchasePrice = ui->lineEdit_im_purchasePrice->text().toFloat();
+        float salePrice = ui->lineEdit_im_salePrice->text().toFloat();
+        int quantity = ui->lineEdit_im_quantity->text().toInt();
+
+        QSqlQuery query;
+        query.prepare("UPDATE tb_inventory SET id = " + QString::number(idNew) + ", description = '" + description +
+                      "', supplier = " + QString::number(id_supplier) + ", quantity = " + QString::number(quantity) +
+                      ", purchase_price = " + QString::number(purchasePrice) + ", sale_price = " + QString::number(salePrice) +
+                      " WHERE id = " + QString::number(idOld));
+
+        if(query.exec())
+        {
+            UpdateIMTableWidget();
+            QMessageBox::information(this, "Success", "Product information updated");
+        }
+        else
+        {
+            QMessageBox::warning(this, "Error", "Unable to update product information from database");
+        }
     }
 }
 

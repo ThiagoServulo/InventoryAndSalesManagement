@@ -68,17 +68,16 @@ void InventoryManagementWindow::on_pushButton_saveNewProduct_clicked()
     else
     {
         QMessageBox::information(this, "Success", "Product save into database");
-        ui->lineEdit_id->clear();
-        ui->lineEdit_description->clear();
-        ui->lineEdit_purchasePrice->clear();
-        ui->lineEdit_quantity->clear();
-        ui->lineEdit_salePrice->clear();
-        ui->lineEdit_supplier->clear();
-        ui->lineEdit_id->setFocus();
+        ClearNewProductTabFields();
     }
 }
 
 void InventoryManagementWindow::on_pushButton_cancel_clicked()
+{
+    ClearNewProductTabFields();
+}
+
+void InventoryManagementWindow::ClearNewProductTabFields()
 {
     ui->lineEdit_id->clear();
     ui->lineEdit_description->clear();
@@ -99,24 +98,29 @@ void InventoryManagementWindow::on_tabWidget_currentChanged(int index)
 
 void InventoryManagementWindow::UpdateIMTableWidget()
 {
-    CleanTableWidget(ui->tableWidget_im_inventory);
-    int line = 0;
     QSqlQuery query;
     query.prepare("SELECT id, description FROM tb_inventory ORDER BY id");
     if(query.exec())
     {
-        while(query.next())
-        {
-            ui->tableWidget_im_inventory->insertRow(line);
-            ui->tableWidget_im_inventory->setItem(line, 0, new QTableWidgetItem(query.value(0).toString()));
-            ui->tableWidget_im_inventory->setItem(line, 1, new QTableWidgetItem(query.value(1).toString()));
-            ui->tableWidget_im_inventory->setRowHeight(line, 20);
-            line++;
-        }
+        InsertIMTableWidget(&query);
     }
     else
     {
         QMessageBox::warning(this, "Error", "Unable to read inventory from database");
+    }
+}
+
+void InventoryManagementWindow::InsertIMTableWidget(QSqlQuery *query)
+{
+    int line = 0;
+    CleanTableWidget(ui->tableWidget_im_inventory);
+    while(query->next())
+    {
+        ui->tableWidget_im_inventory->insertRow(line);
+        ui->tableWidget_im_inventory->setItem(line, 0, new QTableWidgetItem(query->value(0).toString()));
+        ui->tableWidget_im_inventory->setItem(line, 1, new QTableWidgetItem(query->value(1).toString()));
+        ui->tableWidget_im_inventory->setRowHeight(line, 20);
+        line++;
     }
 }
 
@@ -183,3 +187,67 @@ void InventoryManagementWindow::on_pushButton_im_save_clicked()
     }
 }
 
+void InventoryManagementWindow::on_pushButton_im_remove_clicked()
+{
+    QMessageBox::StandardButton button = QMessageBox::question(this, "Remove", "Do you want to remove this product?", QMessageBox::Yes | QMessageBox::No);
+    if(button == QMessageBox::Yes)
+    {
+        int id = ui->tableWidget_im_inventory->item(ui->tableWidget_im_inventory->currentRow(), 0)->text().toInt();
+        QSqlQuery query;
+        query.prepare("DELETE FROM tb_inventory WHERE id = " + QString::number(id));
+        if(query.exec())
+        {
+            ui->tableWidget_im_inventory->removeRow(ui->tableWidget_im_inventory->currentRow());
+            ui->lineEdit_im_id->clear();
+            ui->lineEdit_im_description->clear();
+            ui->lineEdit_im_supplier->clear();
+            ui->lineEdit_im_quantity->clear();
+            ui->lineEdit_im_purchasePrice->clear();
+            ui->lineEdit_im_salePrice->clear();
+            QMessageBox::information(this, "Success", "Product removed with success");
+        }
+        else
+        {
+            QMessageBox::warning(this, "Error", "Unable to remove product from database");
+        }
+    }
+}
+
+void InventoryManagementWindow::on_pushButton_im_search_clicked()
+{
+    QSqlQuery query;
+    if(ui->lineEdit_im_filter->text() == "")
+    {
+        if(ui->radioButton_id->isChecked())
+        {
+            query.prepare("SELECT id, description FROM tb_inventory ORDER BY id");
+        }
+        else
+        {
+            query.prepare("SELECT id, description FROM tb_inventory ORDER BY description");
+        }
+    }
+    else
+    {
+        if(ui->radioButton_id->isChecked())
+        {
+            query.prepare("SELECT id, description FROM tb_inventory WHERE id = " + ui->lineEdit_im_filter->text());
+        }
+        else
+        {
+            query.prepare("SELECT id, description FROM tb_inventory WHERE description LIKE '%" + ui->lineEdit_im_filter->text() + "%'");
+        }
+    }
+
+    ui->lineEdit_im_filter->clear();
+
+    if(query.exec())
+    {
+        InsertIMTableWidget(&query);
+    }
+    else
+    {
+        QMessageBox::warning(this, "Error", "Unable to filter products from database");
+    }
+
+}

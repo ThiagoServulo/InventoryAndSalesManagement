@@ -13,8 +13,7 @@ SalesWindow::SalesWindow(QWidget *parent) :
         QMessageBox::warning(this, "Error", "Unable to connect database");
     }
 
-    ui->lineEdit_quantity->setText("1");
-    ui->lineEdit_quantity->setFocus();
+    InitFieldsWindow();
     ui->tableWidget_listProducts->setColumnCount(5);
     ui->tableWidget_listProducts->setColumnWidth(0, 100);
     ui->tableWidget_listProducts->setColumnWidth(1, 200);
@@ -52,6 +51,9 @@ void SalesWindow::on_lineEdit_idProduct_returnPressed()
             total = ui->lineEdit_quantity->text().toInt() * query.value(2).toString().toFloat();
             ui->tableWidget_listProducts->setItem(line, 4, new QTableWidgetItem(QString::number(total)));
             ui->tableWidget_listProducts->setRowHeight(line, 20);
+
+            total = CalculateTotalSale(ui->tableWidget_listProducts, 4);
+            ui->lineEdit_total->setText(QString::number(total));
         }
         else
         {
@@ -63,7 +65,24 @@ void SalesWindow::on_lineEdit_idProduct_returnPressed()
         QMessageBox::warning(this, "Error", "Error to search this product");
     }
 
-    ui->lineEdit_quantity->setText("1");
-    ui->lineEdit_idProduct->clear();
+    InitFieldsWindow();
 }
 
+void SalesWindow::InitFieldsWindow()
+{
+    ui->lineEdit_quantity->setText("1");
+    ui->lineEdit_idProduct->clear();
+    ui->lineEdit_idProduct->setFocus();
+}
+
+float SalesWindow::CalculateTotalSale(QTableWidget *tableWidget, int column)
+{
+    float total = 0;
+
+    for(int i = 0; i < tableWidget->rowCount(); i++)
+    {
+        total += tableWidget->item(i, column)->text().toFloat();
+    }
+
+    return total;
+}

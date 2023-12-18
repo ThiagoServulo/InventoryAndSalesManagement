@@ -2,6 +2,7 @@
 #define SALESWINDOW_H
 
 #include <QDialog>
+#include <QTableWidget>
 #include "databaseconnection.h"
 
 namespace Ui {
@@ -22,6 +23,8 @@ public:
 
 private slots:
     void on_lineEdit_idProduct_returnPressed();
+    void InitFieldsWindow();
+    float CalculateTotalSale(QTableWidget *tableWidget, int column);
 
 private:
     Ui::SalesWindow *ui;

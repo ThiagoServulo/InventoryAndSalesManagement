@@ -16,60 +16,73 @@
   <widget class="QWidget" name="">
    <property name="geometry">
     <rect>
-     <x>40</x>
-     <y>40</y>
-     <width>681</width>
-     <height>308</height>
+     <x>10</x>
+     <y>42</y>
+     <width>721</width>
+     <height>316</height>
     </rect>
    </property>
-   <layout class="QVBoxLayout" name="verticalLayout_5">
+   <layout class="QVBoxLayout" name="verticalLayout_4">
     <item>
-     <layout class="QVBoxLayout" name="verticalLayout_4">
+     <layout class="QVBoxLayout" name="verticalLayout_3">
       <item>
-       <layout class="QVBoxLayout" name="verticalLayout_3">
+       <layout class="QHBoxLayout" name="horizontalLayout">
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout">
+         <layout class="QVBoxLayout" name="verticalLayout">
           <item>
-           <layout class="QVBoxLayout" name="verticalLayout">
-            <item>
-             <widget class="QLabel" name="label_quantity">
-              <property name="text">
-               <string>Quantity</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLineEdit" name="lineEdit_quantity"/>
-            </item>
-           </layout>
-          </item>
-          <item>
-           <layout class="QVBoxLayout" name="verticalLayout_2">
-            <item>
-             <widget class="QLabel" name="label__idProduct">
-              <property name="text">
-               <string>ID Product</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLineEdit" name="lineEdit_idProduct"/>
-            </item>
-           </layout>
-          </item>
-          <item>
-           <widget class="QPushButton" name="pushButton_searchProduct">
+           <widget class="QLabel" name="label_quantity">
             <property name="text">
-             <string>Search Product</string>
+             <string>Quantity</string>
             </property>
            </widget>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="lineEdit_quantity"/>
           </item>
          </layout>
         </item>
         <item>
-         <widget class="QTableWidget" name="tableWidget_listProducts"/>
+         <layout class="QVBoxLayout" name="verticalLayout_2">
+          <item>
+           <widget class="QLabel" name="label__idProduct">
+            <property name="text">
+             <string>ID Product</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="lineEdit_idProduct"/>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <widget class="QPushButton" name="pushButton_searchProduct">
+          <property name="text">
+           <string>Search Product</string>
+          </property>
+         </widget>
         </item>
        </layout>
+      </item>
+      <item>
+       <widget class="QTableWidget" name="tableWidget_listProducts"/>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout_3">
+      <item>
+       <spacer name="horizontalSpacer">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
       </item>
       <item>
        <widget class="QLabel" name="label_total">
@@ -77,6 +90,9 @@
          <string>Total: </string>
         </property>
        </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="lineEdit_total"/>
       </item>
      </layout>
     </item>

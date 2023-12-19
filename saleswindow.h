@@ -23,8 +23,11 @@ public:
 
 private slots:
     void on_lineEdit_idProduct_returnPressed();
+    void InsertProductIntoTableWidget();
     void InitFieldsWindow();
     float CalculateTotalSale(QTableWidget *tableWidget, int column);
+    void on_pushButton_removeProduct_clicked();
+    void on_pushButton_searchProduct_clicked();
 
 private:
     Ui::SalesWindow *ui;

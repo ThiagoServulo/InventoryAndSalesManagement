@@ -25,6 +25,11 @@ SalesWindow::SalesWindow(QWidget *parent) :
     ui->tableWidget_listProducts->setEditTriggers(QAbstractItemView::NoEditTriggers);
     ui->tableWidget_listProducts->setSelectionBehavior(QAbstractItemView::SelectRows);
     ui->tableWidget_listProducts->verticalHeader()->setVisible(false);
+    ui->pushButton_editProduct->setAutoDefault(false);
+    ui->pushButton_finalizeSale->setAutoDefault(false);
+    ui->pushButton_removeProduct->setAutoDefault(false);
+    ui->pushButton_searchProduct->setAutoDefault(false);
+
 }
 
 SalesWindow::~SalesWindow()
@@ -33,6 +38,11 @@ SalesWindow::~SalesWindow()
 }
 
 void SalesWindow::on_lineEdit_idProduct_returnPressed()
+{
+    InsertProductIntoTableWidget();
+}
+
+void SalesWindow::InsertProductIntoTableWidget()
 {
     float total;
     QSqlQuery query;
@@ -86,3 +96,29 @@ float SalesWindow::CalculateTotalSale(QTableWidget *tableWidget, int column)
 
     return total;
 }
+
+void SalesWindow::on_pushButton_removeProduct_clicked()
+{
+    if(ui->tableWidget_listProducts->currentColumn() != -1)
+    {
+        QMessageBox::StandardButton option;
+        option = QMessageBox::question(this, "Remove", "Do you want to remove this product?", QMessageBox::Yes | QMessageBox::No);
+        if(option == QMessageBox::Yes)
+        {
+            ui->tableWidget_listProducts->removeRow(ui->tableWidget_listProducts->currentRow());
+            ui->lineEdit_total->setText(QString::number(CalculateTotalSale(ui->tableWidget_listProducts, 4)));
+            ui->tableWidget_listProducts->setCurrentCell(-1, -1);
+        }
+    }
+    else
+    {
+        QMessageBox::information(this, "Error", "Select a product first");
+    }
+}
+
+
+void SalesWindow::on_pushButton_searchProduct_clicked()
+{
+    InsertProductIntoTableWidget();
+}
+

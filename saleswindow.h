@@ -29,6 +29,8 @@ private slots:
     void on_pushButton_removeProduct_clicked();
     void on_pushButton_searchProduct_clicked();
 
+    void on_pushButton_editProduct_clicked();
+
 private:
     Ui::SalesWindow *ui;
 };

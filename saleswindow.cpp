@@ -1,5 +1,6 @@
 #include "saleswindow.h"
 #include "ui_saleswindow.h"
+#include "editproductfromsalewindow.h"
 #include <QMessageBox>
 
 SalesWindow::SalesWindow(QWidget *parent) :
@@ -29,7 +30,7 @@ SalesWindow::SalesWindow(QWidget *parent) :
     ui->pushButton_finalizeSale->setAutoDefault(false);
     ui->pushButton_removeProduct->setAutoDefault(false);
     ui->pushButton_searchProduct->setAutoDefault(false);
-
+    ui->lineEdit_total->setEnabled(false);
 }
 
 SalesWindow::~SalesWindow()
@@ -116,9 +117,40 @@ void SalesWindow::on_pushButton_removeProduct_clicked()
     }
 }
 
-
 void SalesWindow::on_pushButton_searchProduct_clicked()
 {
     InsertProductIntoTableWidget();
+}
+
+void SalesWindow::on_pushButton_editProduct_clicked()
+{
+    if(ui->tableWidget_listProducts->currentRow() != -1)
+    {
+        int idProduct = ui->tableWidget_listProducts->item(ui->tableWidget_listProducts->currentRow(), 0)->text().toInt();
+        QString description = ui->tableWidget_listProducts->item(ui->tableWidget_listProducts->currentRow(), 1)->text();
+        float salePrice = ui->tableWidget_listProducts->item(ui->tableWidget_listProducts->currentRow(), 2)->text().toFloat();
+        int quantity = ui->tableWidget_listProducts->item(ui->tableWidget_listProducts->currentRow(), 3)->text().toInt();
+
+        EditProductFromSaleWindow *editProductFromSaleWindow;
+        editProductFromSaleWindow = new EditProductFromSaleWindow(idProduct, description, salePrice, quantity);
+        editProductFromSaleWindow->exec();
+
+        qDebug() << editProductFromSaleWindow->quantity;
+        qDebug() << editProductFromSaleWindow->salePrice;
+
+        ui->tableWidget_listProducts->setItem(ui->tableWidget_listProducts->currentRow(), 2, new QTableWidgetItem(QString::number(editProductFromSaleWindow->salePrice)));
+        ui->tableWidget_listProducts->setItem(ui->tableWidget_listProducts->currentRow(), 3, new QTableWidgetItem(QString::number(editProductFromSaleWindow->quantity)));
+
+        float total = editProductFromSaleWindow->quantity * editProductFromSaleWindow->salePrice;
+        ui->tableWidget_listProducts->setItem(ui->tableWidget_listProducts->currentRow(), 4, new QTableWidgetItem(QString::number(total)));
+
+        total = CalculateTotalSale(ui->tableWidget_listProducts, 4);
+        ui->lineEdit_total->setText(QString::number(total));
+        ui->tableWidget_listProducts->setCurrentCell(-1, -1);
+    }
+    else
+    {
+        QMessageBox::information(this, "Error", "Select a product first");
+    }
 }
 

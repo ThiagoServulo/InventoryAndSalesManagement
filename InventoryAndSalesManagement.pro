@@ -11,6 +11,7 @@ CONFIG += c++17
 SOURCES += \
     collaboratosmanagementwindow.cpp \
     databaseconnection.cpp \
+    editproductfromsalewindow.cpp \
     inventorymanagementwindow.cpp \
     loginwindow.cpp \
     main.cpp \
@@ -21,6 +22,7 @@ SOURCES += \
 HEADERS += \
     collaboratosmanagementwindow.h \
     databaseconnection.h \
+    editproductfromsalewindow.h \
     inventorymanagementwindow.h \
     loginwindow.h \
     mainwindow.h \
@@ -29,6 +31,7 @@ HEADERS += \
 
 FORMS += \
     collaboratosmanagementwindow.ui \
+    editproductfromsalewindow.ui \
     inventorymanagementwindow.ui \
     loginwindow.ui \
     mainwindow.ui \

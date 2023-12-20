@@ -1,6 +1,7 @@
 #include "saleswindow.h"
 #include "ui_saleswindow.h"
 #include "editproductfromsalewindow.h"
+#include "mainwindow.h"
 #include <QMessageBox>
 
 SalesWindow::SalesWindow(QWidget *parent) :
@@ -135,9 +136,6 @@ void SalesWindow::on_pushButton_editProduct_clicked()
         editProductFromSaleWindow = new EditProductFromSaleWindow(idProduct, description, salePrice, quantity);
         editProductFromSaleWindow->exec();
 
-        qDebug() << editProductFromSaleWindow->quantity;
-        qDebug() << editProductFromSaleWindow->salePrice;
-
         ui->tableWidget_listProducts->setItem(ui->tableWidget_listProducts->currentRow(), 2, new QTableWidgetItem(QString::number(editProductFromSaleWindow->salePrice)));
         ui->tableWidget_listProducts->setItem(ui->tableWidget_listProducts->currentRow(), 3, new QTableWidgetItem(QString::number(editProductFromSaleWindow->quantity)));
 
@@ -151,6 +149,45 @@ void SalesWindow::on_pushButton_editProduct_clicked()
     else
     {
         QMessageBox::information(this, "Error", "Select a product first");
+    }
+}
+
+void SalesWindow::EraseTableWidget(QTableWidget *tableWidget)
+{
+    while(tableWidget->rowCount() > 0)
+    {
+        tableWidget->removeRow(0);
+    }
+}
+
+void SalesWindow::on_pushButton_finalizeSale_clicked()
+{
+    if(ui->tableWidget_listProducts->rowCount() != 0)
+    {
+        int id_collaborator = MainWindow::id_collaborator;
+        int id_payment_type = 1;
+        float total = CalculateTotalSale(ui->tableWidget_listProducts, 4);
+        QString date = QDate::currentDate().toString("yyyy-MM-dd") +  QTime::currentTime().toString(":hh:mm:ss");
+        QSqlQuery query;
+        query.prepare("INSERT INTO tb_sales (date, id_collaborator, total_value, id_payment_type) VALUES ('" + date
+                      + "', " + QString::number(id_collaborator) + ", " +  QString::number(total) + ", "
+                      + QString::number(id_payment_type) + ")");
+
+        if(query.exec())
+        {
+            QMessageBox::information(this, "Success", "Sale inserted with success");
+            InitFieldsWindow();
+            EraseTableWidget(ui->tableWidget_listProducts);
+            ui->lineEdit_total->setText("0");
+        }
+        else
+        {
+            QMessageBox::warning(this, "Error", "Error to insert new sale into database");
+        }
+    }
+    else
+    {
+        QMessageBox::information(this, "Error", "Add a product first");
     }
 }
 

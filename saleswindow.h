@@ -28,8 +28,9 @@ private slots:
     float CalculateTotalSale(QTableWidget *tableWidget, int column);
     void on_pushButton_removeProduct_clicked();
     void on_pushButton_searchProduct_clicked();
-
     void on_pushButton_editProduct_clicked();
+    void EraseTableWidget(QTableWidget *tableWidget);
+    void on_pushButton_finalizeSale_clicked();
 
 private:
     Ui::SalesWindow *ui;

@@ -175,7 +175,33 @@ void SalesWindow::on_pushButton_finalizeSale_clicked()
 
         if(query.exec())
         {
-            QMessageBox::information(this, "Success", "Sale inserted with success");
+            query.prepare("SELECT id FROM tb_sales ORDER BY id DESC LIMIT 1");
+            if(query.exec())
+            {
+                query.first();
+                int id_sale = query.value(0).toInt();
+
+                for(int i = 0; i < ui->tableWidget_listProducts->rowCount(); i++)
+                {
+                    int id_product = ui->tableWidget_listProducts->item(i, 0)->text().toInt();
+                    float sale_price = ui->tableWidget_listProducts->item(i, 2)->text().toFloat();
+                    int quantity = ui->tableWidget_listProducts->item(i, 3)->text().toInt();
+                    query.prepare("INSERT INTO tb_products_sales (id_sale, id_product, quantity, sale_price) VALUES "
+                                  "(" + QString::number(id_sale) + ", " + QString::number(id_product) + ", " +
+                                  QString::number(quantity) + ", " + QString::number(sale_price) + ")");
+                    if(!query.exec())
+                    {
+                        QMessageBox::warning(this, "Error", "Error to insert products sale information into database");
+                        return;
+                    }
+                }
+                QMessageBox::information(this, "Success", "Sale: '" + QString::number(id_sale) + "' inserted with success");
+            }
+            else
+            {
+                QMessageBox::warning(this, "Error", "Error to get sale id from database");
+            }
+
             InitFieldsWindow();
             EraseTableWidget(ui->tableWidget_listProducts);
             ui->lineEdit_total->setText("0");

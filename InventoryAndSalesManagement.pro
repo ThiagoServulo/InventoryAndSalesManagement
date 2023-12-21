@@ -17,7 +17,8 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     salesmanagementwindow.cpp \
-    saleswindow.cpp
+    saleswindow.cpp \
+    utilities.cpp
 
 HEADERS += \
     collaboratosmanagementwindow.h \
@@ -27,7 +28,8 @@ HEADERS += \
     loginwindow.h \
     mainwindow.h \
     salesmanagementwindow.h \
-    saleswindow.h
+    saleswindow.h \
+    utilities.h
 
 FORMS += \
     collaboratosmanagementwindow.ui \

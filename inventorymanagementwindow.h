@@ -28,7 +28,6 @@ private slots:
     void ClearNewProductTabFields();
     void on_tabWidget_currentChanged(int index);
     void UpdateIMTableWidget();
-    void InsertIMTableWidget(QSqlQuery *query);
     void on_tableWidget_im_inventory_itemSelectionChanged();
     void on_pushButton_im_save_clicked();
     void on_pushButton_im_remove_clicked();

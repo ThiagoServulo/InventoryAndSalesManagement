@@ -1,5 +1,6 @@
 #include "collaboratosmanagementwindow.h"
 #include "ui_collaboratosmanagementwindow.h"
+#include "utilities.h"
 #include <QSql>
 #include <QMessageBox>
 
@@ -46,35 +47,10 @@ void CollaboratosManagementWindow::UpdateCMTableWidget()
 {
     QSqlQuery query;
     query.prepare("SELECT id, name FROM tb_collaborators ORDER BY id");
-    if(query.exec())
-    {
-        InsertCMTableWidget(&query);
-    }
-    else
+    Utilities utilities;
+    if(!utilities.QueryToUpdateTableWidget(&query, ui->tableWidget_cm_collaborators))
     {
         QMessageBox::warning(this, "Error", "Unable to read collaborators from database");
-    }
-}
-
-void CollaboratosManagementWindow::InsertCMTableWidget(QSqlQuery *query)
-{
-    int line = 0;
-    CleanTableWidget(ui->tableWidget_cm_collaborators);
-    while(query->next())
-    {
-        ui->tableWidget_cm_collaborators->insertRow(line);
-        ui->tableWidget_cm_collaborators->setItem(line, 0, new QTableWidgetItem(query->value(0).toString()));
-        ui->tableWidget_cm_collaborators->setItem(line, 1, new QTableWidgetItem(query->value(1).toString()));
-        ui->tableWidget_cm_collaborators->setRowHeight(line, 20);
-        line++;
-    }
-}
-
-void CollaboratosManagementWindow::CleanTableWidget(QTableWidget *tableWidget)
-{
-    while(tableWidget->rowCount())
-    {
-        tableWidget->removeRow(0);
     }
 }
 

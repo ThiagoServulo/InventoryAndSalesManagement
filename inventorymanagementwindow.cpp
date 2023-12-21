@@ -1,5 +1,6 @@
 #include "inventorymanagementwindow.h"
 #include "ui_inventorymanagementwindow.h"
+#include "utilities.h"
 #include <QMessageBox>
 #include <QRegularExpression>
 #include <QValidator>
@@ -100,35 +101,10 @@ void InventoryManagementWindow::UpdateIMTableWidget()
 {
     QSqlQuery query;
     query.prepare("SELECT id, description FROM tb_inventory ORDER BY id");
-    if(query.exec())
-    {
-        InsertIMTableWidget(&query);
-    }
-    else
+    Utilities utilities;
+    if(!utilities.QueryToUpdateTableWidget(&query, ui->tableWidget_im_inventory))
     {
         QMessageBox::warning(this, "Error", "Unable to read inventory from database");
-    }
-}
-
-void InventoryManagementWindow::InsertIMTableWidget(QSqlQuery *query)
-{
-    int line = 0;
-    CleanTableWidget(ui->tableWidget_im_inventory);
-    while(query->next())
-    {
-        ui->tableWidget_im_inventory->insertRow(line);
-        ui->tableWidget_im_inventory->setItem(line, 0, new QTableWidgetItem(query->value(0).toString()));
-        ui->tableWidget_im_inventory->setItem(line, 1, new QTableWidgetItem(query->value(1).toString()));
-        ui->tableWidget_im_inventory->setRowHeight(line, 20);
-        line++;
-    }
-}
-
-void InventoryManagementWindow::CleanTableWidget(QTableWidget *tableWidget)
-{
-    while(tableWidget->rowCount())
-    {
-        tableWidget->removeRow(0);
     }
 }
 
@@ -243,7 +219,8 @@ void InventoryManagementWindow::on_pushButton_im_search_clicked()
 
     if(query.exec())
     {
-        InsertIMTableWidget(&query);
+        Utilities utilities;
+        utilities.QueryToInsertFieldsIntoTableWidget(&query, ui->tableWidget_im_inventory);
     }
     else
     {

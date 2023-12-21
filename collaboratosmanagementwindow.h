@@ -2,6 +2,7 @@
 #define COLLABORATOSMANAGEMENTWINDOW_H
 
 #include <QDialog>
+#include <QTableWidget>
 #include "databaseconnection.h"
 
 namespace Ui {
@@ -23,8 +24,14 @@ public:
 private slots:
     void on_pushButton_nc_save_clicked();
 
+    void on_tabWidget_currentChanged(int index);
+
 private:
     Ui::CollaboratosManagementWindow *ui;
+    void UpdateCMTableWidget();
+    void InsertCMTableWidget(QSqlQuery *query);
+    void CleanTableWidget(QTableWidget *tableWidget);
+
 };
 
 #endif // COLLABORATOSMANAGEMENTWINDOW_H

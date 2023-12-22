@@ -25,10 +25,13 @@ private slots:
     void on_pushButton_nc_save_clicked();
     void on_tabWidget_currentChanged(int index);
 
+    void on_tableWidget_cm_collaborators_itemSelectionChanged();
+
 private:
     Ui::CollaboratosManagementWindow *ui;
     void UpdateCMTableWidget();
     void ClearNewCollaboratorTabFields();
+    void ClearCollaboratorManagementTabFields();
 
 };
 

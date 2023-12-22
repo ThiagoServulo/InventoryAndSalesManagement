@@ -30,6 +30,7 @@ void Utilities::QueryToInsertFieldsIntoTableWidget(QSqlQuery *query, QTableWidge
         tableWidget->setRowHeight(line, 20);
         line++;
     }
+    tableWidget->setCurrentCell(-1, -1);
 }
 
 void Utilities::CleanTableWidget(QTableWidget *tableWidget)

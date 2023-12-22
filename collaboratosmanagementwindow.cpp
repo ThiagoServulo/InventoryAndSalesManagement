@@ -15,13 +15,16 @@ CollaboratosManagementWindow::CollaboratosManagementWindow(QWidget *parent) :
         QMessageBox::warning(this, "Error", "Unable to connect database");
     }
 
-    ClearNewCollaboratorTabFields();
-
     ui->comboBox_nc_accessType->addItem("A");
     ui->comboBox_nc_accessType->addItem("B");
+    ui->comboBox_cm_accessType->addItem("A");
+    ui->comboBox_cm_accessType->addItem("B");
+
+    ClearNewCollaboratorTabFields();
+    ClearCollaboratorManagementTabFields();
+
     ui->lineEdit_nc_password->setEchoMode(QLineEdit::Password);
     ui->lineEdit_nc_confirmPassword->setEchoMode(QLineEdit::Password);
-    ui->lineEdit_nc_name->setFocus();
 
     ui->tableWidget_cm_collaborators->setColumnCount(2);
     ui->tableWidget_cm_collaborators->setColumnWidth(0, 80);
@@ -88,6 +91,16 @@ void CollaboratosManagementWindow::ClearNewCollaboratorTabFields()
     ui->lineEdit_nc_password->clear();
     ui->lineEdit_nc_confirmPassword->clear();
     ui->comboBox_nc_accessType->setCurrentIndex(-1);
+    ui->lineEdit_nc_name->setFocus();
+}
+
+void CollaboratosManagementWindow::ClearCollaboratorManagementTabFields()
+{
+    ui->lineEdit_cm_name->clear();
+    ui->lineEdit_cm_filter->clear();
+    ui->lineEdit_cm_telephone->clear();
+    ui->lineEdit_cm_username->clear();
+    ui->comboBox_cm_accessType->setCurrentIndex(-1);
 }
 
 void CollaboratosManagementWindow::UpdateCMTableWidget()
@@ -104,8 +117,29 @@ void CollaboratosManagementWindow::UpdateCMTableWidget()
 void CollaboratosManagementWindow::on_tabWidget_currentChanged(int index)
 {
     if(index == 1)
-    {
+    { 
         UpdateCMTableWidget();
+    }
+    ClearCollaboratorManagementTabFields();
+}
+
+
+void CollaboratosManagementWindow::on_tableWidget_cm_collaborators_itemSelectionChanged()
+{
+    int id = ui->tableWidget_cm_collaborators->item(ui->tableWidget_cm_collaborators->currentRow(), 0)->text().toInt();
+    QSqlQuery query;
+    query.prepare("SELECT name, username, telephone, access FROM tb_collaborators WHERE id = " + QString::number(id));
+    if(query.exec())
+    {
+        query.first();
+        ui->lineEdit_cm_name->setText(query.value(0).toString());
+        ui->lineEdit_cm_username->setText(query.value(1).toString());
+        ui->lineEdit_cm_telephone->setText(query.value(2).toString());
+        ui->comboBox_cm_accessType->setCurrentText(query.value(3).toString());
+    }
+    else
+    {
+        QMessageBox::warning(this, "Error", "Unable to read collaborator information from database");
     }
 }
 

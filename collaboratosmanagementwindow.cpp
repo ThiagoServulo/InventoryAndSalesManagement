@@ -15,6 +15,8 @@ CollaboratosManagementWindow::CollaboratosManagementWindow(QWidget *parent) :
         QMessageBox::warning(this, "Error", "Unable to connect database");
     }
 
+    ClearNewCollaboratorTabFields();
+
     ui->comboBox_nc_accessType->addItem("A");
     ui->comboBox_nc_accessType->addItem("B");
     ui->lineEdit_nc_password->setEchoMode(QLineEdit::Password);
@@ -40,7 +42,52 @@ CollaboratosManagementWindow::~CollaboratosManagementWindow()
 
 void CollaboratosManagementWindow::on_pushButton_nc_save_clicked()
 {
+    if(ui->lineEdit_nc_name->text() != "" && ui->lineEdit_nc_name->text() != "" &&
+        ui->lineEdit_nc_telephone->text() != "" && ui->lineEdit_nc_password->text() != "" &&
+        ui->lineEdit_nc_confirmPassword->text() != "")
+    {
+        if(ui->lineEdit_nc_password->text() == ui->lineEdit_nc_confirmPassword->text())
+        {
+            QString name = ui->lineEdit_nc_name->text();
+            QString username = ui->lineEdit_nc_username->text();
+            QString telephone = ui->lineEdit_nc_telephone->text();
+            QString password = ui->lineEdit_nc_password->text();
+            QString accessType = ui->comboBox_nc_accessType->currentText();
 
+            QSqlQuery query;
+            query.prepare("INSERT INTO tb_collaborators (name, username, password, telephone, access) "
+                          "VALUES ('" + name + "', '" + username + "', '" + password + "', '"
+                          + telephone + "', '" + accessType + "')");
+
+            qDebug() << "INSERT INTO tb_collaborators (name, username, password, telephone, accessType) "
+                        "VALUES ('" + name + "', '" + username + "', '" + password + "', '"
+                            + telephone + "', '" + accessType + "')";
+
+            if(!query.exec())
+            {
+                QMessageBox::warning(this, "Error", "Unable to save new collaborator into database");
+            }
+            else
+            {
+                QMessageBox::information(this, "Success", "New collaborator save into database");
+                ClearNewCollaboratorTabFields();
+            }
+        }
+        else
+        {
+            QMessageBox::warning(this, "Error", "The passwords aren't the same");
+        }
+    }
+}
+
+void CollaboratosManagementWindow::ClearNewCollaboratorTabFields()
+{
+    ui->lineEdit_nc_name->clear();
+    ui->lineEdit_nc_username->clear();
+    ui->lineEdit_nc_telephone->clear();
+    ui->lineEdit_nc_password->clear();
+    ui->lineEdit_nc_confirmPassword->clear();
+    ui->comboBox_nc_accessType->setCurrentIndex(-1);
 }
 
 void CollaboratosManagementWindow::UpdateCMTableWidget()

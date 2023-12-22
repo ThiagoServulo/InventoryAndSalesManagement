@@ -28,6 +28,7 @@ private slots:
 private:
     Ui::CollaboratosManagementWindow *ui;
     void UpdateCMTableWidget();
+    void ClearNewCollaboratorTabFields();
 
 };
 

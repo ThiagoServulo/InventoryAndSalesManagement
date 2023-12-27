@@ -27,6 +27,8 @@ private slots:
 
     void on_tableWidget_cm_collaborators_itemSelectionChanged();
 
+    void on_pushButton_cm_filter_clicked();
+
 private:
     Ui::CollaboratosManagementWindow *ui;
     void UpdateCMTableWidget();

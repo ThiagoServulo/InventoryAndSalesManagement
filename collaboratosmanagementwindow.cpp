@@ -123,7 +123,6 @@ void CollaboratosManagementWindow::on_tabWidget_currentChanged(int index)
     ClearCollaboratorManagementTabFields();
 }
 
-
 void CollaboratosManagementWindow::on_tableWidget_cm_collaborators_itemSelectionChanged()
 {
     int id = ui->tableWidget_cm_collaborators->item(ui->tableWidget_cm_collaborators->currentRow(), 0)->text().toInt();
@@ -140,6 +139,46 @@ void CollaboratosManagementWindow::on_tableWidget_cm_collaborators_itemSelection
     else
     {
         QMessageBox::warning(this, "Error", "Unable to read collaborator information from database");
+    }
+}
+
+
+void CollaboratosManagementWindow::on_pushButton_cm_filter_clicked()
+{
+    QSqlQuery query;
+    if(ui->lineEdit_cm_filter->text() == "")
+    {
+        if(ui->radioButton_cm_idCollaborator->isChecked())
+        {
+            query.prepare("SELECT id, name FROM tb_collaborators ORDER BY id");
+        }
+        else
+        {
+            query.prepare("SELECT id, name FROM tb_collaborators ORDER BY name");
+        }
+    }
+    else
+    {
+        if(ui->radioButton_cm_idCollaborator->isChecked())
+        {
+            query.prepare("SELECT id, name FROM tb_collaborators WHERE id = " + ui->lineEdit_cm_filter->text());
+        }
+        else
+        {
+            query.prepare("SELECT id, name FROM tb_collaborators WHERE name LIKE '%" + ui->lineEdit_cm_filter->text() + "%'");
+        }
+    }
+
+    ui->lineEdit_cm_filter->clear();
+
+    if(query.exec())
+    {
+        Utilities utilities;
+        utilities.QueryToInsertFieldsIntoTableWidget(&query, ui->tableWidget_cm_collaborators);
+    }
+    else
+    {
+        QMessageBox::warning(this, "Error", "Unable to filter collaborators from database");
     }
 }
 

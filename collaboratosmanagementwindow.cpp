@@ -62,10 +62,6 @@ void CollaboratosManagementWindow::on_pushButton_nc_save_clicked()
                           "VALUES ('" + name + "', '" + username + "', '" + password + "', '"
                           + telephone + "', '" + accessType + "')");
 
-            qDebug() << "INSERT INTO tb_collaborators (name, username, password, telephone, accessType) "
-                        "VALUES ('" + name + "', '" + username + "', '" + password + "', '"
-                            + telephone + "', '" + accessType + "')";
-
             if(!query.exec())
             {
                 QMessageBox::warning(this, "Error", "Unable to save new collaborator into database");
@@ -214,3 +210,25 @@ void CollaboratosManagementWindow::on_pushButton_cm_save_clicked()
     }
 
 }
+
+void CollaboratosManagementWindow::on_pushButton_cm_remove_clicked()
+{
+    QMessageBox::StandardButton button = QMessageBox::question(this, "Remove", "Do you want to remove this collaborator?", QMessageBox::Yes | QMessageBox::No);
+    if(button == QMessageBox::Yes)
+    {
+        int id = ui->tableWidget_cm_collaborators->item(ui->tableWidget_cm_collaborators->currentRow(), 0)->text().toInt();
+        QSqlQuery query;
+        query.prepare("DELETE FROM tb_collaborators WHERE id = " + QString::number(id));
+        if(query.exec())
+        {
+            ui->tableWidget_cm_collaborators->removeRow(ui->tableWidget_cm_collaborators->currentRow());
+            ClearCollaboratorManagementTabFields();
+            QMessageBox::information(this, "Success", "Collaborator removed with success");
+        }
+        else
+        {
+            QMessageBox::warning(this, "Error", "Unable to remove collaborator from database");
+        }
+    }
+}
+

@@ -182,3 +182,35 @@ void CollaboratosManagementWindow::on_pushButton_cm_filter_clicked()
     }
 }
 
+void CollaboratosManagementWindow::on_pushButton_cm_save_clicked()
+{
+    if(ui->lineEdit_cm_name->text() == "")
+    {
+        QMessageBox::warning(this, "Error", "Select a collaborator");
+    }
+    else
+    {
+        int id = ui->tableWidget_cm_collaborators->item(ui->tableWidget_cm_collaborators->currentRow(), 0)->text().toInt();
+        QString name = ui->lineEdit_cm_name->text();
+        QString username = ui->lineEdit_cm_username->text();
+        QString telephone = ui->lineEdit_cm_telephone->text();
+        QString accessType = ui->comboBox_cm_accessType->currentText();
+
+        QSqlQuery query;
+        query.prepare("UPDATE tb_collaborators SET name = '" + name + "', username = '" + username +
+                      "', telephone = '" + telephone + "', access = '" + accessType +
+                      "' WHERE id = " + QString::number(id));
+
+        if(query.exec())
+        {
+            UpdateCMTableWidget();
+            ClearCollaboratorManagementTabFields();
+            QMessageBox::information(this, "Success", "Collaborator information updated");
+        }
+        else
+        {
+            QMessageBox::warning(this, "Error", "Unable to update collaborator information from database");
+        }
+    }
+
+}

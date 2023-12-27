@@ -29,6 +29,8 @@ private slots:
 
     void on_pushButton_cm_filter_clicked();
 
+    void on_pushButton_cm_save_clicked();
+
 private:
     Ui::CollaboratosManagementWindow *ui;
     void UpdateCMTableWidget();

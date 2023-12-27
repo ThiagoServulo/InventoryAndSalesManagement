@@ -322,9 +322,9 @@
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout_3">
         <item>
-         <widget class="QPushButton" name="pushButton_cm_edit">
+         <widget class="QPushButton" name="pushButton_cm_save">
           <property name="text">
-           <string>Edit</string>
+           <string>Save</string>
           </property>
          </widget>
         </item>

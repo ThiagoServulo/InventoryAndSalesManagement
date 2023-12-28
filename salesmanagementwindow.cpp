@@ -3,6 +3,10 @@
 #include "utilities.h"
 #include <QtSql>
 #include <QMessageBox>
+#include <QPrinter>
+#include <QPainter>
+#include <QDir>
+#include <QDesktopServices>
 
 SalesManagementWindow::SalesManagementWindow(QWidget *parent) :
     QDialog(parent),
@@ -90,5 +94,42 @@ void SalesManagementWindow::on_pushButton_filter_clicked()
 void SalesManagementWindow::on_pushButton_allSales_clicked()
 {
     ShowAllSales();
+}
+
+
+void SalesManagementWindow::on_pushButton_exportPdf_clicked()
+{
+    QString nameFile = ui->tableWidget_sales->item(ui->tableWidget_sales->currentRow(), 0)->text() + "_sale.pdf";
+    QString path = QDir::currentPath();
+
+    QString file = path + "/" + nameFile;
+
+    QPrinter printer;
+    printer.setOutputFormat(QPrinter::PdfFormat);
+    printer.setOutputFileName(file);
+
+    QPainter painter;
+    if(!painter.begin(&printer))
+    {
+        QMessageBox::warning(this, "Error", "Unable to open pdf");
+    }
+    else
+    {
+        painter.drawText(25, 25, "Sale: " + ui->tableWidget_sales->item(ui->tableWidget_sales->currentRow(), 0)->text());
+        painter.drawText(100, 25, "Date: " + ui->tableWidget_sales->item(ui->tableWidget_sales->currentRow(), 1)->text());
+
+        for(int i = 0, line = 100 ; i < ui->tableWidget_productsSales->rowCount(); i++, line += 20)
+        {
+            painter.drawText(25, line, "Id: " + ui->tableWidget_productsSales->item(i, 0)->text());
+            painter.drawText(75, line, "Product Id: " + ui->tableWidget_productsSales->item(i, 1)->text());
+            painter.drawText(200, line, "Quantity: " + ui->tableWidget_productsSales->item(i, 2)->text());
+            painter.drawText(300, line, "Unitary Price: " + ui->tableWidget_productsSales->item(i, 3)->text());
+            painter.drawText(400, line, "Total Price: " + ui->tableWidget_productsSales->item(i, 4)->text());
+        }
+
+        painter.end();
+
+        QDesktopServices::openUrl(QUrl("file:///" + file));
+    }
 }
 

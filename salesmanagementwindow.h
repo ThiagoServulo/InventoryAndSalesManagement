@@ -24,6 +24,8 @@ private slots:
 
     void on_pushButton_allSales_clicked();
 
+    void on_pushButton_exportPdf_clicked();
+
 private:
     Ui::SalesManagementWindow *ui;
     void ShowAllSales();

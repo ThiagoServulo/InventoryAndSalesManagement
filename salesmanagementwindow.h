@@ -17,6 +17,13 @@ public:
     explicit SalesManagementWindow(QWidget *parent = nullptr);
     ~SalesManagementWindow();
 
+private slots:
+    void on_tableWidget_sales_itemSelectionChanged();
+
+    void on_pushButton_filter_clicked();
+
+    void on_pushButton_allSales_clicked();
+
 private:
     Ui::SalesManagementWindow *ui;
     void ShowAllSales();

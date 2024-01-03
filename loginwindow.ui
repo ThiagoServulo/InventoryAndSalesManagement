@@ -7,13 +7,17 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>168</height>
+    <height>157</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
-  <widget class="QWidget" name="">
+  <property name="styleSheet">
+   <string notr="true">background:#2E2F30;
+color: #FFFFFF;</string>
+  </property>
+  <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
      <x>10</x>
@@ -27,13 +31,28 @@
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
        <widget class="QLabel" name="label_Username">
+        <property name="font">
+         <font>
+          <pointsize>12</pointsize>
+         </font>
+        </property>
         <property name="text">
          <string>Username</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QLineEdit" name="lineEdit_Username"/>
+       <widget class="QLineEdit" name="lineEdit_Username">
+        <property name="font">
+         <font>
+          <pointsize>10</pointsize>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">background:#535455;
+color: #FFFFFF;</string>
+        </property>
+       </widget>
       </item>
      </layout>
     </item>
@@ -41,6 +60,11 @@
      <layout class="QHBoxLayout" name="horizontalLayout_2">
       <item>
        <widget class="QLabel" name="label_Password">
+        <property name="font">
+         <font>
+          <pointsize>12</pointsize>
+         </font>
+        </property>
         <property name="text">
          <string>Password</string>
         </property>
@@ -48,6 +72,15 @@
       </item>
       <item>
        <widget class="QLineEdit" name="lineEdit_Password">
+        <property name="font">
+         <font>
+          <pointsize>10</pointsize>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">background:#535455;
+color: #FFFFFF;</string>
+        </property>
         <property name="echoMode">
          <enum>QLineEdit::Password</enum>
         </property>
@@ -59,6 +92,21 @@
      <layout class="QHBoxLayout" name="horizontalLayout_3">
       <item>
        <widget class="QPushButton" name="pushButton_Login">
+        <property name="minimumSize">
+         <size>
+          <width>20</width>
+          <height>30</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>12</pointsize>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">background:#535455;
+color: #FFFFFF;</string>
+        </property>
         <property name="text">
          <string>Login</string>
         </property>
@@ -66,6 +114,21 @@
       </item>
       <item>
        <widget class="QPushButton" name="pushButton_Cancel">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>30</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>12</pointsize>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">background:#535455;
+color: #FFFFFF;</string>
+        </property>
         <property name="text">
          <string>Cancel</string>
         </property>

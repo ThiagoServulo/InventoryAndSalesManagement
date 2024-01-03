@@ -13,13 +13,6 @@ class LoginWindow : public QDialog
     Q_OBJECT
 
 public:
-    // Properties
-    int id;
-    bool logged;
-    QString name, access;
-    DatabaseConnection dbConnection;
-
-    // Functions
     explicit LoginWindow(QWidget *parent = nullptr);
     ~LoginWindow();
 
@@ -28,6 +21,8 @@ private slots:
     void on_pushButton_Cancel_clicked();
 
 private:
+    QIcon iconWindow;
+    DatabaseConnection dbConnection;
     Ui::LoginWindow *ui;
 };
 

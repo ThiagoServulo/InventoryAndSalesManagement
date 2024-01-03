@@ -8,7 +8,13 @@ LoginWindow::LoginWindow(QWidget *parent) :
     ui(new Ui::LoginWindow)
 {
     ui->setupUi(this);
-    logged = false;
+
+    iconWindow.addFile(":/images/login.png");
+    this->setWindowIcon(iconWindow);
+
+    this->setWindowTitle("Login");
+
+    this->setFixedSize(400, 157);
 }
 
 LoginWindow::~LoginWindow()
@@ -18,37 +24,50 @@ LoginWindow::~LoginWindow()
 
 void LoginWindow::on_pushButton_Login_clicked()
 {
+    QString username = ui->lineEdit_Username->text();
+    QString password = ui->lineEdit_Password->text();
+
+    if(username == "" || password == "")
+    {
+        QMessageBox::information(this, "Information", "Enter your credentials to log in");
+        return;
+    }
+
     if(!dbConnection.open())
     {
         QMessageBox::warning(this, "Error", "Unable to connect database");
     }
     else
     {
-        QString username = ui->lineEdit_Username->text();
-        QString password = ui->lineEdit_Password->text();
         QSqlQuery query;
-        query.prepare("SELECT * FROM tb_collaborators WHERE username = '" + username +
-                      "' AND password = '" + password + "'");
+        query.prepare("SELECT * FROM tb_collaborators WHERE username = '" + username + "'");
         if(query.exec())
         {
             query.first();
             if(query.value(1).toString() != "")
             {
-                MainWindow::userLogged = true;
-                MainWindow::id_collaborator = query.value(0).toInt();
-                MainWindow::name_collaborator = query.value(1).toString();
-                MainWindow::access_collaborator = query.value(5).toString();
-                dbConnection.close();
-                close();
+                if(query.value(3).toString() == password)
+                {
+                    MainWindow::userLogged = true;
+                    MainWindow::id_collaborator = query.value(0).toInt();
+                    MainWindow::name_collaborator = query.value(1).toString();
+                    MainWindow::access_collaborator = query.value(5).toString();
+                    dbConnection.close();
+                    close();
+                }
+                else
+                {
+                    QMessageBox::warning(this, "Error", "Password incorrect");
+                }
             }
             else
             {
-                QMessageBox::warning(this, "Error", "Collaborator not found");
+                QMessageBox::warning(this, "Error", "Username not found");
             }
         }
         else
         {
-            QMessageBox::warning(this, "Error", "The query returned empty");
+            QMessageBox::warning(this, "Error", "Query error");
         }
     }
     dbConnection.close();

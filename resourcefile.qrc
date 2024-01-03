@@ -4,5 +4,6 @@
     <qresource prefix="/">
         <file>images/lock.png</file>
         <file>images/unlock.png</file>
+        <file>images/login.png</file>
     </qresource>
 </RCC>

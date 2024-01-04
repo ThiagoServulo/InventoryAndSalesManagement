@@ -10,7 +10,7 @@
 // Globals variables
 int MainWindow::id_collaborator;
 QString MainWindow::name_collaborator;
-QString MainWindow::access_collaborator;
+int MainWindow::access_collaborator;
 QString MainWindow::username_collaborator;
 bool MainWindow::userLogged;
 
@@ -75,7 +75,7 @@ void MainWindow::on_pushButton_NewSale_clicked()
 
 void MainWindow::on_actionInventory_triggered()
 {
-    if(userLogged && access_collaborator == 'A')
+    if(userLogged && access_collaborator == 1)
     {
         InventoryManagementWindow inventoryManagementWindow;
         inventoryManagementWindow.exec();
@@ -89,7 +89,7 @@ void MainWindow::on_actionInventory_triggered()
 
 void MainWindow::on_actionCollaborators_triggered()
 {
-    if(userLogged && access_collaborator == 'A')
+    if(userLogged && access_collaborator == 1)
     {
         CollaboratosManagementWindow collaboratorsManagementWindow;
         collaboratorsManagementWindow.exec();
@@ -103,7 +103,7 @@ void MainWindow::on_actionCollaborators_triggered()
 
 void MainWindow::on_actionSales_triggered()
 {
-    if(userLogged && access_collaborator == 'A')
+    if(userLogged && access_collaborator == 1)
     {
         SalesManagementWindow salesManagementWindow;
         salesManagementWindow.exec();

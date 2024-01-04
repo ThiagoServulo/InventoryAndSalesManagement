@@ -17,8 +17,8 @@ public:
     QIcon lockedPadlock;
     QIcon unlockedPadlock;
     static bool userLogged;
-    static QString name_collaborator, access_collaborator, username_collaborator;
-    static int id_collaborator;
+    static QString name_collaborator, username_collaborator;
+    static int id_collaborator, access_collaborator;
 
     // Functions
     MainWindow(QWidget *parent = nullptr);

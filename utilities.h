@@ -3,6 +3,7 @@
 
 #include <QSqlQuery>
 #include <QTableWidget>
+#include <QComboBox>
 
 class Utilities
 {
@@ -11,6 +12,7 @@ public:
     bool QueryToUpdateTableWidget(QSqlQuery *query, QTableWidget *tableWidget);
     void QueryToInsertFieldsIntoTableWidget(QSqlQuery *query, QTableWidget *tableWidget);
     void CleanTableWidget(QTableWidget *tableWidget);
+    bool QueryToInsertComboBoxElements(QSqlQuery *query, QComboBox *comboBox);
 };
 
 #endif // UTILITIES_H

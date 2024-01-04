@@ -23,7 +23,7 @@
     </rect>
    </property>
    <property name="currentIndex">
-    <number>1</number>
+    <number>0</number>
    </property>
    <widget class="QWidget" name="tab_newCollaborator">
     <attribute name="title">
@@ -44,42 +44,42 @@
         <item>
          <layout class="QVBoxLayout" name="verticalLayout">
           <item>
-           <widget class="QLabel" name="label_nc_name">
+           <widget class="QLabel" name="label_newCollaborator_name">
             <property name="text">
              <string>Name</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QLabel" name="label_nc_username">
+           <widget class="QLabel" name="label_newCollaborator_username">
             <property name="text">
              <string>Username</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QLabel" name="label_nc_password">
+           <widget class="QLabel" name="label_newCollaborator_password">
             <property name="text">
              <string>Passwrod</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QLabel" name="label_nc_confirmPassword">
+           <widget class="QLabel" name="label_newCollaborator_confirmPassword">
             <property name="text">
              <string>Confirm password</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QLabel" name="label_nc_telephone">
+           <widget class="QLabel" name="label_newCollaborator_telephone">
             <property name="text">
              <string>Telephone</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QLabel" name="label_nc_accessType">
+           <widget class="QLabel" name="label_newCollaborator_accessType">
             <property name="text">
              <string>Access type</string>
             </property>
@@ -90,22 +90,22 @@
         <item>
          <layout class="QVBoxLayout" name="verticalLayout_2">
           <item>
-           <widget class="QLineEdit" name="lineEdit_nc_name"/>
+           <widget class="QLineEdit" name="lineEdit_newCollaborator_name"/>
           </item>
           <item>
-           <widget class="QLineEdit" name="lineEdit_nc_username"/>
+           <widget class="QLineEdit" name="lineEdit_newCollaborator_username"/>
           </item>
           <item>
-           <widget class="QLineEdit" name="lineEdit_nc_password"/>
+           <widget class="QLineEdit" name="lineEdit_newCollaborator_password"/>
           </item>
           <item>
-           <widget class="QLineEdit" name="lineEdit_nc_confirmPassword"/>
+           <widget class="QLineEdit" name="lineEdit_newCollaborator_confirmPassword"/>
           </item>
           <item>
-           <widget class="QLineEdit" name="lineEdit_nc_telephone"/>
+           <widget class="QLineEdit" name="lineEdit_newCollaborator_telephone"/>
           </item>
           <item>
-           <widget class="QComboBox" name="comboBox_nc_accessType"/>
+           <widget class="QComboBox" name="comboBox_newCollaborator_accessType"/>
           </item>
          </layout>
         </item>
@@ -140,14 +140,14 @@
          </spacer>
         </item>
         <item>
-         <widget class="QPushButton" name="pushButton_nc_save">
+         <widget class="QPushButton" name="pushButton_newCollaborator_save">
           <property name="text">
            <string>Save</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="pushButton_nc_cancel">
+         <widget class="QPushButton" name="pushButton_newCollaborator_cancel">
           <property name="text">
            <string>Cancel</string>
           </property>
@@ -162,7 +162,7 @@
     <attribute name="title">
      <string>Collaborators management</string>
     </attribute>
-    <widget class="QGroupBox" name="groupBox_cm_filter">
+    <widget class="QGroupBox" name="groupBox_collaboratorsManagement_filter">
      <property name="geometry">
       <rect>
        <x>350</x>
@@ -185,14 +185,14 @@
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_9">
        <item>
-        <widget class="QRadioButton" name="radioButton_cm_idCollaborator">
+        <widget class="QRadioButton" name="radioButton_collaboratorsManagement_idCollaborator">
          <property name="text">
           <string>ID Collaborator</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QRadioButton" name="radioButton_cm_name">
+        <widget class="QRadioButton" name="radioButton_collaboratorsManagement_name">
          <property name="text">
           <string>Name</string>
          </property>
@@ -211,17 +211,17 @@
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_10">
        <item>
-        <widget class="QLabel" name="label_cm_filter">
+        <widget class="QLabel" name="label_collaboratorsManagement_filter">
          <property name="text">
           <string>Filter</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="lineEdit_cm_filter"/>
+        <widget class="QLineEdit" name="lineEdit_collaboratorsManagement_filter"/>
        </item>
        <item>
-        <widget class="QPushButton" name="pushButton_cm_filter">
+        <widget class="QPushButton" name="pushButton_collaboratorsManagement_filter">
          <property name="text">
           <string>Filter</string>
          </property>
@@ -230,7 +230,7 @@
       </layout>
      </widget>
     </widget>
-    <widget class="QTableWidget" name="tableWidget_cm_collaborators">
+    <widget class="QTableWidget" name="tableWidget_collaboratorsManagement_collaborators">
      <property name="geometry">
       <rect>
        <x>350</x>
@@ -253,56 +253,56 @@
       <item>
        <layout class="QVBoxLayout" name="verticalLayout_4">
         <item>
-         <widget class="QLabel" name="label_cm_name">
+         <widget class="QLabel" name="label_collaboratorsManagement_name">
           <property name="text">
            <string>Name</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QLineEdit" name="lineEdit_cm_name"/>
+         <widget class="QLineEdit" name="lineEdit_collaboratorsManagement_name"/>
         </item>
        </layout>
       </item>
       <item>
        <layout class="QVBoxLayout" name="verticalLayout_5">
         <item>
-         <widget class="QLabel" name="label_cm_username">
+         <widget class="QLabel" name="label_collaboratorsManagement_username">
           <property name="text">
            <string>Username</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QLineEdit" name="lineEdit_cm_username"/>
+         <widget class="QLineEdit" name="lineEdit_collaboratorsManagement_username"/>
         </item>
        </layout>
       </item>
       <item>
        <layout class="QVBoxLayout" name="verticalLayout_6">
         <item>
-         <widget class="QLabel" name="label_cm_telephone">
+         <widget class="QLabel" name="label_collaboratorsManagement_telephone">
           <property name="text">
            <string>Telephone</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QLineEdit" name="lineEdit_cm_telephone"/>
+         <widget class="QLineEdit" name="lineEdit_collaboratorsManagement_telephone"/>
         </item>
        </layout>
       </item>
       <item>
        <layout class="QVBoxLayout" name="verticalLayout_7">
         <item>
-         <widget class="QLabel" name="label_cm_accessType">
+         <widget class="QLabel" name="label_collaboratorsManagement_accessType">
           <property name="text">
            <string>Access Type</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QComboBox" name="comboBox_cm_accessType"/>
+         <widget class="QComboBox" name="comboBox_collaboratorsManagement_accessType"/>
         </item>
         <item>
          <spacer name="verticalSpacer_2">
@@ -322,21 +322,21 @@
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout_3">
         <item>
-         <widget class="QPushButton" name="pushButton_cm_save">
+         <widget class="QPushButton" name="pushButton_collaboratorsManagement_save">
           <property name="text">
            <string>Save</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="pushButton_cm_remove">
+         <widget class="QPushButton" name="pushButton_collaboratorsManagement_remove">
           <property name="text">
            <string>Remove</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="pushButton_cm_seeSales">
+         <widget class="QPushButton" name="pushButton_collaboratorsManagement_seeSales">
           <property name="text">
            <string>See sales</string>
           </property>

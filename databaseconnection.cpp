@@ -1,4 +1,5 @@
 #include "databaseconnection.h"
+#include <QMessageBox>
 
 DatabaseConnection::DatabaseConnection()
 {

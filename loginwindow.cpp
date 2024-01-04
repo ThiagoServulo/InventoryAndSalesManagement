@@ -51,9 +51,10 @@ void LoginWindow::on_pushButton_Login_clicked()
                     MainWindow::userLogged = true;
                     MainWindow::id_collaborator = query.value(0).toInt();
                     MainWindow::name_collaborator = query.value(1).toString();
-                    MainWindow::access_collaborator = query.value(5).toString();
+                    MainWindow::access_collaborator = query.value(5).toInt();
                     dbConnection.close();
                     close();
+                    return;
                 }
                 else
                 {
@@ -69,8 +70,8 @@ void LoginWindow::on_pushButton_Login_clicked()
         {
             QMessageBox::warning(this, "Error", "Query error");
         }
+        dbConnection.close();
     }
-    dbConnection.close();
 }
 
 void LoginWindow::on_pushButton_Cancel_clicked()

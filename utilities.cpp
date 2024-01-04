@@ -40,3 +40,20 @@ void Utilities::CleanTableWidget(QTableWidget *tableWidget)
         tableWidget->removeRow(0);
     }
 }
+
+bool Utilities::QueryToInsertComboBoxElements(QSqlQuery *query, QComboBox *comboBox)
+{
+    if(query->exec())
+    {
+        comboBox->clear();
+        comboBox->clearEditText();
+
+        while(query->next())
+        {
+            comboBox->addItem(query->value(1).toString());
+        }
+
+        return true;
+    }
+    return false;
+}

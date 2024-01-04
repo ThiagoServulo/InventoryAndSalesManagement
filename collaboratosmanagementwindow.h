@@ -22,16 +22,16 @@ public:
     ~CollaboratosManagementWindow();
 
 private slots:
-    void on_pushButton_nc_save_clicked();
+    void on_pushButton_newCollaborator_save_clicked();
     void on_tabWidget_currentChanged(int index);
 
-    void on_tableWidget_cm_collaborators_itemSelectionChanged();
+    void on_tableWidget_collaboratorsManagement_collaborators_itemSelectionChanged();
 
-    void on_pushButton_cm_filter_clicked();
+    void on_pushButton_collaboratorsManagement_filter_clicked();
 
-    void on_pushButton_cm_save_clicked();
+    void on_pushButton_collaboratorsManagement_save_clicked();
 
-    void on_pushButton_cm_remove_clicked();
+    void on_pushButton_collaboratorsManagement_remove_clicked();
 
 private:
     Ui::CollaboratosManagementWindow *ui;

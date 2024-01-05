@@ -10,6 +10,7 @@ CollaboratosManagementWindow::CollaboratosManagementWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    // Update combo box with the access type options
     if(dbConnection.open())
     {
         QSqlQuery query;
@@ -34,9 +35,11 @@ CollaboratosManagementWindow::CollaboratosManagementWindow(QWidget *parent) :
         QMessageBox::warning(this, "Error", "Unable to connect database");
     }
 
+    // Clear tab fields
     ClearNewCollaboratorTabFields();
     ClearCollaboratorManagementTabFields();
 
+    // Configure password fields
     ui->lineEdit_newCollaborator_password->setEchoMode(QLineEdit::Password);
     ui->lineEdit_newCollaborator_confirmPassword->setEchoMode(QLineEdit::Password);
 
@@ -65,6 +68,7 @@ void CollaboratosManagementWindow::on_pushButton_newCollaborator_save_clicked()
     QString password = ui->lineEdit_newCollaborator_password->text();
     QString confirmPassword = ui->lineEdit_newCollaborator_confirmPassword->text();
     QString accessType = ui->comboBox_newCollaborator_accessType->currentText();
+    int accessTypeId;
 
     if(name == "" || username == "" || telephone == "" || password == "" || confirmPassword == "" || accessType == "")
     {
@@ -85,10 +89,24 @@ void CollaboratosManagementWindow::on_pushButton_newCollaborator_save_clicked()
     }
     else
     {
+        // Get id for the access type chosen into the combo box
         QSqlQuery query;
+        query.prepare("SELECT id FROM tb_access_type WHERE type = '" + accessType + "'");
+
+        if(!query.exec())
+        {
+            QMessageBox::warning(this, "Error", "Unable to read access type table");
+            return;
+        }
+        else
+        {
+            query.first();
+            accessTypeId = query.value(0).toInt();
+        }
+
         query.prepare("INSERT INTO tb_collaborators (name, username, password, telephone, access) "
                       "VALUES ('" + name + "', '" + username + "', '" + password + "', '"
-                      + telephone + "', '" + accessType + "')");
+                      + telephone + "', " + QString::number(accessTypeId) + ")");
 
         if(!query.exec())
         {
@@ -141,6 +159,7 @@ void CollaboratosManagementWindow::UpdateCMTableWidget()
 
 void CollaboratosManagementWindow::on_tabWidget_currentChanged(int index)
 {
+    ui->tableWidget_collaboratorsManagement_collaborators->clearSelection();
     if(index == 1)
     { 
         UpdateCMTableWidget();
@@ -164,7 +183,17 @@ void CollaboratosManagementWindow::on_tableWidget_collaboratorsManagement_collab
         ui->lineEdit_collaboratorsManagement_name->setText(query.value(0).toString());
         ui->lineEdit_collaboratorsManagement_username->setText(query.value(1).toString());
         ui->lineEdit_collaboratorsManagement_telephone->setText(query.value(2).toString());
-        ui->comboBox_collaboratorsManagement_accessType->setCurrentText(query.value(3).toString());
+
+        query.prepare("SELECT type FROM tb_access_type WHERE id = " + QString::number(query.value(3).toInt()));
+        if(query.exec())
+        {
+            query.first();
+            ui->comboBox_collaboratorsManagement_accessType->setCurrentText(query.value(0).toString());
+        }
+        else
+        {
+            QMessageBox::warning(this, "Error", "Unable to read collaborator access type from database");
+        }
     }
     else
     {
@@ -175,6 +204,7 @@ void CollaboratosManagementWindow::on_tableWidget_collaboratorsManagement_collab
 
 void CollaboratosManagementWindow::on_pushButton_collaboratorsManagement_filter_clicked()
 {
+    ui->tableWidget_collaboratorsManagement_collaborators->clearSelection();
     if(!dbConnection.open()) //*//
     {
         QMessageBox::warning(this, "Error", "Unable to connect database");

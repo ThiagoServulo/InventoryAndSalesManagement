@@ -13,6 +13,7 @@ public:
     void QueryToInsertFieldsIntoTableWidget(QSqlQuery *query, QTableWidget *tableWidget);
     void CleanTableWidget(QTableWidget *tableWidget);
     bool QueryToInsertComboBoxElements(QSqlQuery *query, QComboBox *comboBox);
+    void TableWidgetBasicConfigurations(QTableWidget *tableWidget);
 };
 
 #endif // UTILITIES_H

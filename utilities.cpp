@@ -57,3 +57,10 @@ bool Utilities::QueryToInsertComboBoxElements(QSqlQuery *query, QComboBox *combo
     }
     return false;
 }
+
+void Utilities::TableWidgetBasicConfigurations(QTableWidget *tableWidget)
+{
+    tableWidget->setStyleSheet("QTableView {selection-background-color: red}");
+    tableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    tableWidget->setSelectionBehavior(QAbstractItemView::SelectRows);
+}

@@ -13,11 +13,18 @@ void DatabaseConnection::close()
 
 bool DatabaseConnection::open()
 {
-    QString path = qApp->applicationDirPath();
-    QString db = path + "/database/InventoryManagement.db";
-    database.setDatabaseName(db);
+    if(this->isOpen())
+    {
+        return true;
+    }
+    else
+    {
+        QString path = qApp->applicationDirPath();
+        QString db = path + "/database/InventoryManagement.db";
+        database.setDatabaseName(db);
 
-    return database.open();
+        return database.open();
+    }
 }
 
 bool DatabaseConnection::isOpen()

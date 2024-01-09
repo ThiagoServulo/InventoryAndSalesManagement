@@ -6,21 +6,234 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>951</width>
-    <height>651</height>
+    <width>644</width>
+    <height>514</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Dialog</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">background:#2E2F30;
+color: #FFFFFF;</string>
   </property>
   <widget class="QTabWidget" name="tabWidget">
    <property name="geometry">
     <rect>
      <x>10</x>
      <y>10</y>
-     <width>871</width>
-     <height>571</height>
+     <width>621</width>
+     <height>491</height>
     </rect>
+   </property>
+   <property name="palette">
+    <palette>
+     <active>
+      <colorrole role="WindowText">
+       <brush brushstyle="SolidPattern">
+        <color alpha="255">
+         <red>0</red>
+         <green>0</green>
+         <blue>0</blue>
+        </color>
+       </brush>
+      </colorrole>
+      <colorrole role="Button">
+       <brush brushstyle="SolidPattern">
+        <color alpha="255">
+         <red>46</red>
+         <green>47</green>
+         <blue>48</blue>
+        </color>
+       </brush>
+      </colorrole>
+      <colorrole role="Text">
+       <brush brushstyle="SolidPattern">
+        <color alpha="255">
+         <red>0</red>
+         <green>0</green>
+         <blue>0</blue>
+        </color>
+       </brush>
+      </colorrole>
+      <colorrole role="ButtonText">
+       <brush brushstyle="SolidPattern">
+        <color alpha="255">
+         <red>0</red>
+         <green>0</green>
+         <blue>0</blue>
+        </color>
+       </brush>
+      </colorrole>
+      <colorrole role="Base">
+       <brush brushstyle="SolidPattern">
+        <color alpha="255">
+         <red>46</red>
+         <green>47</green>
+         <blue>48</blue>
+        </color>
+       </brush>
+      </colorrole>
+      <colorrole role="Window">
+       <brush brushstyle="SolidPattern">
+        <color alpha="255">
+         <red>46</red>
+         <green>47</green>
+         <blue>48</blue>
+        </color>
+       </brush>
+      </colorrole>
+      <colorrole role="PlaceholderText">
+       <brush brushstyle="SolidPattern">
+        <color alpha="128">
+         <red>0</red>
+         <green>0</green>
+         <blue>0</blue>
+        </color>
+       </brush>
+      </colorrole>
+     </active>
+     <inactive>
+      <colorrole role="WindowText">
+       <brush brushstyle="SolidPattern">
+        <color alpha="255">
+         <red>0</red>
+         <green>0</green>
+         <blue>0</blue>
+        </color>
+       </brush>
+      </colorrole>
+      <colorrole role="Button">
+       <brush brushstyle="SolidPattern">
+        <color alpha="255">
+         <red>46</red>
+         <green>47</green>
+         <blue>48</blue>
+        </color>
+       </brush>
+      </colorrole>
+      <colorrole role="Text">
+       <brush brushstyle="SolidPattern">
+        <color alpha="255">
+         <red>0</red>
+         <green>0</green>
+         <blue>0</blue>
+        </color>
+       </brush>
+      </colorrole>
+      <colorrole role="ButtonText">
+       <brush brushstyle="SolidPattern">
+        <color alpha="255">
+         <red>0</red>
+         <green>0</green>
+         <blue>0</blue>
+        </color>
+       </brush>
+      </colorrole>
+      <colorrole role="Base">
+       <brush brushstyle="SolidPattern">
+        <color alpha="255">
+         <red>46</red>
+         <green>47</green>
+         <blue>48</blue>
+        </color>
+       </brush>
+      </colorrole>
+      <colorrole role="Window">
+       <brush brushstyle="SolidPattern">
+        <color alpha="255">
+         <red>46</red>
+         <green>47</green>
+         <blue>48</blue>
+        </color>
+       </brush>
+      </colorrole>
+      <colorrole role="PlaceholderText">
+       <brush brushstyle="SolidPattern">
+        <color alpha="128">
+         <red>0</red>
+         <green>0</green>
+         <blue>0</blue>
+        </color>
+       </brush>
+      </colorrole>
+     </inactive>
+     <disabled>
+      <colorrole role="WindowText">
+       <brush brushstyle="SolidPattern">
+        <color alpha="255">
+         <red>0</red>
+         <green>0</green>
+         <blue>0</blue>
+        </color>
+       </brush>
+      </colorrole>
+      <colorrole role="Button">
+       <brush brushstyle="SolidPattern">
+        <color alpha="255">
+         <red>46</red>
+         <green>47</green>
+         <blue>48</blue>
+        </color>
+       </brush>
+      </colorrole>
+      <colorrole role="Text">
+       <brush brushstyle="SolidPattern">
+        <color alpha="255">
+         <red>0</red>
+         <green>0</green>
+         <blue>0</blue>
+        </color>
+       </brush>
+      </colorrole>
+      <colorrole role="ButtonText">
+       <brush brushstyle="SolidPattern">
+        <color alpha="255">
+         <red>0</red>
+         <green>0</green>
+         <blue>0</blue>
+        </color>
+       </brush>
+      </colorrole>
+      <colorrole role="Base">
+       <brush brushstyle="SolidPattern">
+        <color alpha="255">
+         <red>46</red>
+         <green>47</green>
+         <blue>48</blue>
+        </color>
+       </brush>
+      </colorrole>
+      <colorrole role="Window">
+       <brush brushstyle="SolidPattern">
+        <color alpha="255">
+         <red>46</red>
+         <green>47</green>
+         <blue>48</blue>
+        </color>
+       </brush>
+      </colorrole>
+      <colorrole role="PlaceholderText">
+       <brush brushstyle="SolidPattern">
+        <color alpha="128">
+         <red>0</red>
+         <green>0</green>
+         <blue>0</blue>
+        </color>
+       </brush>
+      </colorrole>
+     </disabled>
+    </palette>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>12</pointsize>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background:#2E2F30;
+color: #000000;
+</string>
    </property>
    <property name="currentIndex">
     <number>1</number>
@@ -32,10 +245,10 @@
     <widget class="QWidget" name="layoutWidget">
      <property name="geometry">
       <rect>
-       <x>50</x>
-       <y>50</y>
-       <width>431</width>
-       <height>241</height>
+       <x>10</x>
+       <y>10</y>
+       <width>481</width>
+       <height>281</height>
       </rect>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -45,6 +258,14 @@
          <layout class="QVBoxLayout" name="verticalLayout">
           <item>
            <widget class="QLabel" name="label_newCollaborator_name">
+            <property name="font">
+             <font>
+              <pointsize>12</pointsize>
+             </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">color: #FFFFFF;</string>
+            </property>
             <property name="text">
              <string>Name</string>
             </property>
@@ -52,6 +273,14 @@
           </item>
           <item>
            <widget class="QLabel" name="label_newCollaborator_username">
+            <property name="font">
+             <font>
+              <pointsize>12</pointsize>
+             </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">color: #FFFFFF;</string>
+            </property>
             <property name="text">
              <string>Username</string>
             </property>
@@ -59,13 +288,29 @@
           </item>
           <item>
            <widget class="QLabel" name="label_newCollaborator_password">
+            <property name="font">
+             <font>
+              <pointsize>12</pointsize>
+             </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">color: #FFFFFF;</string>
+            </property>
             <property name="text">
-             <string>Passwrod</string>
+             <string>Password</string>
             </property>
            </widget>
           </item>
           <item>
            <widget class="QLabel" name="label_newCollaborator_confirmPassword">
+            <property name="font">
+             <font>
+              <pointsize>12</pointsize>
+             </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">color: #FFFFFF;</string>
+            </property>
             <property name="text">
              <string>Confirm password</string>
             </property>
@@ -73,6 +318,14 @@
           </item>
           <item>
            <widget class="QLabel" name="label_newCollaborator_telephone">
+            <property name="font">
+             <font>
+              <pointsize>12</pointsize>
+             </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">color: #FFFFFF;</string>
+            </property>
             <property name="text">
              <string>Telephone</string>
             </property>
@@ -80,6 +333,14 @@
           </item>
           <item>
            <widget class="QLabel" name="label_newCollaborator_accessType">
+            <property name="font">
+             <font>
+              <pointsize>12</pointsize>
+             </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">color: #FFFFFF;</string>
+            </property>
             <property name="text">
              <string>Access type</string>
             </property>
@@ -90,22 +351,82 @@
         <item>
          <layout class="QVBoxLayout" name="verticalLayout_2">
           <item>
-           <widget class="QLineEdit" name="lineEdit_newCollaborator_name"/>
+           <widget class="QLineEdit" name="lineEdit_newCollaborator_name">
+            <property name="font">
+             <font>
+              <pointsize>10</pointsize>
+             </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">background:#535455;
+color: #FFFFFF;</string>
+            </property>
+           </widget>
           </item>
           <item>
-           <widget class="QLineEdit" name="lineEdit_newCollaborator_username"/>
+           <widget class="QLineEdit" name="lineEdit_newCollaborator_username">
+            <property name="font">
+             <font>
+              <pointsize>10</pointsize>
+             </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">background:#535455;
+color: #FFFFFF;</string>
+            </property>
+           </widget>
           </item>
           <item>
-           <widget class="QLineEdit" name="lineEdit_newCollaborator_password"/>
+           <widget class="QLineEdit" name="lineEdit_newCollaborator_password">
+            <property name="font">
+             <font>
+              <pointsize>10</pointsize>
+             </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">background:#535455;
+color: #FFFFFF;</string>
+            </property>
+           </widget>
           </item>
           <item>
-           <widget class="QLineEdit" name="lineEdit_newCollaborator_confirmPassword"/>
+           <widget class="QLineEdit" name="lineEdit_newCollaborator_confirmPassword">
+            <property name="font">
+             <font>
+              <pointsize>10</pointsize>
+             </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">background:#535455;
+color: #FFFFFF;</string>
+            </property>
+           </widget>
           </item>
           <item>
-           <widget class="QLineEdit" name="lineEdit_newCollaborator_telephone"/>
+           <widget class="QLineEdit" name="lineEdit_newCollaborator_telephone">
+            <property name="font">
+             <font>
+              <pointsize>10</pointsize>
+             </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">background:#535455;
+color: #FFFFFF;</string>
+            </property>
+           </widget>
           </item>
           <item>
-           <widget class="QComboBox" name="comboBox_newCollaborator_accessType"/>
+           <widget class="QComboBox" name="comboBox_newCollaborator_accessType">
+            <property name="font">
+             <font>
+              <pointsize>10</pointsize>
+             </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">background:#535455;
+color: #FFFFFF;</string>
+            </property>
+           </widget>
           </item>
          </layout>
         </item>
@@ -141,6 +462,21 @@
         </item>
         <item>
          <widget class="QPushButton" name="pushButton_newCollaborator_save">
+          <property name="minimumSize">
+           <size>
+            <width>100</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <pointsize>12</pointsize>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background:#535455;
+color: #FFFFFF;</string>
+          </property>
           <property name="text">
            <string>Save</string>
           </property>
@@ -148,6 +484,21 @@
         </item>
         <item>
          <widget class="QPushButton" name="pushButton_newCollaborator_cancel">
+          <property name="minimumSize">
+           <size>
+            <width>100</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <pointsize>12</pointsize>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background:#535455;
+color: #FFFFFF;</string>
+          </property>
           <property name="text">
            <string>Cancel</string>
           </property>
@@ -165,11 +516,19 @@
     <widget class="QGroupBox" name="groupBox_collaboratorsManagement_filter">
      <property name="geometry">
       <rect>
-       <x>350</x>
-       <y>40</y>
-       <width>281</width>
-       <height>121</height>
+       <x>290</x>
+       <y>10</y>
+       <width>311</width>
+       <height>141</height>
       </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">color: #FFFFFF;</string>
      </property>
      <property name="title">
       <string>Filter type</string>
@@ -178,14 +537,19 @@
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>30</y>
-        <width>111</width>
-        <height>81</height>
+        <y>40</y>
+        <width>133</width>
+        <height>91</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_9">
        <item>
         <widget class="QRadioButton" name="radioButton_collaboratorsManagement_idCollaborator">
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+          </font>
+         </property>
          <property name="text">
           <string>ID Collaborator</string>
          </property>
@@ -193,6 +557,11 @@
        </item>
        <item>
         <widget class="QRadioButton" name="radioButton_collaboratorsManagement_name">
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+          </font>
+         </property>
          <property name="text">
           <string>Name</string>
          </property>
@@ -203,25 +572,49 @@
      <widget class="QWidget" name="layoutWidget">
       <property name="geometry">
        <rect>
-        <x>130</x>
-        <y>30</y>
-        <width>141</width>
-        <height>81</height>
+        <x>150</x>
+        <y>40</y>
+        <width>151</width>
+        <height>89</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_10">
        <item>
         <widget class="QLabel" name="label_collaboratorsManagement_filter">
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+          </font>
+         </property>
          <property name="text">
           <string>Filter</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="lineEdit_collaboratorsManagement_filter"/>
+        <widget class="QLineEdit" name="lineEdit_collaboratorsManagement_filter">
+         <property name="font">
+          <font>
+           <pointsize>10</pointsize>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">background:#535455;
+color: #FFFFFF;</string>
+         </property>
+        </widget>
        </item>
        <item>
         <widget class="QPushButton" name="pushButton_collaboratorsManagement_filter">
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">background:#535455;
+color: #FFFFFF;</string>
+         </property>
          <property name="text">
           <string>Filter</string>
          </property>
@@ -230,23 +623,13 @@
       </layout>
      </widget>
     </widget>
-    <widget class="QTableWidget" name="tableWidget_collaboratorsManagement_collaborators">
-     <property name="geometry">
-      <rect>
-       <x>350</x>
-       <y>170</y>
-       <width>281</width>
-       <height>261</height>
-      </rect>
-     </property>
-    </widget>
     <widget class="QWidget" name="layoutWidget">
      <property name="geometry">
       <rect>
-       <x>70</x>
-       <y>50</y>
+       <x>10</x>
+       <y>20</y>
        <width>271</width>
-       <height>381</height>
+       <height>421</height>
       </rect>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_8">
@@ -254,13 +637,31 @@
        <layout class="QVBoxLayout" name="verticalLayout_4">
         <item>
          <widget class="QLabel" name="label_collaboratorsManagement_name">
+          <property name="font">
+           <font>
+            <pointsize>12</pointsize>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">color: #FFFFFF;</string>
+          </property>
           <property name="text">
            <string>Name</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QLineEdit" name="lineEdit_collaboratorsManagement_name"/>
+         <widget class="QLineEdit" name="lineEdit_collaboratorsManagement_name">
+          <property name="font">
+           <font>
+            <pointsize>10</pointsize>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background:#535455;
+color: #FFFFFF;</string>
+          </property>
+         </widget>
         </item>
        </layout>
       </item>
@@ -268,13 +669,31 @@
        <layout class="QVBoxLayout" name="verticalLayout_5">
         <item>
          <widget class="QLabel" name="label_collaboratorsManagement_username">
+          <property name="font">
+           <font>
+            <pointsize>12</pointsize>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">color: #FFFFFF;</string>
+          </property>
           <property name="text">
            <string>Username</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QLineEdit" name="lineEdit_collaboratorsManagement_username"/>
+         <widget class="QLineEdit" name="lineEdit_collaboratorsManagement_username">
+          <property name="font">
+           <font>
+            <pointsize>10</pointsize>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background:#535455;
+color: #FFFFFF;</string>
+          </property>
+         </widget>
         </item>
        </layout>
       </item>
@@ -282,13 +701,31 @@
        <layout class="QVBoxLayout" name="verticalLayout_6">
         <item>
          <widget class="QLabel" name="label_collaboratorsManagement_telephone">
+          <property name="font">
+           <font>
+            <pointsize>12</pointsize>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">color: #FFFFFF;</string>
+          </property>
           <property name="text">
            <string>Telephone</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QLineEdit" name="lineEdit_collaboratorsManagement_telephone"/>
+         <widget class="QLineEdit" name="lineEdit_collaboratorsManagement_telephone">
+          <property name="font">
+           <font>
+            <pointsize>10</pointsize>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background:#535455;
+color: #FFFFFF;</string>
+          </property>
+         </widget>
         </item>
        </layout>
       </item>
@@ -296,13 +733,31 @@
        <layout class="QVBoxLayout" name="verticalLayout_7">
         <item>
          <widget class="QLabel" name="label_collaboratorsManagement_accessType">
+          <property name="font">
+           <font>
+            <pointsize>12</pointsize>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">color: #FFFFFF;</string>
+          </property>
           <property name="text">
            <string>Access Type</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QComboBox" name="comboBox_collaboratorsManagement_accessType"/>
+         <widget class="QComboBox" name="comboBox_collaboratorsManagement_accessType">
+          <property name="font">
+           <font>
+            <pointsize>10</pointsize>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background:#535455;
+color: #FFFFFF;</string>
+          </property>
+         </widget>
         </item>
         <item>
          <spacer name="verticalSpacer_2">
@@ -317,34 +772,116 @@
           </property>
          </spacer>
         </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_3">
+          <item>
+           <widget class="QPushButton" name="pushButton_collaboratorsManagement_save">
+            <property name="font">
+             <font>
+              <pointsize>12</pointsize>
+             </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">background:#535455;
+color: #FFFFFF;</string>
+            </property>
+            <property name="text">
+             <string>Save</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="pushButton_collaboratorsManagement_remove">
+            <property name="font">
+             <font>
+              <pointsize>12</pointsize>
+             </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">background:#535455;
+color: #FFFFFF;</string>
+            </property>
+            <property name="text">
+             <string>Remove</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
        </layout>
       </item>
       <item>
-       <layout class="QHBoxLayout" name="horizontalLayout_3">
-        <item>
-         <widget class="QPushButton" name="pushButton_collaboratorsManagement_save">
-          <property name="text">
-           <string>Save</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="pushButton_collaboratorsManagement_remove">
-          <property name="text">
-           <string>Remove</string>
-          </property>
-         </widget>
-        </item>
+       <layout class="QHBoxLayout" name="horizontalLayout_4">
         <item>
          <widget class="QPushButton" name="pushButton_collaboratorsManagement_seeSales">
+          <property name="font">
+           <font>
+            <pointsize>12</pointsize>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background:#535455;
+color: #FFFFFF;</string>
+          </property>
           <property name="text">
            <string>See sales</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="pushButton">
+          <property name="font">
+           <font>
+            <pointsize>12</pointsize>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background:#535455;
+color: #FFFFFF;</string>
+          </property>
+          <property name="text">
+           <string>Reset Password</string>
           </property>
          </widget>
         </item>
        </layout>
       </item>
      </layout>
+    </widget>
+    <widget class="QGroupBox" name="groupBox">
+     <property name="geometry">
+      <rect>
+       <x>290</x>
+       <y>160</y>
+       <width>311</width>
+       <height>281</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">color:#FFFFFF;</string>
+     </property>
+     <property name="title">
+      <string/>
+     </property>
+     <widget class="QTableWidget" name="tableWidget_collaboratorsManagement_collaborators">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>311</width>
+        <height>281</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>10</pointsize>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background:#535455;
+color: #FFFFFF;</string>
+      </property>
+     </widget>
     </widget>
    </widget>
   </widget>

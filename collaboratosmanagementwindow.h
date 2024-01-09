@@ -30,6 +30,7 @@ private slots:
 
 private:
     Ui::CollaboratosManagementWindow *ui;
+    QIcon iconWindow;
     DatabaseConnection dbConnection;
     void UpdateCollaboratorsManagementTableWidget();
     void ClearNewCollaboratorTabFields();

@@ -1,5 +1,6 @@
 #include "utilities.h"
 #include <QMessageBox>
+#include <QHeaderView>
 
 Utilities::Utilities()
 {
@@ -60,7 +61,9 @@ bool Utilities::QueryToInsertComboBoxElements(QSqlQuery *query, QComboBox *combo
 
 void Utilities::TableWidgetBasicConfigurations(QTableWidget *tableWidget)
 {
+    tableWidget->horizontalHeader()->setStyleSheet("QHeaderView::section { background-color: #535455; }");
     tableWidget->setStyleSheet("QTableView {selection-background-color: red}");
+    tableWidget->verticalHeader()->setVisible(false);
     tableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
     tableWidget->setSelectionBehavior(QAbstractItemView::SelectRows);
 }

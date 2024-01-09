@@ -12,6 +12,12 @@ CollaboratosManagementWindow::CollaboratosManagementWindow(QWidget *parent) :
 
     Utilities utilities;
 
+    // Window layout
+    iconWindow.addFile(":/images/login.png");
+    this->setWindowIcon(iconWindow);
+    this->setWindowTitle("Collaborators Management");
+    this->setFixedSize(644, 514);
+
     // Update combo box with the access type options
     if(dbConnection.open())
     {
@@ -48,7 +54,6 @@ CollaboratosManagementWindow::CollaboratosManagementWindow(QWidget *parent) :
     ui->tableWidget_collaboratorsManagement_collaborators->setColumnWidth(0, 80);
     ui->tableWidget_collaboratorsManagement_collaborators->setColumnWidth(1, 150);
     ui->tableWidget_collaboratorsManagement_collaborators->setHorizontalHeaderLabels({"Id", "Name"});
-    ui->tableWidget_collaboratorsManagement_collaborators->verticalHeader()->setVisible(false);
     utilities.TableWidgetBasicConfigurations(ui->tableWidget_collaboratorsManagement_collaborators);
 
     // Configure radio button
@@ -56,6 +61,14 @@ CollaboratosManagementWindow::CollaboratosManagementWindow(QWidget *parent) :
 
     // Define first tab
     ui->tabWidget->setCurrentIndex(0);
+
+    // Obter a barra de guias (tab bar) do QTabWidget
+    QTabBar *tabBar = ui->tabWidget->tabBar();
+
+    // Configurar a cor da fonte na barra de guias
+    QPalette palette = tabBar->palette();
+    palette.setColor(QPalette::WindowText, Qt::red); // Você pode substituir Qt::red pela cor desejada
+    tabBar->setPalette(palette);
 }
 
 CollaboratosManagementWindow::~CollaboratosManagementWindow()

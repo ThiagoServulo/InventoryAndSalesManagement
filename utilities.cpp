@@ -67,3 +67,29 @@ void Utilities::TableWidgetBasicConfigurations(QTableWidget *tableWidget)
     tableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
     tableWidget->setSelectionBehavior(QAbstractItemView::SelectRows);
 }
+
+void Utilities::ConfigureRegexLineEdit(QLineEdit *lineEdit, int type)
+{
+    QString regex;
+
+    switch (type)
+    {
+        case 1: // string
+            regex = "[a-zA-ZÀ-ÖØ-öø-ÿ ]*";
+        break;
+
+        case 2: // int
+            regex = "[0-9]**";
+        break;
+
+        case 3: // float
+            regex = "[0-9]*\\.?[0-9]*";
+        break;
+
+        default: // unknown
+            return;
+    }
+
+    QValidator *validator = new QRegularExpressionValidator(QRegularExpression(regex));
+    lineEdit->setValidator(validator);
+}

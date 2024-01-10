@@ -287,36 +287,6 @@ color: #000000;
            </widget>
           </item>
           <item>
-           <widget class="QLabel" name="label_newCollaborator_password">
-            <property name="font">
-             <font>
-              <pointsize>12</pointsize>
-             </font>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">color: #FFFFFF;</string>
-            </property>
-            <property name="text">
-             <string>Password</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QLabel" name="label_newCollaborator_confirmPassword">
-            <property name="font">
-             <font>
-              <pointsize>12</pointsize>
-             </font>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">color: #FFFFFF;</string>
-            </property>
-            <property name="text">
-             <string>Confirm password</string>
-            </property>
-           </widget>
-          </item>
-          <item>
            <widget class="QLabel" name="label_newCollaborator_telephone">
             <property name="font">
              <font>
@@ -365,32 +335,6 @@ color: #FFFFFF;</string>
           </item>
           <item>
            <widget class="QLineEdit" name="lineEdit_newCollaborator_username">
-            <property name="font">
-             <font>
-              <pointsize>10</pointsize>
-             </font>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">background:#535455;
-color: #FFFFFF;</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QLineEdit" name="lineEdit_newCollaborator_password">
-            <property name="font">
-             <font>
-              <pointsize>10</pointsize>
-             </font>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">background:#535455;
-color: #FFFFFF;</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QLineEdit" name="lineEdit_newCollaborator_confirmPassword">
             <property name="font">
              <font>
               <pointsize>10</pointsize>
@@ -829,7 +773,7 @@ color: #FFFFFF;</string>
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="pushButton">
+         <widget class="QPushButton" name="pushButton_resetPassword">
           <property name="font">
            <font>
             <pointsize>12</pointsize>

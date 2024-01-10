@@ -45,10 +45,6 @@ CollaboratosManagementWindow::CollaboratosManagementWindow(QWidget *parent) :
     ClearNewCollaboratorTabFields();
     ClearCollaboratorManagementTabFields(true);
 
-    // Configure password fields
-    ui->lineEdit_newCollaborator_password->setEchoMode(QLineEdit::Password);
-    ui->lineEdit_newCollaborator_confirmPassword->setEchoMode(QLineEdit::Password);
-
     // Configure table widget
     ui->tableWidget_collaboratorsManagement_collaborators->setColumnCount(2);
     ui->tableWidget_collaboratorsManagement_collaborators->setColumnWidth(0, 80);
@@ -62,13 +58,9 @@ CollaboratosManagementWindow::CollaboratosManagementWindow(QWidget *parent) :
     // Define first tab
     ui->tabWidget->setCurrentIndex(0);
 
-    // Obter a barra de guias (tab bar) do QTabWidget
-    QTabBar *tabBar = ui->tabWidget->tabBar();
-
-    // Configurar a cor da fonte na barra de guias
-    QPalette palette = tabBar->palette();
-    palette.setColor(QPalette::WindowText, Qt::red); // Você pode substituir Qt::red pela cor desejada
-    tabBar->setPalette(palette);
+    // Configure regex to line edit fields
+    utilities.ConfigureRegexLineEdit(ui->lineEdit_collaboratorsManagement_name, 1);
+    utilities.ConfigureRegexLineEdit(ui->lineEdit_collaboratorsManagement_username, 1);
 }
 
 CollaboratosManagementWindow::~CollaboratosManagementWindow()
@@ -81,19 +73,11 @@ void CollaboratosManagementWindow::on_pushButton_newCollaborator_save_clicked()
     QString name = ui->lineEdit_newCollaborator_name->text();
     QString username = ui->lineEdit_newCollaborator_username->text();
     QString telephone = ui->lineEdit_newCollaborator_telephone->text();
-    QString password = ui->lineEdit_newCollaborator_password->text();
-    QString confirmPassword = ui->lineEdit_newCollaborator_confirmPassword->text();
     QString accessType = ui->comboBox_newCollaborator_accessType->currentText();
     int accessTypeId;
 
-    if(name == "" || username == "" || telephone == "" || password == "" || confirmPassword == "" || accessType == "")
+    if(name == "" || username == "" || telephone == "" || accessType == "")
     {
-        return;
-    }
-
-    if(password != confirmPassword)
-    {
-        QMessageBox::warning(this, "Error", "The passwords are differents");
         return;
     }
 
@@ -123,8 +107,8 @@ void CollaboratosManagementWindow::on_pushButton_newCollaborator_save_clicked()
 
         // Insert new collaborator
         query.prepare("INSERT INTO tb_collaborators (name, username, password, telephone, access) "
-                      "VALUES ('" + name + "', '" + username + "', '" + password + "', '"
-                      + telephone + "', " + QString::number(accessTypeId) + ")");
+                      "VALUES ('" + name + "', '" + username + "', '" + QString::number(1234)
+                      + "', '" + telephone + "', " + QString::number(accessTypeId) + ")");
 
         if(!query.exec())
         {
@@ -145,8 +129,6 @@ void CollaboratosManagementWindow::ClearNewCollaboratorTabFields()
     ui->lineEdit_newCollaborator_name->clear();
     ui->lineEdit_newCollaborator_username->clear();
     ui->lineEdit_newCollaborator_telephone->clear();
-    ui->lineEdit_newCollaborator_password->clear();
-    ui->lineEdit_newCollaborator_confirmPassword->clear();
     ui->comboBox_newCollaborator_accessType->setCurrentIndex(-1);
     ui->lineEdit_newCollaborator_name->setFocus();
 }
@@ -407,5 +389,10 @@ void CollaboratosManagementWindow::on_pushButton_newCollaborator_cancel_clicked(
 void CollaboratosManagementWindow::on_pushButton_collaboratorsManagement_seeSales_clicked()
 {
     /// TODO: Fazer botão see sales
+}
+
+void CollaboratosManagementWindow::on_pushButton_resetPassword_clicked()
+{
+    /// TODO: Fazer botão reset password
 }
 

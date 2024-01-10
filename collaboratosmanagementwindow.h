@@ -25,8 +25,8 @@ private slots:
     void on_pushButton_collaboratorsManagement_save_clicked();
     void on_pushButton_collaboratorsManagement_remove_clicked();
     void on_pushButton_newCollaborator_cancel_clicked();
-
     void on_pushButton_collaboratorsManagement_seeSales_clicked();
+    void on_pushButton_resetPassword_clicked();
 
 private:
     Ui::CollaboratosManagementWindow *ui;

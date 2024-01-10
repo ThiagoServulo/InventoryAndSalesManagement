@@ -46,10 +46,11 @@ CollaboratosManagementWindow::CollaboratosManagementWindow(QWidget *parent) :
     ClearCollaboratorManagementTabFields(true);
 
     // Configure table widget
-    ui->tableWidget_collaboratorsManagement_collaborators->setColumnCount(2);
-    ui->tableWidget_collaboratorsManagement_collaborators->setColumnWidth(0, 80);
-    ui->tableWidget_collaboratorsManagement_collaborators->setColumnWidth(1, 150);
-    ui->tableWidget_collaboratorsManagement_collaborators->setHorizontalHeaderLabels({"Id", "Name"});
+    ui->tableWidget_collaboratorsManagement_collaborators->setColumnCount(3);
+    ui->tableWidget_collaboratorsManagement_collaborators->setColumnWidth(0, 70);
+    ui->tableWidget_collaboratorsManagement_collaborators->setColumnWidth(1, 100);
+    ui->tableWidget_collaboratorsManagement_collaborators->setColumnWidth(2, 100);
+    ui->tableWidget_collaboratorsManagement_collaborators->setHorizontalHeaderLabels({"Id", "Name", "Username"});
     utilities.TableWidgetBasicConfigurations(ui->tableWidget_collaboratorsManagement_collaborators);
 
     // Configure radio button
@@ -59,13 +60,42 @@ CollaboratosManagementWindow::CollaboratosManagementWindow(QWidget *parent) :
     ui->tabWidget->setCurrentIndex(0);
 
     // Configure regex to line edit fields
+    utilities.ConfigureRegexLineEdit(ui->lineEdit_newCollaborator_name, 1);
+    utilities.ConfigureRegexLineEdit(ui->lineEdit_newCollaborator_username, 1);
+    utilities.ConfigureRegexLineEdit(ui->lineEdit_newCollaborator_telephone, 2);
     utilities.ConfigureRegexLineEdit(ui->lineEdit_collaboratorsManagement_name, 1);
-    utilities.ConfigureRegexLineEdit(ui->lineEdit_collaboratorsManagement_username, 1);
+    utilities.ConfigureRegexLineEdit(ui->lineEdit_collaboratorsManagement_telephone, 2);
+
+    // Set telephone field length
+    ui->lineEdit_newCollaborator_telephone->setMaxLength(11);
+    ui->lineEdit_collaboratorsManagement_telephone->setMaxLength(11);
 }
 
 CollaboratosManagementWindow::~CollaboratosManagementWindow()
 {
     delete ui;
+}
+
+bool CollaboratosManagementWindow::CheckCollaboratorFields(QString name, QString telephone, QString accessType)
+{
+    if(name == "" || telephone == "" || accessType == "")
+    {
+        return false;
+    }
+
+    if(name.length() < 5)
+    {
+        QMessageBox::warning(this, "Error", "Name must have more than 5 characters");
+        return false;
+    }
+
+    if(telephone.length() != 11)
+    {
+        QMessageBox::warning(this, "Error", "Telephone must have 11 characters");
+        return false;
+    }
+
+    return true;
 }
 
 void CollaboratosManagementWindow::on_pushButton_newCollaborator_save_clicked()
@@ -76,13 +106,32 @@ void CollaboratosManagementWindow::on_pushButton_newCollaborator_save_clicked()
     QString accessType = ui->comboBox_newCollaborator_accessType->currentText();
     int accessTypeId;
 
-    if(name == "" || username == "" || telephone == "" || accessType == "")
+    // Check fields
+    if(!CheckCollaboratorFields(name, telephone, accessType))
     {
         return;
     }
 
-    /// TODO: Fazer validações dos campos
+    // Check username
+    if(username.length() < 5)
+    {
+        QMessageBox::warning(this, "Error", "Username must have more than 5 characters");
+        return;
+    }
+    else
+    {
+        if(int status = UsernameExists(username) != 0)
+        {
+            if(status > 0)
+            {
+                QMessageBox::warning(this, "Error", "This username already exists");
+            }
 
+            return;
+        }
+    }
+
+    // Save new collaborator
     if(!dbConnection.open())
     {
         QMessageBox::warning(this, "Error", "Unable to connect database to save new collaborator");
@@ -124,6 +173,42 @@ void CollaboratosManagementWindow::on_pushButton_newCollaborator_save_clicked()
     }
 }
 
+int CollaboratosManagementWindow::UsernameExists(QString username)
+{
+    int status = -1;
+
+    if(dbConnection.open())
+    {
+        QSqlQuery query;
+        query.prepare("SELECT id FROM tb_collaborators WHERE username = '" + username + "'");
+
+        if(!query.exec())
+        {
+            QMessageBox::warning(this, "Error", "Unable to read access type table");
+        }
+        else
+        {
+            int quantity = 0;
+
+            while(query.next())
+            {
+                ++quantity;
+            }
+
+            status = quantity;
+            qDebug() << status;
+        }
+
+        dbConnection.close();
+    }
+    else
+    {
+        QMessageBox::warning(this, "Error", "Unable to connect database to check if username exists");
+    }
+
+    return status;
+}
+
 void CollaboratosManagementWindow::ClearNewCollaboratorTabFields()
 {
     ui->lineEdit_newCollaborator_name->clear();
@@ -137,7 +222,6 @@ void CollaboratosManagementWindow::ClearCollaboratorManagementTabFields(bool cle
 {
     ui->lineEdit_collaboratorsManagement_name->clear();
     ui->lineEdit_collaboratorsManagement_telephone->clear();
-    ui->lineEdit_collaboratorsManagement_username->clear();
     ui->comboBox_collaboratorsManagement_accessType->setCurrentIndex(-1);
 
     if(cleanFilterField)
@@ -152,7 +236,7 @@ void CollaboratosManagementWindow::UpdateCollaboratorsManagementTableWidget()
     {
         Utilities utilities;
         QSqlQuery query;
-        query.prepare("SELECT id, name FROM tb_collaborators ORDER BY id");
+        query.prepare("SELECT id, name, username FROM tb_collaborators ORDER BY id");
 
         if(!utilities.QueryToUpdateTableWidget(&query, ui->tableWidget_collaboratorsManagement_collaborators))
         {
@@ -196,7 +280,6 @@ void CollaboratosManagementWindow::on_tableWidget_collaboratorsManagement_collab
             // Get collaborator information
             query.first();
             ui->lineEdit_collaboratorsManagement_name->setText(query.value(0).toString());
-            ui->lineEdit_collaboratorsManagement_username->setText(query.value(1).toString());
             ui->lineEdit_collaboratorsManagement_telephone->setText(query.value(2).toString());
 
             // Get collaborator access type
@@ -238,22 +321,22 @@ void CollaboratosManagementWindow::on_pushButton_collaboratorsManagement_filter_
         {
             if(ui->radioButton_collaboratorsManagement_idCollaborator->isChecked())
             {
-                query.prepare("SELECT id, name FROM tb_collaborators ORDER BY id");
+                query.prepare("SELECT id, name, username FROM tb_collaborators ORDER BY id");
             }
             else
             {
-                query.prepare("SELECT id, name FROM tb_collaborators ORDER BY name");
+                query.prepare("SELECT id, name, username FROM tb_collaborators ORDER BY name");
             }
         }
         else
         {
             if(ui->radioButton_collaboratorsManagement_idCollaborator->isChecked())
             {
-                query.prepare("SELECT id, name FROM tb_collaborators WHERE id = " + ui->lineEdit_collaboratorsManagement_filter->text());
+                query.prepare("SELECT id, name, username FROM tb_collaborators WHERE id = " + ui->lineEdit_collaboratorsManagement_filter->text());
             }
             else
             {
-                query.prepare("SELECT id, name FROM tb_collaborators WHERE name LIKE '%" + ui->lineEdit_collaboratorsManagement_filter->text() + "%'");
+                query.prepare("SELECT id, name, username FROM tb_collaborators WHERE name LIKE '%" + ui->lineEdit_collaboratorsManagement_filter->text() + "%'");
             }
         }
 
@@ -290,10 +373,16 @@ void CollaboratosManagementWindow::on_pushButton_collaboratorsManagement_save_cl
         int currentRow = ui->tableWidget_collaboratorsManagement_collaborators->currentRow();
         int id = ui->tableWidget_collaboratorsManagement_collaborators->item(currentRow, 0)->text().toInt();
         QString name = ui->lineEdit_collaboratorsManagement_name->text();
-        QString username = ui->lineEdit_collaboratorsManagement_username->text();
         QString telephone = ui->lineEdit_collaboratorsManagement_telephone->text();
         QString accessType = ui->comboBox_collaboratorsManagement_accessType->currentText();
         int accessTypeId;
+
+        // Check fields
+        if(!CheckCollaboratorFields(name, telephone, accessType))
+        {
+            dbConnection.close();
+            return;
+        }
 
         // Get the access type id
         QSqlQuery query;
@@ -312,8 +401,8 @@ void CollaboratosManagementWindow::on_pushButton_collaboratorsManagement_save_cl
         }
 
         // Update collaborator information
-        query.prepare("UPDATE tb_collaborators SET name = '" + name + "', username = '" + username +
-                      "', telephone = '" + telephone + "', access = " + QString::number(accessTypeId) +
+        query.prepare("UPDATE tb_collaborators SET name = '" + name + "', telephone = '" +
+                      telephone + "', access = " + QString::number(accessTypeId) +
                       " WHERE id = " + QString::number(id));
 
         if(query.exec())

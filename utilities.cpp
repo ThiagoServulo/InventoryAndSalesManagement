@@ -62,7 +62,7 @@ bool Utilities::QueryToInsertComboBoxElements(QSqlQuery *query, QComboBox *combo
 void Utilities::TableWidgetBasicConfigurations(QTableWidget *tableWidget)
 {
     tableWidget->horizontalHeader()->setStyleSheet("QHeaderView::section { background-color: #535455; }");
-    tableWidget->setStyleSheet("QTableView {selection-background-color: red}");
+    tableWidget->setStyleSheet("QTableView { selection-background-color: #535455; }");
     tableWidget->verticalHeader()->setVisible(false);
     tableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
     tableWidget->setSelectionBehavior(QAbstractItemView::SelectRows);
@@ -79,7 +79,7 @@ void Utilities::ConfigureRegexLineEdit(QLineEdit *lineEdit, int type)
         break;
 
         case 2: // int
-            regex = "[0-9]**";
+            regex = "[0-9]*";
         break;
 
         case 3: // float

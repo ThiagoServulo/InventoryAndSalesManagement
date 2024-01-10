@@ -35,6 +35,8 @@ private:
     void UpdateCollaboratorsManagementTableWidget();
     void ClearNewCollaboratorTabFields();
     void ClearCollaboratorManagementTabFields(bool cleanFilterField);
+    bool CheckCollaboratorFields(QString name, QString telephone, QString accessType);
+    int UsernameExists(QString username);
 
 };
 

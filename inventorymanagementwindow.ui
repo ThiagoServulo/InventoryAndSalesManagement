@@ -38,24 +38,24 @@
           <item>
            <layout class="QVBoxLayout" name="verticalLayout_2">
             <item>
-             <widget class="QLabel" name="label_id">
+             <widget class="QLabel" name="label_newProduct_id">
               <property name="text">
                <string>ID Product</string>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QLineEdit" name="lineEdit_id"/>
+             <widget class="QLineEdit" name="lineEdit_newProduct_id"/>
             </item>
            </layout>
           </item>
           <item>
            <layout class="QFormLayout" name="formLayout">
             <item row="1" column="0" colspan="2">
-             <widget class="QLineEdit" name="lineEdit_description"/>
+             <widget class="QLineEdit" name="lineEdit_newProduct_description"/>
             </item>
             <item row="0" column="0" colspan="2">
-             <widget class="QLabel" name="label_description">
+             <widget class="QLabel" name="label_newProduct_description">
               <property name="text">
                <string>Description</string>
               </property>
@@ -72,28 +72,28 @@
             <item>
              <layout class="QVBoxLayout" name="verticalLayout_3">
               <item>
-               <widget class="QLabel" name="label_purchasePrice">
+               <widget class="QLabel" name="label_newProduct_purchasePrice">
                 <property name="text">
                  <string>Purchase price</string>
                 </property>
                </widget>
               </item>
               <item>
-               <widget class="QLineEdit" name="lineEdit_purchasePrice"/>
+               <widget class="QLineEdit" name="lineEdit_newProduct_purchasePrice"/>
               </item>
              </layout>
             </item>
             <item>
              <layout class="QVBoxLayout" name="verticalLayout_4">
               <item>
-               <widget class="QLabel" name="label_salePrice">
+               <widget class="QLabel" name="label_newProduct_salePrice">
                 <property name="text">
                  <string>Sale price</string>
                 </property>
                </widget>
               </item>
               <item>
-               <widget class="QLineEdit" name="lineEdit_salePrice"/>
+               <widget class="QLineEdit" name="lineEdit_newProduct_salePrice"/>
               </item>
              </layout>
             </item>
@@ -104,28 +104,28 @@
             <item>
              <layout class="QVBoxLayout" name="verticalLayout">
               <item>
-               <widget class="QLabel" name="label_quantity">
+               <widget class="QLabel" name="label_newProduct_quantity">
                 <property name="text">
                  <string>Quantity</string>
                 </property>
                </widget>
               </item>
               <item>
-               <widget class="QLineEdit" name="lineEdit_quantity"/>
+               <widget class="QLineEdit" name="lineEdit_newProduct_quantity"/>
               </item>
              </layout>
             </item>
             <item>
              <layout class="QVBoxLayout" name="verticalLayout_5">
               <item>
-               <widget class="QLabel" name="label_supplier">
+               <widget class="QLabel" name="label_newProduct_supplier">
                 <property name="text">
                  <string>Supplier</string>
                 </property>
                </widget>
               </item>
               <item>
-               <widget class="QLineEdit" name="lineEdit_supplier"/>
+               <widget class="QLineEdit" name="lineEdit_newProduct_supplier"/>
               </item>
              </layout>
             </item>
@@ -149,14 +149,14 @@
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_3">
           <item>
-           <widget class="QPushButton" name="pushButton_saveNewProduct">
+           <widget class="QPushButton" name="pushButton_newProduct_save">
             <property name="text">
              <string>Save</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="pushButton_cancel">
+           <widget class="QPushButton" name="pushButton_newProduct_cancel">
             <property name="text">
              <string>Cancel</string>
             </property>
@@ -171,7 +171,7 @@
       <attribute name="title">
        <string>Inventoy Management</string>
       </attribute>
-      <widget class="QTableWidget" name="tableWidget_im_inventory">
+      <widget class="QTableWidget" name="tableWidget_inventoryManagement">
        <property name="geometry">
         <rect>
          <x>280</x>
@@ -181,7 +181,7 @@
         </rect>
        </property>
       </widget>
-      <widget class="QGroupBox" name="groupBox_filterType">
+      <widget class="QGroupBox" name="groupBox_inventoryManagement_filterType">
        <property name="geometry">
         <rect>
          <x>280</x>
@@ -204,7 +204,7 @@
         </property>
         <layout class="QVBoxLayout" name="verticalLayout_7">
          <item>
-          <widget class="QRadioButton" name="radioButton_id">
+          <widget class="QRadioButton" name="radioButton_inventoryManagement_id">
            <property name="text">
             <string>Id product</string>
            </property>
@@ -214,7 +214,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QRadioButton" name="radioButton_description">
+          <widget class="QRadioButton" name="radioButton_inventoryManagement_description">
            <property name="text">
             <string>Description</string>
            </property>
@@ -236,84 +236,84 @@
         <item>
          <layout class="QVBoxLayout" name="verticalLayout_8">
           <item>
-           <widget class="QLabel" name="label_im_id">
+           <widget class="QLabel" name="label_inventoryManagement_id">
             <property name="text">
              <string>Id</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QLineEdit" name="lineEdit_im_id"/>
+           <widget class="QLineEdit" name="lineEdit_inventoryManagement_id"/>
           </item>
          </layout>
         </item>
         <item>
          <layout class="QVBoxLayout" name="verticalLayout_9">
           <item>
-           <widget class="QLabel" name="label_im_description">
+           <widget class="QLabel" name="label_inventoryManagement_description">
             <property name="text">
              <string>Description</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QLineEdit" name="lineEdit_im_description"/>
+           <widget class="QLineEdit" name="lineEdit_inventoryManagement_description"/>
           </item>
          </layout>
         </item>
         <item>
          <layout class="QVBoxLayout" name="verticalLayout_10">
           <item>
-           <widget class="QLabel" name="label_im_quantity">
+           <widget class="QLabel" name="label_inventoryManagement_quantity">
             <property name="text">
              <string>Quantity</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QLineEdit" name="lineEdit_im_quantity"/>
+           <widget class="QLineEdit" name="lineEdit_inventoryManagement_quantity"/>
           </item>
          </layout>
         </item>
         <item>
          <layout class="QVBoxLayout" name="verticalLayout_11">
           <item>
-           <widget class="QLabel" name="label_im_supplier">
+           <widget class="QLabel" name="label_inventoryManagement_supplier">
             <property name="text">
              <string>Supplier</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QLineEdit" name="lineEdit_im_supplier"/>
+           <widget class="QLineEdit" name="lineEdit_inventoryManagement_supplier"/>
           </item>
          </layout>
         </item>
         <item>
          <layout class="QVBoxLayout" name="verticalLayout_12">
           <item>
-           <widget class="QLabel" name="label_im_purchasePrice">
+           <widget class="QLabel" name="label_inventoryManagement_purchasePrice">
             <property name="text">
              <string>Purchase price</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QLineEdit" name="lineEdit_im_purchasePrice"/>
+           <widget class="QLineEdit" name="lineEdit_inventoryManagement_purchasePrice"/>
           </item>
          </layout>
         </item>
         <item>
          <layout class="QVBoxLayout" name="verticalLayout_13">
           <item>
-           <widget class="QLabel" name="label_im_salePrice">
+           <widget class="QLabel" name="label_inventoryManagement_salePrice">
             <property name="text">
              <string>Sale price</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QLineEdit" name="lineEdit_im_salePrice"/>
+           <widget class="QLineEdit" name="lineEdit_inventoryManagement_salePrice"/>
           </item>
           <item>
            <spacer name="verticalSpacer_2">
@@ -333,14 +333,14 @@
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_5">
           <item>
-           <widget class="QPushButton" name="pushButton_im_save">
+           <widget class="QPushButton" name="pushButton_inventoryManagement_save">
             <property name="text">
              <string>Save</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="pushButton_im_remove">
+           <widget class="QPushButton" name="pushButton_inventoryManagement_remove">
             <property name="text">
              <string>Remove</string>
             </property>
@@ -363,14 +363,14 @@
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_6">
           <item>
-           <widget class="QLabel" name="label_im_filter">
+           <widget class="QLabel" name="label_inventoryManagement_filter">
             <property name="text">
              <string>Filter</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="pushButton_im_search">
+           <widget class="QPushButton" name="pushButton_inventoryManagement_search">
             <property name="text">
              <string>Search</string>
             </property>

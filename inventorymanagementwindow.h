@@ -23,15 +23,15 @@ public:
     void CleanTableWidget(QTableWidget *tableWidget);
 
 private slots:
-    void on_pushButton_saveNewProduct_clicked();
-    void on_pushButton_cancel_clicked();
+    void on_pushButton_newProduct_save_clicked();
+    void on_pushButton_newProduct_cancel_clicked();
     void ClearNewProductTabFields();
     void on_tabWidget_currentChanged(int index);
     void UpdateIMTableWidget();
-    void on_tableWidget_im_inventory_itemSelectionChanged();
-    void on_pushButton_im_save_clicked();
-    void on_pushButton_im_remove_clicked();
-    void on_pushButton_im_search_clicked();
+    void on_tableWidget_inventoryManagement_itemSelectionChanged();
+    void on_pushButton_inventoryManagement_save_clicked();
+    void on_pushButton_inventoryManagement_remove_clicked();
+    void on_pushButton_inventoryManagement_search_clicked();
 
 private:
     Ui::InventoryManagementWindow *ui;

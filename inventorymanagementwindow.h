@@ -35,6 +35,7 @@ private slots:
 
 private:
     Ui::InventoryManagementWindow *ui;
+    int ProductExists(int id);
 };
 
 #endif // INVENTORYMANAGEMENTWINDOW_H

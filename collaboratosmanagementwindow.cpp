@@ -196,7 +196,6 @@ int CollaboratosManagementWindow::UsernameExists(QString username)
             }
 
             status = quantity;
-            qDebug() << status;
         }
 
         dbConnection.close();

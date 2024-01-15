@@ -15,6 +15,8 @@ InventoryManagementWindow::InventoryManagementWindow(QWidget *parent) :
     ui->setupUi(this);
 
     ui->tabWidget->setCurrentIndex(0);
+
+    // Configure table widget
     ui->tableWidget_inventoryManagement->setColumnCount(2);
     ui->tableWidget_inventoryManagement->setColumnWidth(0, 100);
     ui->tableWidget_inventoryManagement->setColumnWidth(1, 200);
@@ -29,14 +31,14 @@ InventoryManagementWindow::InventoryManagementWindow(QWidget *parent) :
 
     // Configure regex to float fields
     utilities.ConfigureRegexLineEdit(ui->lineEdit_newProduct_quantity, 2);
-    utilities.ConfigureRegexLineEdit(ui->lineEdit_newProduct_supplier, 2);
     utilities.ConfigureRegexLineEdit(ui->lineEdit_newProduct_id, 2);
     utilities.ConfigureRegexLineEdit(ui->lineEdit_inventoryManagement_quantity, 2);
-    utilities.ConfigureRegexLineEdit(ui->lineEdit_inventoryManagement_supplier, 2);
 
     // Configure regex to string fields
     utilities.ConfigureRegexLineEdit(ui->lineEdit_newProduct_description, 1);
+    utilities.ConfigureRegexLineEdit(ui->lineEdit_newProduct_supplier, 1);
     utilities.ConfigureRegexLineEdit(ui->lineEdit_inventoryManagement_description, 1);
+    utilities.ConfigureRegexLineEdit(ui->lineEdit_inventoryManagement_supplier, 1);
 }
 
 InventoryManagementWindow::~InventoryManagementWindow()
@@ -47,32 +49,89 @@ InventoryManagementWindow::~InventoryManagementWindow()
 
 void InventoryManagementWindow::on_pushButton_newProduct_save_clicked()
 {
-    if(!dbConnection.open())
-    {
-        QMessageBox::warning(this, "Error", "Unable to connect database");
-    }
-
+    // Get fields
     int id = ui->lineEdit_newProduct_id->text().toInt();
     QString description = ui->lineEdit_newProduct_description->text();
-    int id_supplier = ui->lineEdit_newProduct_supplier->text().toInt();
+    QString supplier = ui->lineEdit_newProduct_supplier->text();
     float purchasePrice = ui->lineEdit_newProduct_purchasePrice->text().toFloat();
     float salePrice = ui->lineEdit_newProduct_salePrice->text().toFloat();
     int quantity = ui->lineEdit_newProduct_quantity->text().toInt();
 
-    QSqlQuery query;
-    query.prepare("INSERT INTO tb_inventory (id, description, supplier, quantity, purchase_price, sale_price) "
-                  "VALUES (" + QString::number(id) + ", '" + description + "', " + QString::number(id_supplier) + ", "
-                  + QString::number(quantity) + ", " + QString::number(purchasePrice) + ", " + QString::number(salePrice) + ")");
-
-    if(!query.exec())
+    // Check fields are not empty
+    if(id == 0 || purchasePrice == 0 || salePrice == 0 || quantity == 0 || description == "" || supplier == "")
     {
-        QMessageBox::warning(this, "Error", "Unable to save the product into database");
+        return;
+    }
+
+    // Check if the sale price is greater than the purchase price
+    if(salePrice <= purchasePrice)
+    {
+        QMessageBox::warning(this, "Error", "The sale price should be greater than the purchase price");
+        return;
+    }
+
+    // Check if product already exists
+    if(ProductExists(id) != 0)
+    {
+        QMessageBox::warning(this, "Error", "This product already exists");
+        return;
+    }
+
+    // Insert new product
+    if(dbConnection.open())
+    {
+        QSqlQuery query;
+        query.prepare("INSERT INTO tb_inventory (id, description, supplier, quantity, purchase_price, sale_price) "
+                      "VALUES (" + QString::number(id) + ", '" + description + "', '" + supplier + "', "
+                      + QString::number(quantity) + ", " + QString::number(purchasePrice) + ", "
+                      + QString::number(salePrice) + ")");
+
+        if(!query.exec())
+        {
+            QMessageBox::warning(this, "Error", "Unable to save the product into database");
+        }
+        else
+        {
+            QMessageBox::information(this, "Success", "Product save into database");
+            ClearNewProductTabFields();
+        }
+
+        dbConnection.close();
     }
     else
     {
-        QMessageBox::information(this, "Success", "Product save into database");
-        ClearNewProductTabFields();
+        QMessageBox::warning(this, "Error", "Unable to connect database to save new product");
     }
+
+}
+
+int InventoryManagementWindow::ProductExists(int id)
+{
+    int status = -1;
+
+    if(dbConnection.open())
+    {
+        QSqlQuery query;
+        query.prepare("SELECT COUNT(*) FROM tb_inventory WHERE id = " + QString::number(id));
+
+        if(!query.exec())
+        {
+            QMessageBox::warning(this, "Error", "Unable to read access type table");
+        }
+        else
+        {
+            query.first();
+            status = query.value(0).toInt();
+        }
+
+        dbConnection.close();
+    }
+    else
+    {
+        QMessageBox::warning(this, "Error", "Unable to connect database to check if product exists");
+    }
+
+    return status;
 }
 
 void InventoryManagementWindow::on_pushButton_newProduct_cancel_clicked()
@@ -155,14 +214,14 @@ void InventoryManagementWindow::on_pushButton_inventoryManagement_save_clicked()
 
         int id = ui->tableWidget_inventoryManagement->item(ui->tableWidget_inventoryManagement->currentRow(), 0)->text().toInt();
         QString description = ui->lineEdit_inventoryManagement_description->text();
-        int id_supplier = ui->lineEdit_inventoryManagement_supplier->text().toInt();
+        QString supplier = ui->lineEdit_inventoryManagement_supplier->text();
         float purchasePrice = ui->lineEdit_inventoryManagement_purchasePrice->text().toFloat();
         float salePrice = ui->lineEdit_inventoryManagement_salePrice->text().toFloat();
         int quantity = ui->lineEdit_inventoryManagement_quantity->text().toInt();
 
         QSqlQuery query;
-        query.prepare("UPDATE tb_inventory SET description = '" + description + "', supplier = " +
-                      QString::number(id_supplier) + ", quantity = " + QString::number(quantity) +
+        query.prepare("UPDATE tb_inventory SET description = '" + description + "', supplier = '" +
+                      supplier + "', quantity = " + QString::number(quantity) +
                       ", purchase_price = " + QString::number(purchasePrice) + ", sale_price = " +
                       QString::number(salePrice) + " WHERE id = " + QString::number(id));
 

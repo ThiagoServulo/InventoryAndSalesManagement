@@ -57,23 +57,16 @@ void InventoryManagementWindow::on_pushButton_newProduct_save_clicked()
     float salePrice = ui->lineEdit_newProduct_salePrice->text().toFloat();
     int quantity = ui->lineEdit_newProduct_quantity->text().toInt();
 
-    // Check fields are not empty
-    if(id == 0 || purchasePrice == 0 || salePrice == 0 || quantity == 0 || description == "" || supplier == "")
-    {
-        return;
-    }
-
-    // Check if the sale price is greater than the purchase price
-    if(salePrice <= purchasePrice)
-    {
-        QMessageBox::warning(this, "Error", "The sale price should be greater than the purchase price");
-        return;
-    }
-
     // Check if product already exists
     if(ProductExists(id) != 0)
     {
         QMessageBox::warning(this, "Error", "This product already exists");
+        return;
+    }
+
+    // Check valid product
+    if(!CheckValidProduct(purchasePrice, salePrice, quantity, description, supplier))
+    {
         return;
     }
 
@@ -103,6 +96,25 @@ void InventoryManagementWindow::on_pushButton_newProduct_save_clicked()
         QMessageBox::warning(this, "Error", "Unable to connect database to save new product");
     }
 
+}
+
+bool InventoryManagementWindow::CheckValidProduct(float purchasePrice, float salePrice, int quantity, QString description, QString supplier)
+{
+    // Check fields are not empty
+    if(purchasePrice == 0 || salePrice == 0 || quantity == 0 || description == "" || supplier == "")
+    {
+        return false;
+    }
+
+    // Check if the sale price is greater than the purchase price
+    if(salePrice <= purchasePrice)
+    {
+        QMessageBox::warning(this, "Error", "The sale price should be greater than the purchase price");
+        return false;
+    }
+
+    // Is a valid product
+    return true;
 }
 
 int InventoryManagementWindow::ProductExists(int id)
@@ -150,27 +162,41 @@ void InventoryManagementWindow::ClearNewProductTabFields()
     ui->lineEdit_newProduct_id->setFocus();
 }
 
+void InventoryManagementWindow::ClearInventoryManagementTabFields()
+{
+    ui->lineEdit_inventoryManagement_description->clear();
+    ui->lineEdit_inventoryManagement_purchasePrice->clear();
+    ui->lineEdit_inventoryManagement_quantity->clear();
+    ui->lineEdit_inventoryManagement_salePrice->clear();
+    ui->lineEdit_inventoryManagement_supplier->clear();
+}
+
 void InventoryManagementWindow::on_tabWidget_currentChanged(int index)
 {
     if(index == 1)
     {
-        UpdateIMTableWidget();
+        UpdateInventoryManagementTableWidget();
     }
 }
 
-void InventoryManagementWindow::UpdateIMTableWidget()
+void InventoryManagementWindow::UpdateInventoryManagementTableWidget()
 {
-    if(!dbConnection.open())
+    if(dbConnection.open())
     {
-        QMessageBox::warning(this, "Error", "Unable to connect database");
-    }
+        QSqlQuery query;
+        query.prepare("SELECT id, description FROM tb_inventory ORDER BY id");
 
-    QSqlQuery query;
-    query.prepare("SELECT id, description FROM tb_inventory ORDER BY id");
-    Utilities utilities;
-    if(!utilities.QueryToUpdateTableWidget(&query, ui->tableWidget_inventoryManagement))
+        Utilities utilities;
+        if(!utilities.QueryToUpdateTableWidget(&query, ui->tableWidget_inventoryManagement))
+        {
+            QMessageBox::warning(this, "Error", "Unable to read inventory from database");
+        }
+
+        dbConnection.close();
+    }
+    else
     {
-        QMessageBox::warning(this, "Error", "Unable to read inventory from database");
+        QMessageBox::warning(this, "Error", "Unable to connect database to update the products table");
     }
 }
 
@@ -201,24 +227,29 @@ void InventoryManagementWindow::on_tableWidget_inventoryManagement_itemSelection
 
 void InventoryManagementWindow::on_pushButton_inventoryManagement_save_clicked()
 {
-    if(ui->lineEdit_inventoryManagement_description->text() == "")
+    int id = ui->tableWidget_inventoryManagement->item(ui->tableWidget_inventoryManagement->currentRow(), 0)->text().toInt();
+    QString description = ui->lineEdit_inventoryManagement_description->text();
+    QString supplier = ui->lineEdit_inventoryManagement_supplier->text();
+    float purchasePrice = ui->lineEdit_inventoryManagement_purchasePrice->text().toFloat();
+    float salePrice = ui->lineEdit_inventoryManagement_salePrice->text().toFloat();
+    int quantity = ui->lineEdit_inventoryManagement_quantity->text().toInt();
+
+    // Check selection
+    if(description == "")
     {
         QMessageBox::warning(this, "Error", "Select a product");
+        return;
     }
-    else
+
+    // Check valid product
+    if(!CheckValidProduct(purchasePrice, salePrice, quantity, description, supplier))
     {
-        if(!dbConnection.open())
-        {
-            QMessageBox::warning(this, "Error", "Unable to connect database");
-        }
+        return;
+    }
 
-        int id = ui->tableWidget_inventoryManagement->item(ui->tableWidget_inventoryManagement->currentRow(), 0)->text().toInt();
-        QString description = ui->lineEdit_inventoryManagement_description->text();
-        QString supplier = ui->lineEdit_inventoryManagement_supplier->text();
-        float purchasePrice = ui->lineEdit_inventoryManagement_purchasePrice->text().toFloat();
-        float salePrice = ui->lineEdit_inventoryManagement_salePrice->text().toFloat();
-        int quantity = ui->lineEdit_inventoryManagement_quantity->text().toInt();
-
+    // Update a product
+    if(dbConnection.open())
+    {
         QSqlQuery query;
         query.prepare("UPDATE tb_inventory SET description = '" + description + "', supplier = '" +
                       supplier + "', quantity = " + QString::number(quantity) +
@@ -227,13 +258,20 @@ void InventoryManagementWindow::on_pushButton_inventoryManagement_save_clicked()
 
         if(query.exec())
         {
-            UpdateIMTableWidget();
+            UpdateInventoryManagementTableWidget();
             QMessageBox::information(this, "Success", "Product information updated");
+            ClearInventoryManagementTabFields();
         }
         else
         {
             QMessageBox::warning(this, "Error", "Unable to update product information from database");
         }
+
+        dbConnection.close();
+    }
+    else
+    {
+        QMessageBox::warning(this, "Error", "Unable to connect database to update a product");
     }
 }
 
@@ -253,11 +291,7 @@ void InventoryManagementWindow::on_pushButton_inventoryManagement_remove_clicked
         if(query.exec())
         {
             ui->tableWidget_inventoryManagement->removeRow(ui->tableWidget_inventoryManagement->currentRow());
-            ui->lineEdit_inventoryManagement_description->clear();
-            ui->lineEdit_inventoryManagement_supplier->clear();
-            ui->lineEdit_inventoryManagement_quantity->clear();
-            ui->lineEdit_inventoryManagement_purchasePrice->clear();
-            ui->lineEdit_inventoryManagement_salePrice->clear();
+            ClearInventoryManagementTabFields();
             QMessageBox::information(this, "Success", "Product removed with success");
         }
         else

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>834</width>
-    <height>639</height>
+    <width>730</width>
+    <height>502</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -26,8 +26,13 @@ color: #FFFFFF;
        <pointsize>12</pointsize>
       </font>
      </property>
+     <property name="styleSheet">
+      <string notr="true">background:#2E2F30;
+color: #000000;
+</string>
+     </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="tab_newProduct">
       <attribute name="title">
@@ -53,6 +58,9 @@ color: #FFFFFF;
                <font>
                 <pointsize>12</pointsize>
                </font>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">color : #FFFFFF</string>
               </property>
               <property name="text">
                <string>ID Product</string>
@@ -96,6 +104,9 @@ color: #FFFFFF;</string>
                 <pointsize>12</pointsize>
                </font>
               </property>
+              <property name="styleSheet">
+               <string notr="true">color : #FFFFFF</string>
+              </property>
               <property name="text">
                <string>Description</string>
               </property>
@@ -117,6 +128,9 @@ color: #FFFFFF;</string>
                  <font>
                   <pointsize>12</pointsize>
                  </font>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">color : #FFFFFF</string>
                 </property>
                 <property name="text">
                  <string>Purchase price</string>
@@ -146,6 +160,9 @@ color: #FFFFFF;</string>
                  <font>
                   <pointsize>12</pointsize>
                  </font>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">color : #FFFFFF</string>
                 </property>
                 <property name="text">
                  <string>Sale price</string>
@@ -180,6 +197,9 @@ color: #FFFFFF;</string>
                   <pointsize>12</pointsize>
                  </font>
                 </property>
+                <property name="styleSheet">
+                 <string notr="true">color : #FFFFFF</string>
+                </property>
                 <property name="text">
                  <string>Quantity</string>
                 </property>
@@ -208,6 +228,10 @@ color: #FFFFFF;</string>
                  <font>
                   <pointsize>12</pointsize>
                  </font>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">color : #FFFFFF
+</string>
                 </property>
                 <property name="text">
                  <string>Supplier</string>
@@ -289,27 +313,12 @@ color: #FFFFFF;</string>
       <attribute name="title">
        <string>Inventoy Management</string>
       </attribute>
-      <widget class="QTableWidget" name="tableWidget_inventoryManagement">
-       <property name="geometry">
-        <rect>
-         <x>280</x>
-         <y>130</y>
-         <width>401</width>
-         <height>301</height>
-        </rect>
-       </property>
-       <property name="font">
-        <font>
-         <pointsize>10</pointsize>
-        </font>
-       </property>
-      </widget>
       <widget class="QGroupBox" name="groupBox_inventoryManagement_filterType">
        <property name="geometry">
         <rect>
          <x>280</x>
          <y>20</y>
-         <width>131</width>
+         <width>141</width>
          <height>101</height>
         </rect>
        </property>
@@ -317,6 +326,9 @@ color: #FFFFFF;</string>
         <font>
          <pointsize>12</pointsize>
         </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">color: #FFFFFF;</string>
        </property>
        <property name="title">
         <string>Filter type</string>
@@ -326,7 +338,7 @@ color: #FFFFFF;</string>
          <rect>
           <x>10</x>
           <y>30</y>
-          <width>111</width>
+          <width>121</width>
           <height>62</height>
          </rect>
         </property>
@@ -337,6 +349,9 @@ color: #FFFFFF;</string>
             <font>
              <pointsize>12</pointsize>
             </font>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">color: #FFFFFF;</string>
            </property>
            <property name="text">
             <string>Id product</string>
@@ -352,6 +367,9 @@ color: #FFFFFF;</string>
             <font>
              <pointsize>12</pointsize>
             </font>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">color: #FFFFFF;</string>
            </property>
            <property name="text">
             <string>Description</string>
@@ -380,6 +398,9 @@ color: #FFFFFF;</string>
               <pointsize>12</pointsize>
              </font>
             </property>
+            <property name="styleSheet">
+             <string notr="true">color : #FFFFFF</string>
+            </property>
             <property name="text">
              <string>Description</string>
             </property>
@@ -391,6 +412,10 @@ color: #FFFFFF;</string>
              <font>
               <pointsize>10</pointsize>
              </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">background:#535455;
+color: #FFFFFF;</string>
             </property>
            </widget>
           </item>
@@ -405,6 +430,9 @@ color: #FFFFFF;</string>
               <pointsize>12</pointsize>
              </font>
             </property>
+            <property name="styleSheet">
+             <string notr="true">color: #FFFFFF;</string>
+            </property>
             <property name="text">
              <string>Quantity</string>
             </property>
@@ -416,6 +444,10 @@ color: #FFFFFF;</string>
              <font>
               <pointsize>10</pointsize>
              </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">background:#535455;
+color: #FFFFFF;</string>
             </property>
            </widget>
           </item>
@@ -430,6 +462,9 @@ color: #FFFFFF;</string>
               <pointsize>12</pointsize>
              </font>
             </property>
+            <property name="styleSheet">
+             <string notr="true">color: #FFFFFF;</string>
+            </property>
             <property name="text">
              <string>Supplier</string>
             </property>
@@ -441,6 +476,10 @@ color: #FFFFFF;</string>
              <font>
               <pointsize>10</pointsize>
              </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">background:#535455;
+color: #FFFFFF;</string>
             </property>
            </widget>
           </item>
@@ -455,6 +494,9 @@ color: #FFFFFF;</string>
               <pointsize>12</pointsize>
              </font>
             </property>
+            <property name="styleSheet">
+             <string notr="true">color: #FFFFFF;</string>
+            </property>
             <property name="text">
              <string>Purchase price</string>
             </property>
@@ -466,6 +508,10 @@ color: #FFFFFF;</string>
              <font>
               <pointsize>10</pointsize>
              </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">background:#535455;
+color: #FFFFFF;</string>
             </property>
            </widget>
           </item>
@@ -480,6 +526,9 @@ color: #FFFFFF;</string>
               <pointsize>12</pointsize>
              </font>
             </property>
+            <property name="styleSheet">
+             <string notr="true">color: #FFFFFF;</string>
+            </property>
             <property name="text">
              <string>Sale price</string>
             </property>
@@ -491,6 +540,10 @@ color: #FFFFFF;</string>
              <font>
               <pointsize>10</pointsize>
              </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">background:#535455;
+color: #FFFFFF;</string>
             </property>
            </widget>
           </item>
@@ -518,6 +571,10 @@ color: #FFFFFF;</string>
               <pointsize>12</pointsize>
              </font>
             </property>
+            <property name="styleSheet">
+             <string notr="true">background:#535455;
+color: #FFFFFF;</string>
+            </property>
             <property name="text">
              <string>Save</string>
             </property>
@@ -529,6 +586,10 @@ color: #FFFFFF;</string>
              <font>
               <pointsize>12</pointsize>
              </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">background:#535455;
+color: #FFFFFF;</string>
             </property>
             <property name="text">
              <string>Remove</string>
@@ -558,6 +619,9 @@ color: #FFFFFF;</string>
               <pointsize>15</pointsize>
              </font>
             </property>
+            <property name="styleSheet">
+             <string notr="true">color: #FFFFFF;</string>
+            </property>
             <property name="text">
              <string>Filter</string>
             </property>
@@ -569,6 +633,10 @@ color: #FFFFFF;</string>
              <font>
               <pointsize>12</pointsize>
              </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">background:#535455;
+color: #FFFFFF;</string>
             </property>
             <property name="text">
              <string>Search</string>
@@ -584,9 +652,49 @@ color: #FFFFFF;</string>
             <pointsize>10</pointsize>
            </font>
           </property>
+          <property name="styleSheet">
+           <string notr="true">background:#535455;
+color: #FFFFFF;</string>
+          </property>
          </widget>
         </item>
        </layout>
+      </widget>
+      <widget class="QGroupBox" name="groupBox">
+       <property name="geometry">
+        <rect>
+         <x>280</x>
+         <y>130</y>
+         <width>401</width>
+         <height>301</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">background:#535455;
+color: #FFFFFF;</string>
+       </property>
+       <property name="title">
+        <string/>
+       </property>
+       <widget class="QTableWidget" name="tableWidget_inventoryManagement">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>0</y>
+          <width>401</width>
+          <height>301</height>
+         </rect>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>10</pointsize>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">background:#535455;
+color: #FFFFFF;</string>
+        </property>
+       </widget>
       </widget>
      </widget>
     </widget>

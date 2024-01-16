@@ -14,20 +14,13 @@ class InventoryManagementWindow : public QDialog
     Q_OBJECT
 
 public:
-    // Properties
-    DatabaseConnection dbConnection;
-
-    // Functions
     explicit InventoryManagementWindow(QWidget *parent = nullptr);
     ~InventoryManagementWindow();
-    void CleanTableWidget(QTableWidget *tableWidget);
 
 private slots:
     void on_pushButton_newProduct_save_clicked();
     void on_pushButton_newProduct_cancel_clicked();
-    void ClearNewProductTabFields();
     void on_tabWidget_currentChanged(int index);
-    void UpdateIMTableWidget();
     void on_tableWidget_inventoryManagement_itemSelectionChanged();
     void on_pushButton_inventoryManagement_save_clicked();
     void on_pushButton_inventoryManagement_remove_clicked();
@@ -35,7 +28,12 @@ private slots:
 
 private:
     Ui::InventoryManagementWindow *ui;
+    DatabaseConnection dbConnection;
     int ProductExists(int id);
+    void UpdateInventoryManagementTableWidget();
+    void ClearNewProductTabFields();
+    bool CheckValidProduct(float purchasePrice, float salePrice, int quantity, QString description, QString supplier);
+    void ClearInventoryManagementTabFields();
 };
 
 #endif // INVENTORYMANAGEMENTWINDOW_H

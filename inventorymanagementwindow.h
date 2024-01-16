@@ -29,6 +29,7 @@ private slots:
 private:
     Ui::InventoryManagementWindow *ui;
     DatabaseConnection dbConnection;
+    QIcon iconWindow;
     int ProductExists(int id);
     void UpdateInventoryManagementTableWidget();
     void ClearNewProductTabFields();

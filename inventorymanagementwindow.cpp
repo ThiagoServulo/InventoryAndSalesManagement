@@ -14,6 +14,13 @@ InventoryManagementWindow::InventoryManagementWindow(QWidget *parent) :
 
     ui->setupUi(this);
 
+    // Window layout
+    iconWindow.addFile(":/images/inventory.png");
+    this->setWindowIcon(iconWindow);
+    this->setWindowTitle("Inventory Management");
+    this->setFixedSize(730, 502);
+
+    // Set first tab
     ui->tabWidget->setCurrentIndex(0);
 
     // Configure table widget
@@ -173,10 +180,9 @@ void InventoryManagementWindow::ClearInventoryManagementTabFields()
 
 void InventoryManagementWindow::on_tabWidget_currentChanged(int index)
 {
-    if(index == 1)
-    {
-        UpdateInventoryManagementTableWidget();
-    }
+    ui->lineEdit_inventoryManagement_filter->clear();
+    ClearInventoryManagementTabFields();
+    UpdateInventoryManagementTableWidget();
 }
 
 void InventoryManagementWindow::UpdateInventoryManagementTableWidget()
@@ -202,26 +208,39 @@ void InventoryManagementWindow::UpdateInventoryManagementTableWidget()
 
 void InventoryManagementWindow::on_tableWidget_inventoryManagement_itemSelectionChanged()
 {
-    if(!dbConnection.open())
+    int currentRow = ui->tableWidget_inventoryManagement->currentRow();
+
+    if(currentRow == -1)
     {
-        QMessageBox::warning(this, "Error", "Unable to connect database");
+        return;
     }
 
-    int id = ui->tableWidget_inventoryManagement->item(ui->tableWidget_inventoryManagement->currentRow(), 0)->text().toInt();
-    QSqlQuery query;
-    query.prepare("SELECT * FROM tb_inventory WHERE id = " + QString::number(id));
-    if(query.exec())
+    if(dbConnection.open())
     {
-        query.first();
-        ui->lineEdit_inventoryManagement_description->setText(query.value(1).toString());
-        ui->lineEdit_inventoryManagement_supplier->setText(query.value(2).toString());
-        ui->lineEdit_inventoryManagement_quantity->setText(query.value(3).toString());
-        ui->lineEdit_inventoryManagement_purchasePrice->setText(query.value(4).toString());
-        ui->lineEdit_inventoryManagement_salePrice->setText(query.value(5).toString());
+        int id = ui->tableWidget_inventoryManagement->item(currentRow, 0)->text().toInt();
+
+        QSqlQuery query;
+        query.prepare("SELECT * FROM tb_inventory WHERE id = " + QString::number(id));
+
+        if(query.exec())
+        {
+            query.first();
+            ui->lineEdit_inventoryManagement_description->setText(query.value(1).toString());
+            ui->lineEdit_inventoryManagement_supplier->setText(query.value(2).toString());
+            ui->lineEdit_inventoryManagement_quantity->setText(query.value(3).toString());
+            ui->lineEdit_inventoryManagement_purchasePrice->setText(query.value(4).toString());
+            ui->lineEdit_inventoryManagement_salePrice->setText(query.value(5).toString());
+        }
+        else
+        {
+            QMessageBox::warning(this, "Error", "Unable to read product information from database");
+        }
+
+        dbConnection.close();
     }
     else
     {
-        QMessageBox::warning(this, "Error", "Unable to read product information from database");
+        QMessageBox::warning(this, "Error", "Unable to connect database to read product information");
     }
 }
 
@@ -258,9 +277,10 @@ void InventoryManagementWindow::on_pushButton_inventoryManagement_save_clicked()
 
         if(query.exec())
         {
+            ui->tableWidget_inventoryManagement->clearSelection();
+            ClearInventoryManagementTabFields();
             UpdateInventoryManagementTableWidget();
             QMessageBox::information(this, "Success", "Product information updated");
-            ClearInventoryManagementTabFields();
         }
         else
         {
@@ -277,71 +297,91 @@ void InventoryManagementWindow::on_pushButton_inventoryManagement_save_clicked()
 
 void InventoryManagementWindow::on_pushButton_inventoryManagement_remove_clicked()
 {
-    if(!dbConnection.open())
+    // Check selection
+    if(ui->lineEdit_inventoryManagement_description->text() == "")
     {
-        QMessageBox::warning(this, "Error", "Unable to connect database");
+        QMessageBox::warning(this, "Error", "Select a product");
+        return;
     }
 
-    QMessageBox::StandardButton button = QMessageBox::question(this, "Remove", "Do you want to remove this product?", QMessageBox::Yes | QMessageBox::No);
-    if(button == QMessageBox::Yes)
+    // Remove product
+    if(dbConnection.open())
+    {       
+        QMessageBox::StandardButton button = QMessageBox::question(this, "Remove", "Do you want to remove this product?", QMessageBox::Yes | QMessageBox::No);
+        if(button == QMessageBox::Yes)
+        {
+            int id = ui->tableWidget_inventoryManagement->item(ui->tableWidget_inventoryManagement->currentRow(), 0)->text().toInt();
+            QSqlQuery query;
+            query.prepare("DELETE FROM tb_inventory WHERE id = " + QString::number(id));
+
+            if(query.exec())
+            {
+                //ui->tableWidget_inventoryManagement->removeRow(ui->tableWidget_inventoryManagement->currentRow());
+                ui->tableWidget_inventoryManagement->setCurrentCell(-1, -1);
+                ClearInventoryManagementTabFields();
+                UpdateInventoryManagementTableWidget();
+                //qDebug() << ui->tableWidget_inventoryManagement->rowCount();
+                QMessageBox::information(this, "Success", "Product removed with success");
+            }
+            else
+            {
+                QMessageBox::warning(this, "Error", "Unable to remove product from database");
+            }
+        }
+
+        dbConnection.close();
+    }
+    else
     {
-        int id = ui->tableWidget_inventoryManagement->item(ui->tableWidget_inventoryManagement->currentRow(), 0)->text().toInt();
-        QSqlQuery query;
-        query.prepare("DELETE FROM tb_inventory WHERE id = " + QString::number(id));
-        if(query.exec())
-        {
-            ui->tableWidget_inventoryManagement->removeRow(ui->tableWidget_inventoryManagement->currentRow());
-            ClearInventoryManagementTabFields();
-            QMessageBox::information(this, "Success", "Product removed with success");
-        }
-        else
-        {
-            QMessageBox::warning(this, "Error", "Unable to remove product from database");
-        }
+        QMessageBox::warning(this, "Error", "Unable to connect database to remove product");
     }
 }
 
 void InventoryManagementWindow::on_pushButton_inventoryManagement_search_clicked()
 {
-    if(!dbConnection.open())
+    if(dbConnection.open())
     {
-        QMessageBox::warning(this, "Error", "Unable to connect database");
-    }
-
-    QSqlQuery query;
-    if(ui->lineEdit_inventoryManagement_filter->text() == "")
-    {
-        if(ui->radioButton_inventoryManagement_id->isChecked())
+        QSqlQuery query;
+        if(ui->lineEdit_inventoryManagement_filter->text() == "")
         {
-            query.prepare("SELECT id, description FROM tb_inventory ORDER BY id");
+            if(ui->radioButton_inventoryManagement_id->isChecked())
+            {
+                query.prepare("SELECT id, description FROM tb_inventory ORDER BY id");
+            }
+            else
+            {
+                query.prepare("SELECT id, description FROM tb_inventory ORDER BY description");
+            }
         }
         else
         {
-            query.prepare("SELECT id, description FROM tb_inventory ORDER BY description");
+            if(ui->radioButton_inventoryManagement_id->isChecked())
+            {
+                query.prepare("SELECT id, description FROM tb_inventory WHERE id = " + ui->lineEdit_inventoryManagement_filter->text());
+            }
+            else
+            {
+                query.prepare("SELECT id, description FROM tb_inventory WHERE description LIKE '%" + ui->lineEdit_inventoryManagement_filter->text() + "%'");
+            }
         }
-    }
-    else
-    {
-        if(ui->radioButton_inventoryManagement_id->isChecked())
+
+        ui->lineEdit_inventoryManagement_filter->clear();
+        ClearInventoryManagementTabFields();
+
+        if(query.exec())
         {
-            query.prepare("SELECT id, description FROM tb_inventory WHERE id = " + ui->lineEdit_inventoryManagement_filter->text());
+            Utilities utilities;
+            utilities.QueryToInsertFieldsIntoTableWidget(&query, ui->tableWidget_inventoryManagement);
         }
         else
         {
-            query.prepare("SELECT id, description FROM tb_inventory WHERE description LIKE '%" + ui->lineEdit_inventoryManagement_filter->text() + "%'");
+            QMessageBox::warning(this, "Error", "Unable to filter products from database");
         }
-    }
 
-    ui->lineEdit_inventoryManagement_filter->clear();
-
-    if(query.exec())
-    {
-        Utilities utilities;
-        utilities.QueryToInsertFieldsIntoTableWidget(&query, ui->tableWidget_inventoryManagement);
+        dbConnection.close();
     }
     else
     {
-        QMessageBox::warning(this, "Error", "Unable to filter products from database");
+        QMessageBox::warning(this, "Error", "Unable to connect database to filter products");
     }
-
 }

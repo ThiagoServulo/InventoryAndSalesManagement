@@ -670,8 +670,7 @@ color: #FFFFFF;</string>
         </rect>
        </property>
        <property name="styleSheet">
-        <string notr="true">background:#535455;
-color: #FFFFFF;</string>
+        <string notr="true">color: #FFFFFF;</string>
        </property>
        <property name="title">
         <string/>

@@ -143,7 +143,42 @@ color: #FFFFFF;</string>
 color: #FFFFFF;</string>
         </property>
         <property name="text">
-         <string>All Sales</string>
+         <string>All sales</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer_2">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButton_removeSale">
+        <property name="minimumSize">
+         <size>
+          <width>120</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>12</pointsize>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">background:#535455;
+color: #FFFFFF;</string>
+        </property>
+        <property name="text">
+         <string>Remove sale</string>
         </property>
        </widget>
       </item>
@@ -164,7 +199,7 @@ color: #FFFFFF;</string>
        <widget class="QPushButton" name="pushButton_exportPdf">
         <property name="minimumSize">
          <size>
-          <width>150</width>
+          <width>120</width>
           <height>0</height>
          </size>
         </property>
@@ -186,6 +221,11 @@ color: #FFFFFF;</string>
     </item>
     <item>
      <widget class="QTableWidget" name="tableWidget_sales">
+      <property name="font">
+       <font>
+        <pointsize>10</pointsize>
+       </font>
+      </property>
       <property name="styleSheet">
        <string notr="true">background:#535455;
 color: #FFFFFF;</string>
@@ -207,6 +247,11 @@ color: #FFFFFF;</string>
     </item>
     <item>
      <widget class="QTableWidget" name="tableWidget_productsSales">
+      <property name="font">
+       <font>
+        <pointsize>10</pointsize>
+       </font>
+      </property>
       <property name="styleSheet">
        <string notr="true">background:#535455;
 color: #FFFFFF;</string>

@@ -1,6 +1,7 @@
 #include "salesmanagementwindow.h"
 #include "ui_salesmanagementwindow.h"
 #include "utilities.h"
+#include <QDateEdit>
 #include <QtSql>
 #include <QMessageBox>
 #include <QPrinter>
@@ -20,8 +21,14 @@ SalesManagementWindow::SalesManagementWindow(QWidget *parent) :
     ui->dateEdit_initial->setDisplayFormat("yyyy-MM-dd");
     ui->dateEdit_final->setDisplayFormat("yyyy-MM-dd");
 
+    // Init with a date
+    QDate today = QDate::currentDate();
+    QDate yesterday = today.addDays(-1);
+    ui->dateEdit_initial->setDate(yesterday);
+    ui->dateEdit_final->setDate(today);
+
     // Configure products sales table
-    QStringList headerLabels = {"Id", "Product Id", "Quantity", "Unitary Price", "Total Price"};
+    QStringList headerLabels = {"Product Id", "Quantity", "Unitary Price", "Total Price"};
     utilities.TableWidgetBasicConfigurations(ui->tableWidget_productsSales, headerLabels);
     utilities.CleanTableWidget(ui->tableWidget_productsSales);
 
@@ -33,17 +40,22 @@ SalesManagementWindow::SalesManagementWindow(QWidget *parent) :
 
 void SalesManagementWindow::ShowAllSalesIntoTableWidget()
 {
-    if(!dbConnection.open())
+    if(dbConnection.open())
     {
-        QMessageBox::warning(this, "Error", "Unable to connect database");
-    }
+        Utilities utilities;
+        QSqlQuery query;
+        query.prepare("SELECT * FROM tb_sales ORDER BY id");
 
-    Utilities utilities;
-    QSqlQuery query;
-    query.prepare("SELECT * FROM tb_sales ORDER BY id");
-    if(!utilities.QueryToUpdateTableWidget(&query, ui->tableWidget_sales))
+        if(!utilities.QueryToUpdateTableWidget(&query, ui->tableWidget_sales))
+        {
+            QMessageBox::warning(this, "Error", "Unable to read sales from database");
+        }
+
+        dbConnection.close();
+    }
+    else
     {
-        QMessageBox::warning(this, "Error", "Unable to read sales from database");
+        QMessageBox::warning(this, "Error", "Unable to connect database to read all sales");
     }
 }
 
@@ -54,47 +66,65 @@ SalesManagementWindow::~SalesManagementWindow()
 
 void SalesManagementWindow::on_tableWidget_sales_itemSelectionChanged()
 {
-    if(!dbConnection.open())
+    if(dbConnection.open())
     {
-        QMessageBox::warning(this, "Error", "Unable to connect database");
-    }
+        Utilities utilities;
+        QSqlQuery query;
 
-    Utilities utilities;
-    QSqlQuery query;
-    int idSale = ui->tableWidget_sales->item(ui->tableWidget_sales->currentRow(), 0)->text().toInt();
-    query.prepare("SELECT id, id_product, quantity, sale_price, quantity * sale_price FROM tb_products_sales WHERE id_sale = " +
-                  QString::number(idSale) + " ORDER BY id");
-    if(!utilities.QueryToUpdateTableWidget(&query, ui->tableWidget_productsSales))
+        // Get sale id
+        int idSale = ui->tableWidget_sales->item(ui->tableWidget_sales->currentRow(), 0)->text().toInt();
+
+        query.prepare("SELECT i.description, ps.quantity, ps.sale_price, ps.quantity * ps.sale_price "
+                      "FROM tb_products_sales ps JOIN tb_inventory i ON ps.id_product = i.id "
+                      "WHERE ps.id_sale = " + QString::number(idSale) + " ORDER BY ps.id");
+
+        if(!utilities.QueryToUpdateTableWidget(&query, ui->tableWidget_productsSales))
+        {
+            QMessageBox::warning(this, "Error", "Unable to read prducts of sales from database");
+        }
+
+        dbConnection.close();
+    }
+    else
     {
-        QMessageBox::warning(this, "Error", "Unable to read prducts sales from database");
+        QMessageBox::warning(this, "Error", "Unable to connect database to read products of sales");
     }
 }
-
 
 void SalesManagementWindow::on_pushButton_filter_clicked()
 {
-
-    if(!dbConnection.open())
+    // Check dates
+    if(ui->dateEdit_final->date() < ui->dateEdit_initial->date())
     {
-        QMessageBox::warning(this, "Error", "Unable to connect database");
+        QMessageBox::information(this, "Information", "The final date should be later than the initial");
+        return;
     }
 
-    Utilities utilities;
-    QSqlQuery query;
-    query.prepare("SELECT * FROM tb_sales WHERE date BETWEEN '" + ui->dateEdit_initial->text() + "' AND '" +
-                  ui->dateEdit_final->text() + "' ORDER BY id");
-    if(!utilities.QueryToUpdateTableWidget(&query, ui->tableWidget_sales))
+    // Filter sales
+    if(dbConnection.open())
     {
-        QMessageBox::warning(this, "Error", "Unable to read sales from database");
+        Utilities utilities;
+        QSqlQuery query;
+        query.prepare("SELECT * FROM tb_sales WHERE date BETWEEN '" + ui->dateEdit_initial->text() + "' AND '" +
+                      ui->dateEdit_final->text() + "' ORDER BY id");
+
+        if(!utilities.QueryToUpdateTableWidget(&query, ui->tableWidget_sales))
+        {
+            QMessageBox::warning(this, "Error", "Unable to read sales from database");
+        }
+
+        dbConnection.close();
+    }
+    else
+    {
+        QMessageBox::warning(this, "Error", "Unable to connect database to filter sales");
     }
 }
-
 
 void SalesManagementWindow::on_pushButton_allSales_clicked()
 {
     ShowAllSalesIntoTableWidget();
 }
-
 
 void SalesManagementWindow::on_pushButton_exportPdf_clicked()
 {
@@ -132,3 +162,7 @@ void SalesManagementWindow::on_pushButton_exportPdf_clicked()
     }
 }
 
+void SalesManagementWindow::on_pushButton_removeSale_clicked()
+{
+    // Implementar
+}

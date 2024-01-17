@@ -6,18 +6,23 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>919</width>
-    <height>596</height>
+    <width>789</width>
+    <height>522</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
-  <widget class="QWidget" name="">
+  <property name="styleSheet">
+   <string notr="true">background:#2E2F30;
+color: #FFFFFF;
+</string>
+  </property>
+  <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
-     <x>60</x>
-     <y>30</y>
+     <x>10</x>
+     <y>10</y>
      <width>771</width>
      <height>501</height>
     </rect>
@@ -32,6 +37,11 @@
         </property>
         <item>
          <widget class="QLabel" name="label_initialDate">
+          <property name="font">
+           <font>
+            <pointsize>12</pointsize>
+           </font>
+          </property>
           <property name="text">
            <string>Initial Date</string>
           </property>
@@ -45,6 +55,15 @@
             <height>0</height>
            </size>
           </property>
+          <property name="font">
+           <font>
+            <pointsize>10</pointsize>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background:#535455;
+color: #FFFFFF;</string>
+          </property>
          </widget>
         </item>
        </layout>
@@ -53,6 +72,11 @@
        <layout class="QVBoxLayout" name="verticalLayout_2">
         <item>
          <widget class="QLabel" name="label_finalDate">
+          <property name="font">
+           <font>
+            <pointsize>12</pointsize>
+           </font>
+          </property>
           <property name="text">
            <string>Final Date</string>
           </property>
@@ -66,6 +90,15 @@
             <height>0</height>
            </size>
           </property>
+          <property name="font">
+           <font>
+            <pointsize>10</pointsize>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background:#535455;
+color: #FFFFFF;</string>
+          </property>
          </widget>
         </item>
        </layout>
@@ -78,6 +111,15 @@
           <height>0</height>
          </size>
         </property>
+        <property name="font">
+         <font>
+          <pointsize>12</pointsize>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">background:#535455;
+color: #FFFFFF;</string>
+        </property>
         <property name="text">
          <string>Filter</string>
         </property>
@@ -85,6 +127,21 @@
       </item>
       <item>
        <widget class="QPushButton" name="pushButton_allSales">
+        <property name="minimumSize">
+         <size>
+          <width>100</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>12</pointsize>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">background:#535455;
+color: #FFFFFF;</string>
+        </property>
         <property name="text">
          <string>All Sales</string>
         </property>
@@ -107,9 +164,18 @@
        <widget class="QPushButton" name="pushButton_exportPdf">
         <property name="minimumSize">
          <size>
-          <width>120</width>
+          <width>150</width>
           <height>0</height>
          </size>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>12</pointsize>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">background:#535455;
+color: #FFFFFF;</string>
         </property>
         <property name="text">
          <string>Export to PDF</string>
@@ -119,7 +185,12 @@
      </layout>
     </item>
     <item>
-     <widget class="QTableWidget" name="tableWidget_sales"/>
+     <widget class="QTableWidget" name="tableWidget_sales">
+      <property name="styleSheet">
+       <string notr="true">background:#535455;
+color: #FFFFFF;</string>
+      </property>
+     </widget>
     </item>
     <item>
      <spacer name="verticalSpacer">
@@ -135,7 +206,12 @@
      </spacer>
     </item>
     <item>
-     <widget class="QTableWidget" name="tableWidget_productsSales"/>
+     <widget class="QTableWidget" name="tableWidget_productsSales">
+      <property name="styleSheet">
+       <string notr="true">background:#535455;
+color: #FFFFFF;</string>
+      </property>
+     </widget>
     </item>
    </layout>
   </widget>

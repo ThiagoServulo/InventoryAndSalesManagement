@@ -16,30 +16,22 @@ SalesManagementWindow::SalesManagementWindow(QWidget *parent) :
 
     Utilities utilities;
 
+    // Configure data format
     ui->dateEdit_initial->setDisplayFormat("yyyy-MM-dd");
     ui->dateEdit_final->setDisplayFormat("yyyy-MM-dd");
 
-    ui->tableWidget_productsSales->horizontalHeader()->setVisible(true);
+    // Configure products sales table
     QStringList headerLabels = {"Id", "Product Id", "Quantity", "Unitary Price", "Total Price"};
     utilities.TableWidgetBasicConfigurations(ui->tableWidget_productsSales, headerLabels);
-
-    ui->tableWidget_sales->horizontalHeader()->setVisible(true);
-    ui->tableWidget_sales->setColumnCount(5);
-    ui->tableWidget_sales->setHorizontalHeaderLabels({"Id", "Date", "Collaborator", "Total", "Payment Type"});
-    ui->tableWidget_sales->setStyleSheet("QTableView {selection-background-color: red}");
-    ui->tableWidget_sales->setEditTriggers(QAbstractItemView::NoEditTriggers);
-    ui->tableWidget_sales->setSelectionBehavior(QAbstractItemView::SelectRows);
-    ui->tableWidget_sales->verticalHeader()->setVisible(false);
-    ui->tableWidget_sales->verticalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
-    ui->tableWidget_sales->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-
-
     utilities.CleanTableWidget(ui->tableWidget_productsSales);
 
-    ShowAllSales();
+    // Configure sales table
+    headerLabels = {"Id", "Date", "Collaborator", "Total", "Payment Type"};
+    utilities.TableWidgetBasicConfigurations(ui->tableWidget_sales, headerLabels);
+    ShowAllSalesIntoTableWidget();
 }
 
-void SalesManagementWindow::ShowAllSales()
+void SalesManagementWindow::ShowAllSalesIntoTableWidget()
 {
     if(!dbConnection.open())
     {
@@ -100,7 +92,7 @@ void SalesManagementWindow::on_pushButton_filter_clicked()
 
 void SalesManagementWindow::on_pushButton_allSales_clicked()
 {
-    ShowAllSales();
+    ShowAllSalesIntoTableWidget();
 }
 
 

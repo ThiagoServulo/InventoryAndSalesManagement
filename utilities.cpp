@@ -11,6 +11,7 @@ bool Utilities::QueryToUpdateTableWidget(QSqlQuery *query, QTableWidget *tableWi
 {
     if(query->exec())
     {
+        tableWidget->clearSelection();
         QueryToInsertFieldsIntoTableWidget(query, tableWidget);
         return true;
     }

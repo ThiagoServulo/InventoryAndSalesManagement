@@ -33,16 +33,21 @@ SalesManagementWindow::SalesManagementWindow(QWidget *parent) :
     utilities.CleanTableWidget(ui->tableWidget_productsSales);
 
     // Configure sales table
-    headerLabels = {"Id", "Date", "Collaborator", "Total", "Payment Type"};
+    headerLabels = {"Id", "Date", "Collaborator", "Total"};
     utilities.TableWidgetBasicConfigurations(ui->tableWidget_sales, headerLabels);
     ShowAllSalesIntoTableWidget();
 }
 
 void SalesManagementWindow::ShowAllSalesIntoTableWidget()
 {
+    // Prepare tables
+    Utilities utilities;
+    ui->tableWidget_sales->clearSelection();
+    utilities.CleanTableWidget(ui->tableWidget_productsSales);
+
+    // Show all sales
     if(dbConnection.open())
     {
-        Utilities utilities;
         QSqlQuery query;
         query.prepare("SELECT * FROM tb_sales ORDER BY id");
 
@@ -66,6 +71,13 @@ SalesManagementWindow::~SalesManagementWindow()
 
 void SalesManagementWindow::on_tableWidget_sales_itemSelectionChanged()
 {
+    // Check if is a valid row
+    if(ui->tableWidget_sales->currentRow() < 0)
+    {
+        return;
+    }
+
+    // Show sales products
     if(dbConnection.open())
     {
         Utilities utilities;
@@ -112,6 +124,9 @@ void SalesManagementWindow::on_pushButton_filter_clicked()
         {
             QMessageBox::warning(this, "Error", "Unable to read sales from database");
         }
+
+        // Clean product sales table
+        utilities.CleanTableWidget(ui->tableWidget_productsSales);
 
         dbConnection.close();
     }

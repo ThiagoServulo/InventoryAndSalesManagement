@@ -165,13 +165,11 @@ void SalesWindow::on_pushButton_finalizeSale_clicked()
     if(ui->tableWidget_listProducts->rowCount() != 0)
     {
         int id_collaborator = MainWindow::id_collaborator;
-        int id_payment_type = 1;
         float total = CalculateTotalSale(ui->tableWidget_listProducts, 4);
         QString date = QDate::currentDate().toString("yyyy-MM-dd") +  QTime::currentTime().toString(":hh:mm:ss");
         QSqlQuery query;
-        query.prepare("INSERT INTO tb_sales (date, id_collaborator, total_value, id_payment_type) VALUES ('" + date
-                      + "', " + QString::number(id_collaborator) + ", " +  QString::number(total) + ", "
-                      + QString::number(id_payment_type) + ")");
+        query.prepare("INSERT INTO tb_sales (date, id_collaborator, total_value) VALUES ('" + date
+                      + "', " + QString::number(id_collaborator) + ", " +  QString::number(total) + ")");
 
         if(query.exec())
         {

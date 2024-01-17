@@ -14,7 +14,7 @@ public:
     void QueryToInsertFieldsIntoTableWidget(QSqlQuery *query, QTableWidget *tableWidget);
     void CleanTableWidget(QTableWidget *tableWidget);
     bool QueryToInsertComboBoxElements(QSqlQuery *query, QComboBox *comboBox);
-    void TableWidgetBasicConfigurations(QTableWidget *tableWidget);
+    void TableWidgetBasicConfigurations(QTableWidget *tableWidget, QStringList &headerLabels);
     void ConfigureRegexLineEdit(QLineEdit *lineEdit, int type);
 };
 

@@ -46,12 +46,8 @@ CollaboratosManagementWindow::CollaboratosManagementWindow(QWidget *parent) :
     ClearCollaboratorManagementTabFields(true);
 
     // Configure table widget
-    ui->tableWidget_collaboratorsManagement_collaborators->setColumnCount(3);
-    ui->tableWidget_collaboratorsManagement_collaborators->setColumnWidth(0, 70);
-    ui->tableWidget_collaboratorsManagement_collaborators->setColumnWidth(1, 100);
-    ui->tableWidget_collaboratorsManagement_collaborators->setColumnWidth(2, 100);
-    ui->tableWidget_collaboratorsManagement_collaborators->setHorizontalHeaderLabels({"Id", "Name", "Username"});
-    utilities.TableWidgetBasicConfigurations(ui->tableWidget_collaboratorsManagement_collaborators);
+    QStringList headerLabels = {"Id", "Name", "Username"};
+    utilities.TableWidgetBasicConfigurations(ui->tableWidget_collaboratorsManagement_collaborators, headerLabels);
 
     // Configure radio button
     ui->radioButton_collaboratorsManagement_idCollaborator->setChecked(true);

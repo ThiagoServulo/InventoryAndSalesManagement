@@ -24,11 +24,8 @@ InventoryManagementWindow::InventoryManagementWindow(QWidget *parent) :
     ui->tabWidget->setCurrentIndex(0);
 
     // Configure table widget
-    ui->tableWidget_inventoryManagement->setColumnCount(2);
-    ui->tableWidget_inventoryManagement->setColumnWidth(0, 100);
-    ui->tableWidget_inventoryManagement->setColumnWidth(1, 200);
-    ui->tableWidget_inventoryManagement->setHorizontalHeaderLabels({"Id", "Description"});
-    utilities.TableWidgetBasicConfigurations(ui->tableWidget_inventoryManagement);
+    QStringList headerLabels = {"Id", "Description"};
+    utilities.TableWidgetBasicConfigurations(ui->tableWidget_inventoryManagement, headerLabels);
 
     // Configure regex to int fields
     utilities.ConfigureRegexLineEdit(ui->lineEdit_newProduct_salePrice, 3);

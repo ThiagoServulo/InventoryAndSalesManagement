@@ -59,13 +59,17 @@ bool Utilities::QueryToInsertComboBoxElements(QSqlQuery *query, QComboBox *combo
     return false;
 }
 
-void Utilities::TableWidgetBasicConfigurations(QTableWidget *tableWidget)
+void Utilities::TableWidgetBasicConfigurations(QTableWidget *tableWidget, QStringList &headerLabels)
 {
+    tableWidget->setColumnCount(headerLabels.size());
+    tableWidget->setHorizontalHeaderLabels(headerLabels);
     tableWidget->horizontalHeader()->setStyleSheet("QHeaderView::section { background-color: #535455; }");
     tableWidget->setStyleSheet("QTableView { selection-background-color: #535455; }");
     tableWidget->verticalHeader()->setVisible(false);
     tableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
     tableWidget->setSelectionBehavior(QAbstractItemView::SelectRows);
+    tableWidget->verticalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
+    tableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 }
 
 void Utilities::ConfigureRegexLineEdit(QLineEdit *lineEdit, int type)

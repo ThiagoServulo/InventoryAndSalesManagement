@@ -71,6 +71,7 @@ void Utilities::TableWidgetBasicConfigurations(QTableWidget *tableWidget, QStrin
     tableWidget->setSelectionBehavior(QAbstractItemView::SelectRows);
     tableWidget->verticalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
     tableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    tableWidget->setSelectionMode(QAbstractItemView::SingleSelection);
 }
 
 void Utilities::ConfigureRegexLineEdit(QLineEdit *lineEdit, int type)

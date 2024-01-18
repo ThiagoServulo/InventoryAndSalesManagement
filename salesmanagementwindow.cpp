@@ -17,6 +17,12 @@ SalesManagementWindow::SalesManagementWindow(QWidget *parent) :
 
     Utilities utilities;
 
+    // Window layout
+    iconWindow.addFile(":/images/sale.png");
+    this->setWindowIcon(iconWindow);
+    this->setWindowTitle("Sales Management");
+    this->setFixedSize(789, 522);
+
     // Configure data format
     ui->dateEdit_initial->setDisplayFormat("yyyy-MM-dd");
     ui->dateEdit_final->setDisplayFormat("yyyy-MM-dd");
@@ -117,6 +123,9 @@ void SalesManagementWindow::on_pushButton_filter_clicked()
     // Filter sales
     if(dbConnection.open())
     {
+        // Block signals to ignore items selections changed
+        ui->tableWidget_sales->blockSignals(true);
+
         Utilities utilities;
         QSqlQuery query;
         query.prepare("SELECT * FROM tb_sales WHERE date BETWEEN '" + ui->dateEdit_initial->text() + "' AND '" +
@@ -130,13 +139,20 @@ void SalesManagementWindow::on_pushButton_filter_clicked()
         // Clean product sales table
         utilities.CleanTableWidget(ui->tableWidget_productsSales);
         ui->tableWidget_sales->clearSelection();
+        ui->tableWidget_sales->setCurrentCell(-1, -1);
 
         dbConnection.close();
+
+        // Restore signals
+        ui->tableWidget_sales->blockSignals(false);
     }
     else
     {
         QMessageBox::warning(this, "Error", "Unable to connect database to filter sales");
     }
+
+    // Restore flag
+    //ignoreSelection = false;
 }
 
 void SalesManagementWindow::on_pushButton_allSales_clicked()

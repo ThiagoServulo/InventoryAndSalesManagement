@@ -336,6 +336,9 @@ void InventoryManagementWindow::on_pushButton_inventoryManagement_search_clicked
 {
     if(dbConnection.open())
     {
+        // Block signals to ignore items selections changed
+        ui->tableWidget_inventoryManagement->blockSignals(true);
+
         QSqlQuery query;
         if(ui->lineEdit_inventoryManagement_filter->text() == "")
         {
@@ -374,6 +377,9 @@ void InventoryManagementWindow::on_pushButton_inventoryManagement_search_clicked
         }
 
         dbConnection.close();
+
+        // Restore signals
+        ui->tableWidget_inventoryManagement->blockSignals(false);
     }
     else
     {

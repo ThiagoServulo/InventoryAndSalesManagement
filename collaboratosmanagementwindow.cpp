@@ -309,6 +309,9 @@ void CollaboratosManagementWindow::on_pushButton_collaboratorsManagement_filter_
 
     if(dbConnection.open())
     {
+        // Block signals to ignore items selections changed
+        ui->tableWidget_collaboratorsManagement_collaborators->blockSignals(true);
+
         QSqlQuery query;
 
         // Check filter type
@@ -348,6 +351,9 @@ void CollaboratosManagementWindow::on_pushButton_collaboratorsManagement_filter_
         }
 
         dbConnection.close();
+
+        // Restore signals
+        ui->tableWidget_collaboratorsManagement_collaborators->blockSignals(false);
     }
     else
     {

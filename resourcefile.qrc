@@ -6,5 +6,6 @@
         <file>images/unlock.png</file>
         <file>images/login.png</file>
         <file>images/inventory.png</file>
+        <file>images/sale.png</file>
     </qresource>
 </RCC>

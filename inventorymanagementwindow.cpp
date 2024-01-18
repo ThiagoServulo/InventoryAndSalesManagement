@@ -313,11 +313,9 @@ void InventoryManagementWindow::on_pushButton_inventoryManagement_remove_clicked
 
             if(query.exec())
             {
-                //ui->tableWidget_inventoryManagement->removeRow(ui->tableWidget_inventoryManagement->currentRow());
                 ui->tableWidget_inventoryManagement->setCurrentCell(-1, -1);
                 ClearInventoryManagementTabFields();
                 UpdateInventoryManagementTableWidget();
-                //qDebug() << ui->tableWidget_inventoryManagement->rowCount();
                 QMessageBox::information(this, "Success", "Product removed with success");
             }
             else

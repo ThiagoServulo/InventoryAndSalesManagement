@@ -71,8 +71,10 @@ SalesManagementWindow::~SalesManagementWindow()
 
 void SalesManagementWindow::on_tableWidget_sales_itemSelectionChanged()
 {
+    int currentRow = ui->tableWidget_sales->currentRow();
+
     // Check if is a valid row
-    if(ui->tableWidget_sales->currentRow() < 0)
+    if(currentRow < 0)
     {
         return;
     }
@@ -84,7 +86,7 @@ void SalesManagementWindow::on_tableWidget_sales_itemSelectionChanged()
         QSqlQuery query;
 
         // Get sale id
-        int idSale = ui->tableWidget_sales->item(ui->tableWidget_sales->currentRow(), 0)->text().toInt();
+        int idSale = ui->tableWidget_sales->item(currentRow, 0)->text().toInt();
 
         query.prepare("SELECT i.description, ps.quantity, ps.sale_price, ps.quantity * ps.sale_price "
                       "FROM tb_products_sales ps JOIN tb_inventory i ON ps.id_product = i.id "
@@ -127,6 +129,7 @@ void SalesManagementWindow::on_pushButton_filter_clicked()
 
         // Clean product sales table
         utilities.CleanTableWidget(ui->tableWidget_productsSales);
+        ui->tableWidget_sales->clearSelection();
 
         dbConnection.close();
     }
@@ -179,5 +182,50 @@ void SalesManagementWindow::on_pushButton_exportPdf_clicked()
 
 void SalesManagementWindow::on_pushButton_removeSale_clicked()
 {
-    // Implementar
+    int currentRow = ui->tableWidget_sales->currentRow();
+
+    // Sale invalid
+    if(currentRow < 0)
+    {
+        QMessageBox::warning(this, "Error", "Select a sale first");
+        return;
+    }
+
+    // Remove sale
+    if(dbConnection.open())
+    {
+        QMessageBox::StandardButton button = QMessageBox::question(this, "Remove", "Do you want to remove this sale?", QMessageBox::Yes | QMessageBox::No);
+
+        if(button == QMessageBox::Yes)
+        {
+            int idSale = ui->tableWidget_sales->item(currentRow, 0)->text().toInt();
+            QSqlQuery query;
+            query.prepare("DELETE FROM tb_products_sales WHERE id_sale = " + QString::number(idSale));
+
+            if(query.exec())
+            {
+                query.prepare("DELETE FROM tb_sales WHERE id = " + QString::number(idSale));
+
+                if(query.exec())
+                {
+                    ShowAllSalesIntoTableWidget();
+                    QMessageBox::information(this, "Success", "Sale '" + QString::number(idSale) + "' removed with success");
+                }
+                else
+                {
+                    QMessageBox::warning(this, "Error", "Unable to remove sales from database");
+                }
+            }
+            else
+            {
+                QMessageBox::warning(this, "Error", "Unable to remove product sales from database");
+            }
+        }
+
+        dbConnection.close();
+    }
+    else
+    {
+        QMessageBox::warning(this, "Error", "Unable to connect database to remove sale");
+    }
 }

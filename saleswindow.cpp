@@ -2,6 +2,7 @@
 #include "ui_saleswindow.h"
 #include "editproductfromsalewindow.h"
 #include "mainwindow.h"
+#include "utilities.h"
 #include <QMessageBox>
 
 SalesWindow::SalesWindow(QWidget *parent) :
@@ -16,17 +17,12 @@ SalesWindow::SalesWindow(QWidget *parent) :
     }
 
     InitFieldsWindow();
-    ui->tableWidget_listProducts->setColumnCount(5);
-    ui->tableWidget_listProducts->setColumnWidth(0, 100);
-    ui->tableWidget_listProducts->setColumnWidth(1, 200);
-    ui->tableWidget_listProducts->setColumnWidth(2, 100);
-    ui->tableWidget_listProducts->setColumnWidth(3, 100);
-    ui->tableWidget_listProducts->setColumnWidth(4, 100);
-    ui->tableWidget_listProducts->setHorizontalHeaderLabels({"Id", "Description", "Unit value", "Quantity", "Total"});
-    ui->tableWidget_listProducts->setStyleSheet("QTableView {selection-background-color: red}");
-    ui->tableWidget_listProducts->setEditTriggers(QAbstractItemView::NoEditTriggers);
-    ui->tableWidget_listProducts->setSelectionBehavior(QAbstractItemView::SelectRows);
-    ui->tableWidget_listProducts->verticalHeader()->setVisible(false);
+
+    // Configure sales table
+    Utilities utilities;
+    QStringList headerLabels = {"Id", "Description", "Unit value", "Quantity", "Total"};
+    utilities.TableWidgetBasicConfigurations(ui->tableWidget_listProducts, headerLabels);
+
     ui->pushButton_editProduct->setAutoDefault(false);
     ui->pushButton_finalizeSale->setAutoDefault(false);
     ui->pushButton_removeProduct->setAutoDefault(false);

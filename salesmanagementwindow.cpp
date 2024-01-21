@@ -55,7 +55,9 @@ void SalesManagementWindow::ShowAllSalesIntoTableWidget()
     if(dbConnection.open())
     {
         QSqlQuery query;
-        query.prepare("SELECT * FROM tb_sales ORDER BY id");
+        query.prepare("SELECT s.id, s.date, c.name, printf('%.2f', s.total_value) "
+                      "FROM tb_sales s JOIN tb_collaborators c "
+                      "ON s.id_collaborator = c.id ORDER BY s.id");
 
         if(!utilities.QueryToUpdateTableWidget(&query, ui->tableWidget_sales))
         {
@@ -94,7 +96,8 @@ void SalesManagementWindow::on_tableWidget_sales_itemSelectionChanged()
         // Get sale id
         int idSale = ui->tableWidget_sales->item(currentRow, 0)->text().toInt();
 
-        query.prepare("SELECT i.description, ps.quantity, ps.sale_price, ps.quantity * ps.sale_price "
+        query.prepare("SELECT i.description, ps.quantity, printf('%.2f', ps.sale_price), "
+                      "printf('%.2f', ps.quantity * ps.sale_price) "
                       "FROM tb_products_sales ps JOIN tb_inventory i ON ps.id_product = i.id "
                       "WHERE ps.id_sale = " + QString::number(idSale) + " ORDER BY ps.id");
 
@@ -128,8 +131,11 @@ void SalesManagementWindow::on_pushButton_filter_clicked()
 
         Utilities utilities;
         QSqlQuery query;
-        query.prepare("SELECT * FROM tb_sales WHERE date BETWEEN '" + ui->dateEdit_initial->text() + "' AND '" +
-                      ui->dateEdit_final->text() + "' ORDER BY id");
+        query.prepare("SELECT s.id, s.date, c.name, printf('%.2f', s.total_value)"
+                      " FROM tb_sales s JOIN tb_collaborators c "
+                      "ON s.id_collaborator = c.id WHERE s.date BETWEEN '" +
+                      ui->dateEdit_initial->text() + "' AND '" +
+                      ui->dateEdit_final->text() + "' ORDER BY s.id");
 
         if(!utilities.QueryToUpdateTableWidget(&query, ui->tableWidget_sales))
         {
@@ -150,9 +156,6 @@ void SalesManagementWindow::on_pushButton_filter_clicked()
     {
         QMessageBox::warning(this, "Error", "Unable to connect database to filter sales");
     }
-
-    // Restore flag
-    //ignoreSelection = false;
 }
 
 void SalesManagementWindow::on_pushButton_allSales_clicked()

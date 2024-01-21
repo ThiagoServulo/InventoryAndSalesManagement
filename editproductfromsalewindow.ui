@@ -6,20 +6,24 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>468</width>
-    <height>313</height>
+    <width>340</width>
+    <height>218</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">background:#2E2F30;
+color: #FFFFFF;</string>
+  </property>
   <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
-     <x>50</x>
-     <y>20</y>
+     <x>10</x>
+     <y>10</y>
      <width>321</width>
-     <height>161</height>
+     <height>201</height>
     </rect>
    </property>
    <layout class="QVBoxLayout" name="verticalLayout_5">
@@ -29,13 +33,29 @@
        <layout class="QVBoxLayout" name="verticalLayout">
         <item>
          <widget class="QLabel" name="label_idProduct">
+          <property name="font">
+           <font>
+            <pointsize>12</pointsize>
+           </font>
+          </property>
           <property name="text">
            <string>Id Product</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QLineEdit" name="lineEdit_idProduct"/>
+         <widget class="QLineEdit" name="lineEdit_idProduct">
+          <property name="font">
+           <font>
+            <pointsize>10</pointsize>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background:#535455;
+color: #FFFFFF;
+</string>
+          </property>
+         </widget>
         </item>
        </layout>
       </item>
@@ -43,13 +63,35 @@
        <layout class="QVBoxLayout" name="verticalLayout_2">
         <item>
          <widget class="QLabel" name="label_description">
+          <property name="font">
+           <font>
+            <pointsize>12</pointsize>
+           </font>
+          </property>
           <property name="text">
            <string>Description</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QLineEdit" name="lineEdit_description"/>
+         <widget class="QLineEdit" name="lineEdit_description">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <pointsize>10</pointsize>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background:#535455;
+color: #FAFAFA;
+</string>
+          </property>
+         </widget>
         </item>
        </layout>
       </item>
@@ -61,13 +103,29 @@
        <layout class="QVBoxLayout" name="verticalLayout_3">
         <item>
          <widget class="QLabel" name="label_quantity">
+          <property name="font">
+           <font>
+            <pointsize>12</pointsize>
+           </font>
+          </property>
           <property name="text">
            <string>Quantity</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QLineEdit" name="lineEdit_quantity"/>
+         <widget class="QLineEdit" name="lineEdit_quantity">
+          <property name="font">
+           <font>
+            <pointsize>10</pointsize>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background:#535455;
+color: #FFFFFF;
+</string>
+          </property>
+         </widget>
         </item>
        </layout>
       </item>
@@ -75,13 +133,29 @@
        <layout class="QVBoxLayout" name="verticalLayout_4">
         <item>
          <widget class="QLabel" name="label_salePrice">
+          <property name="font">
+           <font>
+            <pointsize>12</pointsize>
+           </font>
+          </property>
           <property name="text">
            <string>Sale Price</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QLineEdit" name="lineEdit_salePrice"/>
+         <widget class="QLineEdit" name="lineEdit_salePrice">
+          <property name="font">
+           <font>
+            <pointsize>10</pointsize>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background:#535455;
+color: #FFFFFF;
+</string>
+          </property>
+         </widget>
         </item>
        </layout>
       </item>
@@ -104,6 +178,16 @@
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
        <widget class="QPushButton" name="pushButton_confirm">
+        <property name="font">
+         <font>
+          <pointsize>12</pointsize>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">background:#535455;
+color: #FFFFFF;
+</string>
+        </property>
         <property name="text">
          <string>Confirm</string>
         </property>
@@ -111,6 +195,17 @@
       </item>
       <item>
        <widget class="QPushButton" name="pushButton_cancel">
+        <property name="font">
+         <font>
+          <pointsize>12</pointsize>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">background:#535455;
+color: #FFFFFF;
+
+</string>
+        </property>
         <property name="text">
          <string>Cancel</string>
         </property>

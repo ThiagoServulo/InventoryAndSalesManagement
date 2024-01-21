@@ -11,9 +11,7 @@ LoginWindow::LoginWindow(QWidget *parent) :
 
     iconWindow.addFile(":/images/login.png");
     this->setWindowIcon(iconWindow);
-
     this->setWindowTitle("Login");
-
     this->setFixedSize(400, 157);
 }
 

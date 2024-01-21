@@ -23,6 +23,7 @@ private slots:
 
 private:
     Ui::EditProductFromSaleWindow *ui;
+    QIcon iconWindow;
 
 };
 

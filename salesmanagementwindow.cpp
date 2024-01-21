@@ -18,7 +18,7 @@ SalesManagementWindow::SalesManagementWindow(QWidget *parent) :
     Utilities utilities;
 
     // Window layout
-    iconWindow.addFile(":/images/sale.png");
+    iconWindow.addFile(":/images/sale_management.png");
     this->setWindowIcon(iconWindow);
     this->setWindowTitle("Sales Management");
     this->setFixedSize(789, 522);

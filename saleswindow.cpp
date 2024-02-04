@@ -11,23 +11,29 @@ SalesWindow::SalesWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    // remover -------------------------------
     if(!dbConnection.open())
     {
         QMessageBox::warning(this, "Error", "Unable to connect database");
     }
+    // ---------------------------------
 
+    // Init window configurations
     InitFieldsWindow();
+    ui->pushButton_editProduct->setAutoDefault(false);
+    ui->pushButton_finalizeSale->setAutoDefault(false);
+    ui->pushButton_removeProduct->setAutoDefault(false);
+    ui->pushButton_searchProduct->setAutoDefault(false);
+    ui->lineEdit_total->setEnabled(false);
 
     // Configure sales table
     Utilities utilities;
     QStringList headerLabels = {"Id", "Description", "Unit value", "Quantity", "Total"};
     utilities.TableWidgetBasicConfigurations(ui->tableWidget_listProducts, headerLabels);
 
-    ui->pushButton_editProduct->setAutoDefault(false);
-    ui->pushButton_finalizeSale->setAutoDefault(false);
-    ui->pushButton_removeProduct->setAutoDefault(false);
-    ui->pushButton_searchProduct->setAutoDefault(false);
-    ui->lineEdit_total->setEnabled(false);
+    // Configure regex to int fields
+    utilities.ConfigureRegexLineEdit(ui->lineEdit_idProduct, 2);
+    utilities.ConfigureRegexLineEdit(ui->lineEdit_quantity, 2);
 }
 
 SalesWindow::~SalesWindow()
@@ -42,42 +48,112 @@ void SalesWindow::on_lineEdit_idProduct_returnPressed()
 
 void SalesWindow::InsertProductIntoTableWidget()
 {
-    float total;
-    QSqlQuery query;
-    query.prepare("SELECT id, description, sale_price FROM tb_inventory WHERE id = " + ui->lineEdit_idProduct->text());
-    if(query.exec())
+    // Get product informations
+    if(dbConnection.open())
     {
-        query.first();
-        if(query.value(0).toString() != "")
-        {
-            int line = 0;
-            ui->tableWidget_listProducts->insertRow(line);
-            ui->tableWidget_listProducts->setItem(line, 0, new QTableWidgetItem(query.value(0).toString()));
-            ui->tableWidget_listProducts->setItem(line, 1, new QTableWidgetItem(query.value(1).toString()));
-            ui->tableWidget_listProducts->setItem(line, 2, new QTableWidgetItem(query.value(2).toString()));
-            ui->tableWidget_listProducts->setItem(line, 3, new QTableWidgetItem(ui->lineEdit_quantity->text()));
-            total = ui->lineEdit_quantity->text().toInt() * query.value(2).toString().toFloat();
-            ui->tableWidget_listProducts->setItem(line, 4, new QTableWidgetItem(QString::number(total)));
-            ui->tableWidget_listProducts->setRowHeight(line, 20);
+        QSqlQuery query;
+        query.prepare("SELECT id, quantity, description, sale_price FROM tb_inventory WHERE id = " + ui->lineEdit_idProduct->text());
 
-            total = CalculateTotalSale(ui->tableWidget_listProducts, 4);
-            ui->lineEdit_total->setText(QString::number(total));
+        if(query.exec())
+        {
+            query.first();
+
+            if(query.value(0).toString() != "")
+            {
+                // Check if the quantity is valid
+                int quantity_storage = query.value(1).toInt();
+                if (quantity_storage >= ui->lineEdit_quantity->text().toInt())
+                {
+                    float total;
+                    int line = 0;
+
+                    // Insert into table widget
+                    ui->tableWidget_listProducts->insertRow(line);
+                    ui->tableWidget_listProducts->setItem(line, 0, new QTableWidgetItem(query.value(0).toString()));
+                    ui->tableWidget_listProducts->setItem(line, 1, new QTableWidgetItem(query.value(2).toString()));
+                    ui->tableWidget_listProducts->setItem(line, 2, new QTableWidgetItem(query.value(3).toString()));
+                    ui->tableWidget_listProducts->setItem(line, 3, new QTableWidgetItem(ui->lineEdit_quantity->text()));
+                    total = ui->lineEdit_quantity->text().toInt() * query.value(2).toString().toFloat();
+                    ui->tableWidget_listProducts->setItem(line, 4, new QTableWidgetItem(QString::number(total)));
+                    ui->tableWidget_listProducts->setRowHeight(line, 20);
+
+                    // Update total sale
+                    total = CalculateTotalSale(ui->tableWidget_listProducts, 4);
+                    ui->lineEdit_total->setText(QString::number(total));
+
+                    // Update product quantity at database
+                    UpdateProductQuantiy(query.value(0).toInt(), -(ui->lineEdit_quantity->text().toInt()));
+                }
+                else
+                {
+                    QString message = (quantity_storage == 0) ? "Product unavailable. Quantity in stock is zero." :
+                                          "Invalid quantity. Max quantity available: " + query.value(1).toString();
+                    QMessageBox::warning(this, "Error", message);
+                }
+            }
+            else
+            {
+                QMessageBox::warning(this, "Error", "Product not found");
+            }
+        }
+        else
+        {
+            QMessageBox::warning(this, "Error", "Erro to add product to sale");
+        }
+
+        dbConnection.close();
+    }
+    else
+    {
+        QMessageBox::warning(this, "Error", "Unable to connect database to read product informations");
+    }
+
+    // Restore window configurations
+    InitFieldsWindow();
+}
+
+
+void SalesWindow::UpdateProductQuantiy(int id_product, int quantity)
+{
+    if(dbConnection.open())
+    {
+        // Get current quantity
+        QSqlQuery query;
+        query.prepare("SELECT quantity FROM tb_inventory WHERE id = " + QString::number(id_product));
+
+        if(query.exec())
+        {
+            query.first();
+
+            // Calculate new quantity
+            int new_quantity = query.value(0).toInt() + quantity;
+
+            // Update quantity at database
+            query.prepare("UPDATE tb_inventory SET quantity = " + QString::number(new_quantity) + " WHERE id = " + QString::number(id_product));
+
+            // Check query status
+            if(!query.exec())
+            {
+                QMessageBox::warning(this, "Error", "Erro to update product quantity");
+            }
         }
         else
         {
             QMessageBox::warning(this, "Error", "Product not found");
         }
+
+        dbConnection.close();
     }
     else
     {
-        QMessageBox::warning(this, "Error", "Error to search this product");
+        QMessageBox::warning(this, "Error", "Unable to connect database to read product quantity");
     }
-
-    InitFieldsWindow();
 }
+
 
 void SalesWindow::InitFieldsWindow()
 {
+    // Init window configurations
     ui->lineEdit_quantity->setText("1");
     ui->lineEdit_idProduct->clear();
     ui->lineEdit_idProduct->setFocus();
@@ -106,6 +182,8 @@ void SalesWindow::on_pushButton_removeProduct_clicked()
             ui->tableWidget_listProducts->removeRow(ui->tableWidget_listProducts->currentRow());
             ui->lineEdit_total->setText(QString::number(CalculateTotalSale(ui->tableWidget_listProducts, 4)));
             ui->tableWidget_listProducts->setCurrentCell(-1, -1);
+
+            // ATUALIZAR QUANTIDADE
         }
     }
     else

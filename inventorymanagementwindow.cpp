@@ -27,13 +27,13 @@ InventoryManagementWindow::InventoryManagementWindow(QWidget *parent) :
     QStringList headerLabels = {"Id", "Description"};
     utilities.TableWidgetBasicConfigurations(ui->tableWidget_inventoryManagement, headerLabels);
 
-    // Configure regex to int fields
+    // Configure regex to float fields
     utilities.ConfigureRegexLineEdit(ui->lineEdit_newProduct_salePrice, 3);
     utilities.ConfigureRegexLineEdit(ui->lineEdit_newProduct_purchasePrice, 3);
     utilities.ConfigureRegexLineEdit(ui->lineEdit_inventoryManagement_salePrice, 3);
     utilities.ConfigureRegexLineEdit(ui->lineEdit_inventoryManagement_purchasePrice, 3);
 
-    // Configure regex to float fields
+    // Configure regex to int fields
     utilities.ConfigureRegexLineEdit(ui->lineEdit_newProduct_quantity, 2);
     utilities.ConfigureRegexLineEdit(ui->lineEdit_newProduct_id, 2);
     utilities.ConfigureRegexLineEdit(ui->lineEdit_inventoryManagement_quantity, 2);
@@ -309,14 +309,36 @@ void InventoryManagementWindow::on_pushButton_inventoryManagement_remove_clicked
         {
             int id = ui->tableWidget_inventoryManagement->item(ui->tableWidget_inventoryManagement->currentRow(), 0)->text().toInt();
             QSqlQuery query;
-            query.prepare("DELETE FROM tb_inventory WHERE id = " + QString::number(id));
 
+            // Check if it's possible to remove
+            int quant = 0;
+            query.prepare("SELECT COUNT(*) FROM tb_products_sales WHERE id_product = " + QString::number(id));
+            if(query.exec())
+            {
+                query.first();
+                quant = query.value(0).toInt();
+            }
+
+            // Check action
+            QString message;
+            if(quant > 0)
+            {
+                message = "Product quantity set to zero";
+                query.prepare("UPDATE tb_inventory SET quantity = 0 WHERE id = " + QString::number(id));
+            }
+            else
+            {
+                message = "Product removed with success";
+                query.prepare("DELETE FROM tb_inventory WHERE id = " + QString::number(id));
+            }
+
+            // Remove or update quantity
             if(query.exec())
             {
                 ui->tableWidget_inventoryManagement->setCurrentCell(-1, -1);
                 ClearInventoryManagementTabFields();
                 UpdateInventoryManagementTableWidget();
-                QMessageBox::information(this, "Success", "Product removed with success");
+                QMessageBox::information(this, "Success", message);
             }
             else
             {

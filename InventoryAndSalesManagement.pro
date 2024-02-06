@@ -17,7 +17,6 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     salesmanagementwindow.cpp \
-    saleswindow.cpp \
     utilities.cpp
 
 HEADERS += \
@@ -28,7 +27,6 @@ HEADERS += \
     loginwindow.h \
     mainwindow.h \
     salesmanagementwindow.h \
-    saleswindow.h \
     utilities.h
 
 FORMS += \
@@ -37,8 +35,7 @@ FORMS += \
     inventorymanagementwindow.ui \
     loginwindow.ui \
     mainwindow.ui \
-    salesmanagementwindow.ui \
-    saleswindow.ui
+    salesmanagementwindow.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

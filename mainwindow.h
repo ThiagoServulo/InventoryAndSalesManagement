@@ -39,8 +39,6 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-    //DatabaseConnection dbConnection;
-    void EraseTableWidget(QTableWidget *tableWidget);
     float CalculateTotalSale(QTableWidget *tableWidget, int column);
     void InitFieldsWindow();
     void UpdateProductQuantiy(int id_product, int quantity);

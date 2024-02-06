@@ -21,11 +21,18 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
+    // Configure window
+    QIcon iconWindow;
+    iconWindow.addFile(":/images/sale.png");
+    this->setWindowIcon(iconWindow);
+    this->setWindowTitle("Sale");
+    this->setFixedSize(699, 415);
+
+    // Init window setup
     userLogged = false;
     ui->label_name->setText("No user logged in");
     lockedPadlock.addFile(":/images/lock.png");
     unlockedPadlock.addFile(":/images/unlock.png");
-
     ui->pushButton_Block->setText("");
     ui->pushButton_Block->setIcon(lockedPadlock);
     ui->statusbar->addWidget(ui->pushButton_Block);
@@ -238,21 +245,13 @@ float MainWindow::CalculateTotalSale(QTableWidget *tableWidget, int column)
 {
     float total = 0;
 
+    // Add the value from each row
     for(int i = 0; i < tableWidget->rowCount(); i++)
     {
         total += tableWidget->item(i, column)->text().toFloat();
     }
 
     return total;
-}
-
-
-void MainWindow::EraseTableWidget(QTableWidget *tableWidget)
-{
-    while(tableWidget->rowCount() > 0)
-    {
-        tableWidget->removeRow(0);
-    }
 }
 
 
@@ -265,6 +264,7 @@ void MainWindow::on_lineEdit_idProduct_returnPressed()
         return;
     }
 
+    // Insert new product to the table widget
     InsertProductIntoTableWidget();
 }
 
@@ -280,49 +280,74 @@ void MainWindow::on_pushButton_finalizeSale_clicked()
 
     if(ui->tableWidget_listProducts->rowCount() != 0)
     {
-        int id_collaborator = MainWindow::id_collaborator;
-        float total = CalculateTotalSale(ui->tableWidget_listProducts, 4);
-        QString date = QDate::currentDate().toString("yyyy-MM-dd") +  QTime::currentTime().toString(":hh:mm:ss");
-        QSqlQuery query;
-        query.prepare("INSERT INTO tb_sales (date, id_collaborator, total_value) VALUES ('" + date
-                      + "', " + QString::number(id_collaborator) + ", " +  QString::number(total) + ")");
+        DatabaseConnection dbConnection;
 
-        if(query.exec())
+        // Finalizing sale
+        if(dbConnection.open())
         {
-            query.prepare("SELECT id FROM tb_sales ORDER BY id DESC LIMIT 1");
+            // Get fields
+            int id_collaborator = MainWindow::id_collaborator;
+            float total = CalculateTotalSale(ui->tableWidget_listProducts, 4);
+            QString date = QDate::currentDate().toString("yyyy-MM-dd") +  QTime::currentTime().toString(":hh:mm:ss");
+
+            // Update tb_sales table
+            QSqlQuery query;
+            query.prepare("INSERT INTO tb_sales (date, id_collaborator, total_value) VALUES ('" + date
+                          + "', " + QString::number(id_collaborator) + ", " +  QString::number(total) + ")");
+
+            // Check query return
             if(query.exec())
             {
-                query.first();
-                int id_sale = query.value(0).toInt();
-
-                for(int i = 0; i < ui->tableWidget_listProducts->rowCount(); i++)
+                query.prepare("SELECT id FROM tb_sales ORDER BY id DESC LIMIT 1");
+                if(query.exec())
                 {
-                    int id_product = ui->tableWidget_listProducts->item(i, 0)->text().toInt();
-                    float sale_price = ui->tableWidget_listProducts->item(i, 2)->text().toFloat();
-                    int quantity = ui->tableWidget_listProducts->item(i, 3)->text().toInt();
-                    query.prepare("INSERT INTO tb_products_sales (id_sale, id_product, quantity, sale_price) VALUES "
-                                  "(" + QString::number(id_sale) + ", " + QString::number(id_product) + ", " +
-                                  QString::number(quantity) + ", " + QString::number(sale_price) + ")");
-                    if(!query.exec())
+                    // Get sale id
+                    query.first();
+                    int id_sale = query.value(0).toInt();
+
+                    // Get products
+                    for(int i = 0; i < ui->tableWidget_listProducts->rowCount(); i++)
                     {
-                        QMessageBox::warning(this, "Error", "Error to insert products sale information into database");
-                        return;
+                        // Get fields
+                        int id_product = ui->tableWidget_listProducts->item(i, 0)->text().toInt();
+                        float sale_price = ui->tableWidget_listProducts->item(i, 2)->text().toFloat();
+                        int quantity = ui->tableWidget_listProducts->item(i, 3)->text().toInt();
+
+                        // Update tb_products_sales table
+                        query.prepare("INSERT INTO tb_products_sales (id_sale, id_product, quantity, sale_price) VALUES "
+                                      "(" + QString::number(id_sale) + ", " + QString::number(id_product) + ", " +
+                                      QString::number(quantity) + ", " + QString::number(sale_price) + ")");
+
+                        // Check query return
+                        if(!query.exec())
+                        {
+                            QMessageBox::warning(this, "Error", "Error to insert products sale information into database");
+                            return;
+                        }
                     }
+                    QMessageBox::information(this, "Success", "Sale: '" + QString::number(id_sale) + "' inserted with success");
                 }
-                QMessageBox::information(this, "Success", "Sale: '" + QString::number(id_sale) + "' inserted with success");
+                else
+                {
+                    QMessageBox::warning(this, "Error", "Error to get sale id from database");
+                }
+
+                // Restore initial window configurations
+                InitFieldsWindow();
+                Utilities utilities;
+                utilities.CleanTableWidget(ui->tableWidget_listProducts);
+                ui->lineEdit_total->setText("0");
             }
             else
             {
-                QMessageBox::warning(this, "Error", "Error to get sale id from database");
+                QMessageBox::warning(this, "Error", "Error to insert new sale into database");
             }
 
-            InitFieldsWindow();
-            EraseTableWidget(ui->tableWidget_listProducts);
-            ui->lineEdit_total->setText("0");
+            dbConnection.close();
         }
         else
         {
-            QMessageBox::warning(this, "Error", "Error to insert new sale into database");
+            QMessageBox::information(this, "Error", "Unable to connect database to finalize sale");
         }
     }
     else
@@ -361,6 +386,8 @@ void MainWindow::on_pushButton_editProduct_clicked()
         float salePrice = ui->tableWidget_listProducts->item(ui->tableWidget_listProducts->currentRow(), 2)->text().toFloat();
         int quantity = ui->tableWidget_listProducts->item(ui->tableWidget_listProducts->currentRow(), 3)->text().toInt();
 
+        // NÃO DEIXAR EDITAR PRA UMA QUANTIDADE INEXISTENTE
+
         EditProductFromSaleWindow *editProductFromSaleWindow;
         editProductFromSaleWindow = new EditProductFromSaleWindow(idProduct, description, salePrice, quantity);
         editProductFromSaleWindow->exec();
@@ -391,17 +418,24 @@ void MainWindow::on_pushButton_removeProduct_clicked()
         return;
     }
 
+    // Check if is a valid product
     if(ui->tableWidget_listProducts->currentColumn() != -1)
     {
         QMessageBox::StandardButton option;
         option = QMessageBox::question(this, "Remove", "Do you want to remove this product?", QMessageBox::Yes | QMessageBox::No);
         if(option == QMessageBox::Yes)
         {
+            // Update product quantity
+            int id_product = ui->tableWidget_listProducts->item(ui->tableWidget_listProducts->currentRow(), 0)->text().toInt();
+            int quantity = ui->tableWidget_listProducts->item(ui->tableWidget_listProducts->currentRow(), 3)->text().toInt();
+            UpdateProductQuantiy(id_product, quantity);
+
+            // Removing row
             ui->tableWidget_listProducts->removeRow(ui->tableWidget_listProducts->currentRow());
-            ui->lineEdit_total->setText(QString::number(CalculateTotalSale(ui->tableWidget_listProducts, 4)));
             ui->tableWidget_listProducts->setCurrentCell(-1, -1);
 
-            // ATUALIZAR QUANTIDADE
+            // Update sale total
+            ui->lineEdit_total->setText(QString::number(CalculateTotalSale(ui->tableWidget_listProducts, 4)));
         }
     }
     else

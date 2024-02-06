@@ -6,48 +6,23 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>673</height>
+    <width>699</width>
+    <height>415</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">background:#2E2F30;
+color: #FFFFFF;</string>
+  </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QPushButton" name="pushButton_Block">
-    <property name="geometry">
-     <rect>
-      <x>40</x>
-      <y>480</y>
-      <width>32</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>b</string>
-    </property>
-    <property name="flat">
-     <bool>true</bool>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_name">
-    <property name="geometry">
-     <rect>
-      <x>90</x>
-      <y>490</y>
-      <width>49</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Name</string>
-    </property>
-   </widget>
    <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>20</y>
+      <x>9</x>
+      <y>10</y>
       <width>681</width>
       <height>56</height>
      </rect>
@@ -141,8 +116,8 @@ color: #FFFFFF</string>
    <widget class="QGroupBox" name="groupBox">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>87</y>
+      <x>9</x>
+      <y>77</y>
       <width>681</width>
       <height>211</height>
      </rect>
@@ -167,12 +142,41 @@ color: #FFFFFF</string>
 color: #FFFFFF;</string>
      </property>
     </widget>
+    <widget class="QPushButton" name="pushButton_Block">
+     <property name="geometry">
+      <rect>
+       <x>30</x>
+       <y>140</y>
+       <width>32</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>b</string>
+     </property>
+     <property name="flat">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_name">
+     <property name="geometry">
+      <rect>
+       <x>70</x>
+       <y>150</y>
+       <width>49</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Name</string>
+     </property>
+    </widget>
    </widget>
    <widget class="QWidget" name="layoutWidget_2">
     <property name="geometry">
      <rect>
-      <x>11</x>
-      <y>310</y>
+      <x>10</x>
+      <y>300</y>
       <width>681</width>
       <height>66</height>
      </rect>
@@ -289,7 +293,7 @@ color: #FFFFFF</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>800</width>
+     <width>699</width>
      <height>21</height>
     </rect>
    </property>

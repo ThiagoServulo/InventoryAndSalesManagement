@@ -33,20 +33,20 @@ MainWindow::MainWindow(QWidget *parent)
 
     // Init window configurations
     InitFieldsWindow();
-    ui->pushButton_editProduct_4->setAutoDefault(false);
-    ui->pushButton_finalizeSale_4->setAutoDefault(false);
-    ui->pushButton_removeProduct_4->setAutoDefault(false);
-    ui->pushButton_searchProduct_4->setAutoDefault(false);
-    ui->lineEdit_total_4->setEnabled(false);
+    ui->pushButton_editProduct->setAutoDefault(false);
+    ui->pushButton_finalizeSale->setAutoDefault(false);
+    ui->pushButton_removeProduct->setAutoDefault(false);
+    ui->pushButton_searchProduct->setAutoDefault(false);
+    ui->lineEdit_total->setEnabled(false);
 
     // Configure sales table
     Utilities utilities;
     QStringList headerLabels = {"Id", "Description", "Unit value", "Quantity", "Total"};
-    utilities.TableWidgetBasicConfigurations(ui->tableWidget_listProducts_4, headerLabels);
+    utilities.TableWidgetBasicConfigurations(ui->tableWidget_listProducts, headerLabels);
 
     // Configure regex to int fields
-    utilities.ConfigureRegexLineEdit(ui->lineEdit_idProduct_4, 2);
-    utilities.ConfigureRegexLineEdit(ui->lineEdit_quantity_4, 2);
+    utilities.ConfigureRegexLineEdit(ui->lineEdit_idProduct, 2);
+    utilities.ConfigureRegexLineEdit(ui->lineEdit_quantity, 2);
 }
 
 MainWindow::~MainWindow()
@@ -126,7 +126,7 @@ void MainWindow::InsertProductIntoTableWidget()
     if(dbConnection.open())
     {
         QSqlQuery query;
-        query.prepare("SELECT id, quantity, description, sale_price FROM tb_inventory WHERE id = " + ui->lineEdit_idProduct_4->text());
+        query.prepare("SELECT id, quantity, description, sale_price FROM tb_inventory WHERE id = " + ui->lineEdit_idProduct->text());
 
         if(query.exec())
         {
@@ -136,27 +136,27 @@ void MainWindow::InsertProductIntoTableWidget()
             {
                 // Check if the quantity is valid
                 int quantity_storage = query.value(1).toInt();
-                if (quantity_storage >= ui->lineEdit_quantity_4->text().toInt())
+                if (quantity_storage >= ui->lineEdit_quantity->text().toInt())
                 {
                     float total;
                     int line = 0;
 
                     // Insert into table widget
-                    ui->tableWidget_listProducts_4->insertRow(line);
-                    ui->tableWidget_listProducts_4->setItem(line, 0, new QTableWidgetItem(query.value(0).toString()));
-                    ui->tableWidget_listProducts_4->setItem(line, 1, new QTableWidgetItem(query.value(2).toString()));
-                    ui->tableWidget_listProducts_4->setItem(line, 2, new QTableWidgetItem(query.value(3).toString()));
-                    ui->tableWidget_listProducts_4->setItem(line, 3, new QTableWidgetItem(ui->lineEdit_quantity_4->text()));
-                    total = ui->lineEdit_quantity_4->text().toInt() * query.value(3).toString().toFloat();
-                    ui->tableWidget_listProducts_4->setItem(line, 4, new QTableWidgetItem(QString::number(total)));
-                    ui->tableWidget_listProducts_4->setRowHeight(line, 20);
+                    ui->tableWidget_listProducts->insertRow(line);
+                    ui->tableWidget_listProducts->setItem(line, 0, new QTableWidgetItem(query.value(0).toString()));
+                    ui->tableWidget_listProducts->setItem(line, 1, new QTableWidgetItem(query.value(2).toString()));
+                    ui->tableWidget_listProducts->setItem(line, 2, new QTableWidgetItem(query.value(3).toString()));
+                    ui->tableWidget_listProducts->setItem(line, 3, new QTableWidgetItem(ui->lineEdit_quantity->text()));
+                    total = ui->lineEdit_quantity->text().toInt() * query.value(3).toString().toFloat();
+                    ui->tableWidget_listProducts->setItem(line, 4, new QTableWidgetItem(QString::number(total)));
+                    ui->tableWidget_listProducts->setRowHeight(line, 20);
 
                     // Update total sale
-                    total = CalculateTotalSale(ui->tableWidget_listProducts_4, 4);
-                    ui->lineEdit_total_4->setText(QString::number(total));
+                    total = CalculateTotalSale(ui->tableWidget_listProducts, 4);
+                    ui->lineEdit_total->setText(QString::number(total));
 
                     // Update product quantity at database
-                    UpdateProductQuantiy(query.value(0).toInt(), -(ui->lineEdit_quantity_4->text().toInt()));
+                    UpdateProductQuantiy(query.value(0).toInt(), -(ui->lineEdit_quantity->text().toInt()));
                 }
                 else
                 {
@@ -229,9 +229,9 @@ void MainWindow::UpdateProductQuantiy(int id_product, int quantity)
 void MainWindow::InitFieldsWindow()
 {
     // Init window configurations
-    ui->lineEdit_quantity_4->setText("1");
-    ui->lineEdit_idProduct_4->clear();
-    ui->lineEdit_idProduct_4->setFocus();
+    ui->lineEdit_quantity->setText("1");
+    ui->lineEdit_idProduct->clear();
+    ui->lineEdit_idProduct->setFocus();
 }
 
 float MainWindow::CalculateTotalSale(QTableWidget *tableWidget, int column)
@@ -256,7 +256,7 @@ void MainWindow::EraseTableWidget(QTableWidget *tableWidget)
 }
 
 
-void MainWindow::on_lineEdit_idProduct_4_returnPressed()
+void MainWindow::on_lineEdit_idProduct_returnPressed()
 {
     // Check if user is logged
     if(!userLogged)
@@ -269,7 +269,7 @@ void MainWindow::on_lineEdit_idProduct_4_returnPressed()
 }
 
 
-void MainWindow::on_pushButton_finalizeSale_4_clicked()
+void MainWindow::on_pushButton_finalizeSale_clicked()
 {
     // Check if user is logged
     if(!userLogged)
@@ -278,10 +278,10 @@ void MainWindow::on_pushButton_finalizeSale_4_clicked()
         return;
     }
 
-    if(ui->tableWidget_listProducts_4->rowCount() != 0)
+    if(ui->tableWidget_listProducts->rowCount() != 0)
     {
         int id_collaborator = MainWindow::id_collaborator;
-        float total = CalculateTotalSale(ui->tableWidget_listProducts_4, 4);
+        float total = CalculateTotalSale(ui->tableWidget_listProducts, 4);
         QString date = QDate::currentDate().toString("yyyy-MM-dd") +  QTime::currentTime().toString(":hh:mm:ss");
         QSqlQuery query;
         query.prepare("INSERT INTO tb_sales (date, id_collaborator, total_value) VALUES ('" + date
@@ -295,11 +295,11 @@ void MainWindow::on_pushButton_finalizeSale_4_clicked()
                 query.first();
                 int id_sale = query.value(0).toInt();
 
-                for(int i = 0; i < ui->tableWidget_listProducts_4->rowCount(); i++)
+                for(int i = 0; i < ui->tableWidget_listProducts->rowCount(); i++)
                 {
-                    int id_product = ui->tableWidget_listProducts_4->item(i, 0)->text().toInt();
-                    float sale_price = ui->tableWidget_listProducts_4->item(i, 2)->text().toFloat();
-                    int quantity = ui->tableWidget_listProducts_4->item(i, 3)->text().toInt();
+                    int id_product = ui->tableWidget_listProducts->item(i, 0)->text().toInt();
+                    float sale_price = ui->tableWidget_listProducts->item(i, 2)->text().toFloat();
+                    int quantity = ui->tableWidget_listProducts->item(i, 3)->text().toInt();
                     query.prepare("INSERT INTO tb_products_sales (id_sale, id_product, quantity, sale_price) VALUES "
                                   "(" + QString::number(id_sale) + ", " + QString::number(id_product) + ", " +
                                   QString::number(quantity) + ", " + QString::number(sale_price) + ")");
@@ -317,8 +317,8 @@ void MainWindow::on_pushButton_finalizeSale_4_clicked()
             }
 
             InitFieldsWindow();
-            EraseTableWidget(ui->tableWidget_listProducts_4);
-            ui->lineEdit_total_4->setText("0");
+            EraseTableWidget(ui->tableWidget_listProducts);
+            ui->lineEdit_total->setText("0");
         }
         else
         {
@@ -332,7 +332,7 @@ void MainWindow::on_pushButton_finalizeSale_4_clicked()
 }
 
 
-void MainWindow::on_pushButton_searchProduct_4_clicked()
+void MainWindow::on_pushButton_searchProduct_clicked()
 {
     // Check if user is logged
     if(!userLogged)
@@ -345,7 +345,7 @@ void MainWindow::on_pushButton_searchProduct_4_clicked()
 }
 
 
-void MainWindow::on_pushButton_editProduct_4_clicked()
+void MainWindow::on_pushButton_editProduct_clicked()
 {
     // Check if user is logged
     if(!userLogged)
@@ -354,26 +354,26 @@ void MainWindow::on_pushButton_editProduct_4_clicked()
         return;
     }
 
-    if(ui->tableWidget_listProducts_4->currentRow() != -1)
+    if(ui->tableWidget_listProducts->currentRow() != -1)
     {
-        int idProduct = ui->tableWidget_listProducts_4->item(ui->tableWidget_listProducts_4->currentRow(), 0)->text().toInt();
-        QString description = ui->tableWidget_listProducts_4->item(ui->tableWidget_listProducts_4->currentRow(), 1)->text();
-        float salePrice = ui->tableWidget_listProducts_4->item(ui->tableWidget_listProducts_4->currentRow(), 2)->text().toFloat();
-        int quantity = ui->tableWidget_listProducts_4->item(ui->tableWidget_listProducts_4->currentRow(), 3)->text().toInt();
+        int idProduct = ui->tableWidget_listProducts->item(ui->tableWidget_listProducts->currentRow(), 0)->text().toInt();
+        QString description = ui->tableWidget_listProducts->item(ui->tableWidget_listProducts->currentRow(), 1)->text();
+        float salePrice = ui->tableWidget_listProducts->item(ui->tableWidget_listProducts->currentRow(), 2)->text().toFloat();
+        int quantity = ui->tableWidget_listProducts->item(ui->tableWidget_listProducts->currentRow(), 3)->text().toInt();
 
         EditProductFromSaleWindow *editProductFromSaleWindow;
         editProductFromSaleWindow = new EditProductFromSaleWindow(idProduct, description, salePrice, quantity);
         editProductFromSaleWindow->exec();
 
-        ui->tableWidget_listProducts_4->setItem(ui->tableWidget_listProducts_4->currentRow(), 2, new QTableWidgetItem(QString::number(editProductFromSaleWindow->salePrice)));
-        ui->tableWidget_listProducts_4->setItem(ui->tableWidget_listProducts_4->currentRow(), 3, new QTableWidgetItem(QString::number(editProductFromSaleWindow->quantity)));
+        ui->tableWidget_listProducts->setItem(ui->tableWidget_listProducts->currentRow(), 2, new QTableWidgetItem(QString::number(editProductFromSaleWindow->salePrice)));
+        ui->tableWidget_listProducts->setItem(ui->tableWidget_listProducts->currentRow(), 3, new QTableWidgetItem(QString::number(editProductFromSaleWindow->quantity)));
 
         float total = editProductFromSaleWindow->quantity * editProductFromSaleWindow->salePrice;
-        ui->tableWidget_listProducts_4->setItem(ui->tableWidget_listProducts_4->currentRow(), 4, new QTableWidgetItem(QString::number(total)));
+        ui->tableWidget_listProducts->setItem(ui->tableWidget_listProducts->currentRow(), 4, new QTableWidgetItem(QString::number(total)));
 
-        total = CalculateTotalSale(ui->tableWidget_listProducts_4, 4);
-        ui->lineEdit_total_4->setText(QString::number(total));
-        ui->tableWidget_listProducts_4->setCurrentCell(-1, -1);
+        total = CalculateTotalSale(ui->tableWidget_listProducts, 4);
+        ui->lineEdit_total->setText(QString::number(total));
+        ui->tableWidget_listProducts->setCurrentCell(-1, -1);
     }
     else
     {
@@ -382,7 +382,7 @@ void MainWindow::on_pushButton_editProduct_4_clicked()
 }
 
 
-void MainWindow::on_pushButton_removeProduct_4_clicked()
+void MainWindow::on_pushButton_removeProduct_clicked()
 {
     // Check if user is logged
     if(!userLogged)
@@ -391,15 +391,15 @@ void MainWindow::on_pushButton_removeProduct_4_clicked()
         return;
     }
 
-    if(ui->tableWidget_listProducts_4->currentColumn() != -1)
+    if(ui->tableWidget_listProducts->currentColumn() != -1)
     {
         QMessageBox::StandardButton option;
         option = QMessageBox::question(this, "Remove", "Do you want to remove this product?", QMessageBox::Yes | QMessageBox::No);
         if(option == QMessageBox::Yes)
         {
-            ui->tableWidget_listProducts_4->removeRow(ui->tableWidget_listProducts_4->currentRow());
-            ui->lineEdit_total_4->setText(QString::number(CalculateTotalSale(ui->tableWidget_listProducts_4, 4)));
-            ui->tableWidget_listProducts_4->setCurrentCell(-1, -1);
+            ui->tableWidget_listProducts->removeRow(ui->tableWidget_listProducts->currentRow());
+            ui->lineEdit_total->setText(QString::number(CalculateTotalSale(ui->tableWidget_listProducts, 4)));
+            ui->tableWidget_listProducts->setCurrentCell(-1, -1);
 
             // ATUALIZAR QUANTIDADE
         }

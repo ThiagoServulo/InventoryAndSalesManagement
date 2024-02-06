@@ -31,11 +31,11 @@ private slots:
     void on_actionInventory_triggered();
     void on_actionCollaborators_triggered();
     void on_actionSales_triggered();
-    void on_lineEdit_idProduct_4_returnPressed();
-    void on_pushButton_finalizeSale_4_clicked();
-    void on_pushButton_searchProduct_4_clicked();
-    void on_pushButton_editProduct_4_clicked();
-    void on_pushButton_removeProduct_4_clicked();
+    void on_lineEdit_idProduct_returnPressed();
+    void on_pushButton_finalizeSale_clicked();
+    void on_pushButton_searchProduct_clicked();
+    void on_pushButton_editProduct_clicked();
+    void on_pushButton_removeProduct_clicked();
 
 private:
     Ui::MainWindow *ui;

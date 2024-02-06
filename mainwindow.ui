@@ -52,11 +52,11 @@
       <height>56</height>
      </rect>
     </property>
-    <layout class="QHBoxLayout" name="horizontalLayout_10">
+    <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
-      <layout class="QVBoxLayout" name="verticalLayout_10">
+      <layout class="QVBoxLayout" name="verticalLayout">
        <item>
-        <widget class="QLabel" name="label_quantity_4">
+        <widget class="QLabel" name="label_quantity">
          <property name="font">
           <font>
            <pointsize>12</pointsize>
@@ -68,7 +68,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="lineEdit_quantity_4">
+        <widget class="QLineEdit" name="lineEdit_quantity">
          <property name="font">
           <font>
            <pointsize>10</pointsize>
@@ -83,9 +83,9 @@ color: #FFFFFF</string>
       </layout>
      </item>
      <item>
-      <layout class="QVBoxLayout" name="verticalLayout_11">
+      <layout class="QVBoxLayout" name="verticalLayout_2">
        <item>
-        <widget class="QLabel" name="label__idProduct_4">
+        <widget class="QLabel" name="label__idProduct">
          <property name="font">
           <font>
            <pointsize>12</pointsize>
@@ -97,7 +97,7 @@ color: #FFFFFF</string>
         </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="lineEdit_idProduct_4">
+        <widget class="QLineEdit" name="lineEdit_idProduct">
          <property name="font">
           <font>
            <pointsize>10</pointsize>
@@ -112,7 +112,7 @@ color: #FFFFFF</string>
       </layout>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton_searchProduct_4">
+      <widget class="QPushButton" name="pushButton_searchProduct">
        <property name="minimumSize">
         <size>
          <width>150</width>
@@ -153,7 +153,7 @@ color: #FFFFFF</string>
     <property name="title">
      <string/>
     </property>
-    <widget class="QTableWidget" name="tableWidget_listProducts_4">
+    <widget class="QTableWidget" name="tableWidget_listProducts">
      <property name="geometry">
       <rect>
        <x>0</x>
@@ -177,9 +177,9 @@ color: #FFFFFF;</string>
       <height>66</height>
      </rect>
     </property>
-    <layout class="QVBoxLayout" name="verticalLayout_12">
+    <layout class="QVBoxLayout" name="verticalLayout_3">
      <item>
-      <layout class="QHBoxLayout" name="horizontalLayout_11">
+      <layout class="QHBoxLayout" name="horizontalLayout_2">
        <item>
         <spacer name="horizontalSpacer_4">
          <property name="orientation">
@@ -194,7 +194,7 @@ color: #FFFFFF;</string>
         </spacer>
        </item>
        <item>
-        <widget class="QLabel" name="label_total_4">
+        <widget class="QLabel" name="label_total">
          <property name="font">
           <font>
            <pointsize>12</pointsize>
@@ -206,7 +206,7 @@ color: #FFFFFF;</string>
         </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="lineEdit_total_4">
+        <widget class="QLineEdit" name="lineEdit_total">
          <property name="font">
           <font>
            <pointsize>10</pointsize>
@@ -221,9 +221,9 @@ color: #FFFFFF</string>
       </layout>
      </item>
      <item>
-      <layout class="QHBoxLayout" name="horizontalLayout_12">
+      <layout class="QHBoxLayout" name="horizontalLayout_3">
        <item>
-        <widget class="QPushButton" name="pushButton_removeProduct_4">
+        <widget class="QPushButton" name="pushButton_removeProduct">
          <property name="font">
           <font>
            <pointsize>12</pointsize>
@@ -242,7 +242,7 @@ color: #FFFFFF</string>
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="pushButton_editProduct_4">
+        <widget class="QPushButton" name="pushButton_editProduct">
          <property name="font">
           <font>
            <pointsize>12</pointsize>
@@ -261,7 +261,7 @@ color: #FFFFFF</string>
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="pushButton_finalizeSale_4">
+        <widget class="QPushButton" name="pushButton_finalizeSale">
          <property name="font">
           <font>
            <pointsize>12</pointsize>

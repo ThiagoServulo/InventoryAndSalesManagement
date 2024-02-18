@@ -11,6 +11,7 @@ CONFIG += c++17
 SOURCES += \
     collaboratosmanagementwindow.cpp \
     databaseconnection.cpp \
+    definepasswordwindow.cpp \
     editproductfromsalewindow.cpp \
     inventorymanagementwindow.cpp \
     loginwindow.cpp \
@@ -22,6 +23,7 @@ SOURCES += \
 HEADERS += \
     collaboratosmanagementwindow.h \
     databaseconnection.h \
+    definepasswordwindow.h \
     editproductfromsalewindow.h \
     inventorymanagementwindow.h \
     loginwindow.h \
@@ -31,6 +33,7 @@ HEADERS += \
 
 FORMS += \
     collaboratosmanagementwindow.ui \
+    definepasswordwindow.ui \
     editproductfromsalewindow.ui \
     inventorymanagementwindow.ui \
     loginwindow.ui \
@@ -44,3 +47,5 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 RESOURCES += \
     resourcefile.qrc
+
+DISTFILES +=

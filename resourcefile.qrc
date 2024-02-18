@@ -8,5 +8,7 @@
         <file>images/inventory.png</file>
         <file>images/sale_management.png</file>
         <file>images/sale.png</file>
+        <file>images/eye_close.png</file>
+        <file>images/eye_open.png</file>
     </qresource>
 </RCC>

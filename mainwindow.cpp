@@ -56,6 +56,7 @@ MainWindow::MainWindow(QWidget *parent)
     utilities.ConfigureRegexLineEdit(ui->lineEdit_quantity, 2);
 }
 
+
 MainWindow::~MainWindow()
 {
     delete ui;
@@ -82,6 +83,7 @@ void MainWindow::on_pushButton_Block_clicked()
         ui->pushButton_Block->setIcon(lockedPadlock);
     }
 }
+
 
 void MainWindow::on_actionInventory_triggered()
 {
@@ -379,25 +381,68 @@ void MainWindow::on_pushButton_editProduct_clicked()
         return;
     }
 
+    // Check if is a valid product
     if(ui->tableWidget_listProducts->currentRow() != -1)
     {
-        int idProduct = ui->tableWidget_listProducts->item(ui->tableWidget_listProducts->currentRow(), 0)->text().toInt();
+        // Get product fields
+        int id_product = ui->tableWidget_listProducts->item(ui->tableWidget_listProducts->currentRow(), 0)->text().toInt();
         QString description = ui->tableWidget_listProducts->item(ui->tableWidget_listProducts->currentRow(), 1)->text();
         float salePrice = ui->tableWidget_listProducts->item(ui->tableWidget_listProducts->currentRow(), 2)->text().toFloat();
         int quantity = ui->tableWidget_listProducts->item(ui->tableWidget_listProducts->currentRow(), 3)->text().toInt();
 
-        // NÃO DEIXAR EDITAR PRA UMA QUANTIDADE INEXISTENTE
-
+        // Show edit product from sale window
         EditProductFromSaleWindow *editProductFromSaleWindow;
-        editProductFromSaleWindow = new EditProductFromSaleWindow(idProduct, description, salePrice, quantity);
+        editProductFromSaleWindow = new EditProductFromSaleWindow(id_product, description, salePrice, quantity);
         editProductFromSaleWindow->exec();
 
+        // Create database connection
+        DatabaseConnection dbConnection;
+
+        if(dbConnection.open())
+        {
+            // Get current quantity
+            QSqlQuery query;
+            query.prepare("SELECT quantity FROM tb_inventory WHERE id = " + QString::number(id_product));
+
+            if(query.exec())
+            {
+                query.first();
+
+                // Check if the new quantity is valid
+                if((editProductFromSaleWindow->quantity > (quantity + query.value(0).toInt())) && (quantity < editProductFromSaleWindow->quantity))
+                {
+                    QMessageBox::information(this, "Error", "Invalid quantity. Maximum quantity available: " + QString::number(quantity + query.value(0).toInt()));
+                    dbConnection.close();
+                    return;
+                }
+                else
+                {
+                    // Update product quantity at database
+                    UpdateProductQuantiy(id_product, quantity - editProductFromSaleWindow->quantity);
+                }
+            }
+            else
+            {
+                QMessageBox::warning(this, "Error", "Product not found");
+            }
+
+            dbConnection.close();
+        }
+        else
+        {
+            QMessageBox::information(this, "Error", "Unable to connect database to update product sale");
+            return;
+        }
+
+        // Update table widget
         ui->tableWidget_listProducts->setItem(ui->tableWidget_listProducts->currentRow(), 2, new QTableWidgetItem(QString::number(editProductFromSaleWindow->salePrice)));
         ui->tableWidget_listProducts->setItem(ui->tableWidget_listProducts->currentRow(), 3, new QTableWidgetItem(QString::number(editProductFromSaleWindow->quantity)));
 
+        // Update product total
         float total = editProductFromSaleWindow->quantity * editProductFromSaleWindow->salePrice;
         ui->tableWidget_listProducts->setItem(ui->tableWidget_listProducts->currentRow(), 4, new QTableWidgetItem(QString::number(total)));
 
+        // Update sale total
         total = CalculateTotalSale(ui->tableWidget_listProducts, 4);
         ui->lineEdit_total->setText(QString::number(total));
         ui->tableWidget_listProducts->setCurrentCell(-1, -1);

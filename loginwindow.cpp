@@ -64,8 +64,9 @@ void LoginWindow::on_pushButton_Login_clicked()
                         QMessageBox::warning(this, "Warning", "You need to redefine your password");
 
                         // Show define password window
-                        DefinePasswordWindow definePasswordWindow;
-                        QObject::connect(&definePasswordWindow, &QDialog::finished, [&](int result)
+                        DefinePasswordWindow *definePasswordWindow;
+                        definePasswordWindow = new DefinePasswordWindow(username);
+                        QObject::connect(definePasswordWindow, &QDialog::finished, [&](int result)
                         {
                             // Only perform login if password reset is accepted
                             if (result == QDialog::Accepted)
@@ -73,7 +74,7 @@ void LoginWindow::on_pushButton_Login_clicked()
                                 close();
                             }
                         });
-                        definePasswordWindow.exec();
+                        definePasswordWindow->exec();
                     }
 
                     return;

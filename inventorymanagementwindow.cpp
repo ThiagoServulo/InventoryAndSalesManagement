@@ -266,6 +266,9 @@ void InventoryManagementWindow::on_pushButton_inventoryManagement_save_clicked()
     // Update a product
     if(dbConnection.open())
     {
+        // Block signals to ignore items selections changed
+        ui->tableWidget_inventoryManagement->blockSignals(true);
+
         QSqlQuery query;
         query.prepare("UPDATE tb_inventory SET description = '" + description + "', supplier = '" +
                       supplier + "', quantity = " + QString::number(quantity) +
@@ -285,6 +288,9 @@ void InventoryManagementWindow::on_pushButton_inventoryManagement_save_clicked()
         }
 
         dbConnection.close();
+
+        // Restore signals
+        ui->tableWidget_inventoryManagement->blockSignals(false);
     }
     else
     {

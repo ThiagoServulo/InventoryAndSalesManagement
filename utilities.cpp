@@ -81,7 +81,7 @@ void Utilities::ConfigureRegexLineEdit(QLineEdit *lineEdit, int type)
     switch (type)
     {
         case 1: // string
-            regex = "[a-zA-ZÀ-ÖØ-öø-ÿ ]*";
+            regex = "[a-zA-ZÀ-ÖØ-öø-ÿ]+(?: [a-zA-ZÀ-ÖØ-öø-ÿ]+)*";
         break;
 
         case 2: // int
@@ -90,6 +90,10 @@ void Utilities::ConfigureRegexLineEdit(QLineEdit *lineEdit, int type)
 
         case 3: // float
             regex = "[0-9]*\\.?[0-9]*";
+        break;
+
+        case 4: // string without spaces
+            regex = "^[a-zA-ZÀ-ÖØ-öø-ÿ]+$";
         break;
 
         default: // unknown

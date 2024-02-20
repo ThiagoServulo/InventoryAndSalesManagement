@@ -57,7 +57,7 @@ CollaboratosManagementWindow::CollaboratosManagementWindow(QWidget *parent) :
 
     // Configure regex to line edit fields
     utilities.ConfigureRegexLineEdit(ui->lineEdit_newCollaborator_name, 1);
-    utilities.ConfigureRegexLineEdit(ui->lineEdit_newCollaborator_username, 1);
+    utilities.ConfigureRegexLineEdit(ui->lineEdit_newCollaborator_username, 4);
     utilities.ConfigureRegexLineEdit(ui->lineEdit_newCollaborator_telephone, 2);
     utilities.ConfigureRegexLineEdit(ui->lineEdit_collaboratorsManagement_name, 1);
     utilities.ConfigureRegexLineEdit(ui->lineEdit_collaboratorsManagement_telephone, 2);
@@ -238,7 +238,7 @@ void CollaboratosManagementWindow::UpdateCollaboratorsManagementTableWidget()
     {
         Utilities utilities;
         QSqlQuery query;
-        query.prepare("SELECT id, name, username FROM tb_collaborators ORDER BY id");
+        query.prepare("SELECT id, name, username FROM tb_collaborators WHERE username != 'admin' ORDER BY id");
 
         if(!utilities.QueryToUpdateTableWidget(&query, ui->tableWidget_collaboratorsManagement_collaborators))
         {
@@ -329,22 +329,22 @@ void CollaboratosManagementWindow::on_pushButton_collaboratorsManagement_filter_
         {
             if(ui->radioButton_collaboratorsManagement_idCollaborator->isChecked())
             {
-                query.prepare("SELECT id, name, username FROM tb_collaborators ORDER BY id");
+                query.prepare("SELECT id, name, username FROM tb_collaborators WHERE username != 'admin' ORDER BY id");
             }
             else
             {
-                query.prepare("SELECT id, name, username FROM tb_collaborators ORDER BY name");
+                query.prepare("SELECT id, name, username FROM tb_collaborators WHERE username != 'admin' ORDER BY name");
             }
         }
         else
         {
             if(ui->radioButton_collaboratorsManagement_idCollaborator->isChecked())
             {
-                query.prepare("SELECT id, name, username FROM tb_collaborators WHERE id = " + ui->lineEdit_collaboratorsManagement_filter->text());
+                query.prepare("SELECT id, name, username FROM tb_collaborators WHERE username != 'admin' WHERE id = " + ui->lineEdit_collaboratorsManagement_filter->text());
             }
             else
             {
-                query.prepare("SELECT id, name, username FROM tb_collaborators WHERE name LIKE '%" + ui->lineEdit_collaboratorsManagement_filter->text() + "%'");
+                query.prepare("SELECT id, name, username FROM tb_collaborators WHERE username != 'admin' WHERE name LIKE '%" + ui->lineEdit_collaboratorsManagement_filter->text() + "%'");
             }
         }
 
@@ -434,7 +434,7 @@ void CollaboratosManagementWindow::on_pushButton_collaboratorsManagement_save_cl
     }
     else
     {
-        QMessageBox::warning(this, "Error", "Unable to connect database to remove collaborator");
+        QMessageBox::warning(this, "Error", "Unable to connect database to update collaborator");
     }
 }
 
@@ -457,6 +457,9 @@ void CollaboratosManagementWindow::on_pushButton_collaboratorsManagement_remove_
                                                                    QMessageBox::Yes | QMessageBox::No);
         if(button == QMessageBox::Yes)
         {
+            // Block signals to ignore items selections changed
+            ui->tableWidget_collaboratorsManagement_collaborators->blockSignals(true);
+
             int id = ui->tableWidget_collaboratorsManagement_collaborators->item(currentRow, 0)->text().toInt();
 
             // Remove collaborator from database
@@ -476,6 +479,9 @@ void CollaboratosManagementWindow::on_pushButton_collaboratorsManagement_remove_
             }
 
             dbConnection.close();
+
+            // Restore signals
+            ui->tableWidget_collaboratorsManagement_collaborators->blockSignals(false);
         }
     }
     else

@@ -55,8 +55,9 @@ void SalesManagementWindow::ShowAllSalesIntoTableWidget()
     if(dbConnection.open())
     {
         QSqlQuery query;
-        query.prepare("SELECT s.id, s.date, c.name, printf('%.2f', s.total_value) "
-                      "FROM tb_sales s JOIN tb_collaborators c "
+        query.prepare("SELECT s.id, s.date, COALESCE(c.name, 'not found'), "
+                      "printf('%.2f', s.total_value) "
+                      "FROM tb_sales s LEFT JOIN tb_collaborators c "
                       "ON s.id_collaborator = c.id ORDER BY s.id");
 
         if(!utilities.QueryToUpdateTableWidget(&query, ui->tableWidget_sales))
@@ -217,6 +218,9 @@ void SalesManagementWindow::on_pushButton_removeSale_clicked()
 
         if(button == QMessageBox::Yes)
         {
+            // Block signals to ignore items selections changed
+            ui->tableWidget_sales->blockSignals(true);
+
             int idSale = ui->tableWidget_sales->item(currentRow, 0)->text().toInt();
             QSqlQuery query;
             query.prepare("DELETE FROM tb_products_sales WHERE id_sale = " + QString::number(idSale));
@@ -242,6 +246,9 @@ void SalesManagementWindow::on_pushButton_removeSale_clicked()
         }
 
         dbConnection.close();
+
+        // Restore signals
+        ui->tableWidget_sales->blockSignals(false);
     }
     else
     {

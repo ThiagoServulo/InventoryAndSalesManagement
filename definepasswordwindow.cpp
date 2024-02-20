@@ -62,9 +62,21 @@ void DefinePasswordWindow::on_pushButton_confirm_clicked()
     }
     else
     {
-        //QSqlQuery query;
-        //query.prepare("SELECT id FROM tb_access_type WHERE type = '" + accessType + "'");
-        qDebug() << username;
+        // Update database
+        QSqlQuery query;
+        query.prepare("UPDATE tb_collaborators SET password = '" + ui->lineEdit_password->text() + "' WHERE username = '" + username + "'");
+
+        if(query.exec())
+        {
+            QMessageBox::information(this, "Success", "Username password updated");
+        }
+        else
+        {
+            QMessageBox::warning(this, "Error", "Unable to update username password from database");
+            dbConnection.close();
+            return;
+        }
+
         dbConnection.close();
     }
 

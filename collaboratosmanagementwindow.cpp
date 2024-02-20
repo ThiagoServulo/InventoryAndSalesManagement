@@ -67,10 +67,12 @@ CollaboratosManagementWindow::CollaboratosManagementWindow(QWidget *parent) :
     ui->lineEdit_collaboratorsManagement_telephone->setMaxLength(11);
 }
 
+
 CollaboratosManagementWindow::~CollaboratosManagementWindow()
 {
     delete ui;
 }
+
 
 bool CollaboratosManagementWindow::CheckCollaboratorFields(QString name, QString telephone, QString accessType)
 {
@@ -79,9 +81,9 @@ bool CollaboratosManagementWindow::CheckCollaboratorFields(QString name, QString
         return false;
     }
 
-    if(name.length() < 5)
+    if(name.length() < 6)
     {
-        QMessageBox::warning(this, "Error", "Name must have more than 5 characters");
+        QMessageBox::warning(this, "Error", "Name must have more than 6 characters");
         return false;
     }
 
@@ -93,6 +95,7 @@ bool CollaboratosManagementWindow::CheckCollaboratorFields(QString name, QString
 
     return true;
 }
+
 
 void CollaboratosManagementWindow::on_pushButton_newCollaborator_save_clicked()
 {
@@ -109,9 +112,9 @@ void CollaboratosManagementWindow::on_pushButton_newCollaborator_save_clicked()
     }
 
     // Check username
-    if(username.length() < 5)
+    if(username.length() < 6)
     {
-        QMessageBox::warning(this, "Error", "Username must have more than 5 characters");
+        QMessageBox::warning(this, "Error", "Username must have more than 6 characters");
         return;
     }
     else
@@ -169,6 +172,7 @@ void CollaboratosManagementWindow::on_pushButton_newCollaborator_save_clicked()
     }
 }
 
+
 int CollaboratosManagementWindow::UsernameExists(QString username)
 {
     int status = -1;
@@ -204,6 +208,7 @@ int CollaboratosManagementWindow::UsernameExists(QString username)
     return status;
 }
 
+
 void CollaboratosManagementWindow::ClearNewCollaboratorTabFields()
 {
     ui->lineEdit_newCollaborator_name->clear();
@@ -212,6 +217,7 @@ void CollaboratosManagementWindow::ClearNewCollaboratorTabFields()
     ui->comboBox_newCollaborator_accessType->setCurrentIndex(-1);
     ui->lineEdit_newCollaborator_name->setFocus();
 }
+
 
 void CollaboratosManagementWindow::ClearCollaboratorManagementTabFields(bool cleanFilterField)
 {
@@ -224,6 +230,7 @@ void CollaboratosManagementWindow::ClearCollaboratorManagementTabFields(bool cle
         ui->lineEdit_collaboratorsManagement_filter->clear();
     }
 }
+
 
 void CollaboratosManagementWindow::UpdateCollaboratorsManagementTableWidget()
 {
@@ -246,6 +253,7 @@ void CollaboratosManagementWindow::UpdateCollaboratorsManagementTableWidget()
     }
 }
 
+
 void CollaboratosManagementWindow::on_tabWidget_currentChanged(int index)
 {
     // Clear table widget selection
@@ -259,6 +267,7 @@ void CollaboratosManagementWindow::on_tabWidget_currentChanged(int index)
     // Clear collaborator management tab fields
     ClearCollaboratorManagementTabFields(true);
 }
+
 
 void CollaboratosManagementWindow::on_tableWidget_collaboratorsManagement_collaborators_itemSelectionChanged()
 {
@@ -301,6 +310,7 @@ void CollaboratosManagementWindow::on_tableWidget_collaboratorsManagement_collab
         QMessageBox::warning(this, "Error", "Unable to connect database to read collaborator information");
     }
 }
+
 
 void CollaboratosManagementWindow::on_pushButton_collaboratorsManagement_filter_clicked()
 {
@@ -360,6 +370,7 @@ void CollaboratosManagementWindow::on_pushButton_collaboratorsManagement_filter_
         QMessageBox::warning(this, "Error", "Unable to connect database to filter collaborators");
     }
 }
+
 
 void CollaboratosManagementWindow::on_pushButton_collaboratorsManagement_save_clicked()
 {
@@ -427,10 +438,13 @@ void CollaboratosManagementWindow::on_pushButton_collaboratorsManagement_save_cl
     }
 }
 
+
 void CollaboratosManagementWindow::on_pushButton_collaboratorsManagement_remove_clicked()
 {
+    // Get current row
     int currentRow = ui->tableWidget_collaboratorsManagement_collaborators->currentRow();
 
+    // Check if it is a valid row
     if(currentRow == -1)
     {
         QMessageBox::information(this, "Information", "Select a collaborator first");
@@ -443,7 +457,6 @@ void CollaboratosManagementWindow::on_pushButton_collaboratorsManagement_remove_
                                                                    QMessageBox::Yes | QMessageBox::No);
         if(button == QMessageBox::Yes)
         {
-
             int id = ui->tableWidget_collaboratorsManagement_collaborators->item(currentRow, 0)->text().toInt();
 
             // Remove collaborator from database
@@ -471,18 +484,59 @@ void CollaboratosManagementWindow::on_pushButton_collaboratorsManagement_remove_
     }
 }
 
+
 void CollaboratosManagementWindow::on_pushButton_newCollaborator_cancel_clicked()
 {
     ClearNewCollaboratorTabFields();
 }
+
 
 void CollaboratosManagementWindow::on_pushButton_collaboratorsManagement_seeSales_clicked()
 {
     /// TODO: Fazer botão see sales
 }
 
+
 void CollaboratosManagementWindow::on_pushButton_resetPassword_clicked()
 {
-    /// TODO: Fazer botão reset password
+    // Get current row
+    int currentRow = ui->tableWidget_collaboratorsManagement_collaborators->currentRow();
+
+    // Check if it is a valid row
+    if(currentRow == -1)
+    {
+        QMessageBox::information(this, "Information", "Select a collaborator first");
+        return;
+    }
+
+    if(dbConnection.open())
+    {
+        QMessageBox::StandardButton button = QMessageBox::question(this, "Remove", "Do you want to reset the collaborator's password?",
+                                                                   QMessageBox::Yes | QMessageBox::No);
+        if(button == QMessageBox::Yes)
+        {
+            // Get collaborator id
+            int id = ui->tableWidget_collaboratorsManagement_collaborators->item(currentRow, 0)->text().toInt();
+
+            // Reset collaborator's from database's password
+            QSqlQuery query;
+            query.prepare("UPDATE tb_collaborators SET password = '1234' WHERE id = " + QString::number(id));
+
+            if(query.exec())
+            {
+                QMessageBox::information(this, "Success", "Collaborator's password reseted with success");
+            }
+            else
+            {
+                QMessageBox::warning(this, "Error", "Unable to reset password from database");
+            }
+
+            dbConnection.close();
+        }
+    }
+    else
+    {
+        QMessageBox::warning(this, "Error", "Unable to connect database to reset password");
+    }
 }
 

@@ -51,11 +51,6 @@ void LoginWindow::on_pushButton_Login_clicked()
             {
                 if(query.value(3).toString() == password)
                 {
-                    // Get user logged information
-                    MainWindow::userLogged = true;
-                    MainWindow::id_collaborator = query.value(0).toInt();
-                    MainWindow::name_collaborator = query.value(1).toString();
-                    MainWindow::access_collaborator = query.value(5).toInt();
                     dbConnection.close();
 
                     // Check if the password must be redefined
@@ -68,13 +63,31 @@ void LoginWindow::on_pushButton_Login_clicked()
                         definePasswordWindow = new DefinePasswordWindow(username);
                         QObject::connect(definePasswordWindow, &QDialog::finished, [&](int result)
                         {
-                            // Only perform login if password reset is accepted
+                            // Perform login if password reset is accepted
                             if (result == QDialog::Accepted)
                             {
+                                // Get user logged information
+                                MainWindow::userLogged = true;
+                                MainWindow::id_collaborator = query.value(0).toInt();
+                                MainWindow::name_collaborator = query.value(1).toString();
+                                MainWindow::access_collaborator = query.value(5).toInt();
+
+                                // Close login window
                                 close();
                             }
                         });
                         definePasswordWindow->exec();
+                    }
+                    else
+                    {
+                        // Get user logged information
+                        MainWindow::userLogged = true;
+                        MainWindow::id_collaborator = query.value(0).toInt();
+                        MainWindow::name_collaborator = query.value(1).toString();
+                        MainWindow::access_collaborator = query.value(5).toInt();
+
+                        // Close login window
+                        close();
                     }
 
                     return;

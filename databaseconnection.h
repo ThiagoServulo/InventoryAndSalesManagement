@@ -5,12 +5,14 @@
 class DatabaseConnection{
 
 public:
-    QSqlDatabase database;
     DatabaseConnection();
     void close();
     bool open();
     bool isOpen();
-    bool SendQuery(QString command, QSqlQuery *query);
+
+private:
+    QSqlDatabase database;
+    int createDatabase(QString databasePath);
 };
 
 

@@ -1,3 +1,5 @@
+*.db
+
 # Qt-specific files
 *.pro.user
 *.pro.user.*

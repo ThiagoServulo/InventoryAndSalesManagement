@@ -1,6 +1,7 @@
 #include "collaboratosmanagementwindow.h"
 #include "ui_collaboratosmanagementwindow.h"
 #include "utilities.h"
+#include "mainwindow.h"
 #include <QSql>
 #include <QMessageBox>
 
@@ -256,6 +257,14 @@ void CollaboratosManagementWindow::UpdateCollaboratorsManagementTableWidget()
 
 void CollaboratosManagementWindow::on_tabWidget_currentChanged(int index)
 {
+    // Check the user access
+    if(index == 1 && MainWindow::access_collaborator != 1)
+    {
+        ui->tabWidget->setCurrentIndex(0);
+        QMessageBox::information(this, "Information", "You don't have access");
+        return;
+    }
+
     // Clear table widget selection
     ui->tableWidget_collaboratorsManagement_collaborators->clearSelection();
 

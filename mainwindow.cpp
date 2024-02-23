@@ -87,7 +87,8 @@ void MainWindow::on_pushButton_Block_clicked()
 
 void MainWindow::on_actionInventory_triggered()
 {
-    if(userLogged && access_collaborator == 1)
+    // Check the access
+    if(userLogged && (access_collaborator == 1 || access_collaborator == 2))
     {
         InventoryManagementWindow inventoryManagementWindow;
         inventoryManagementWindow.exec();
@@ -101,7 +102,8 @@ void MainWindow::on_actionInventory_triggered()
 
 void MainWindow::on_actionCollaborators_triggered()
 {
-    if(userLogged && access_collaborator == 1)
+    // Check the access
+    if(userLogged && (access_collaborator == 1 || access_collaborator == 2))
     {
         CollaboratosManagementWindow collaboratorsManagementWindow;
         collaboratorsManagementWindow.exec();
@@ -115,7 +117,8 @@ void MainWindow::on_actionCollaborators_triggered()
 
 void MainWindow::on_actionSales_triggered()
 {
-    if(userLogged && access_collaborator == 1)
+    // Check the access
+    if(userLogged && (access_collaborator == 1 || access_collaborator == 2))
     {
         SalesManagementWindow salesManagementWindow;
         salesManagementWindow.exec();

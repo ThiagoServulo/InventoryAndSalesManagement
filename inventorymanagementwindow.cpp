@@ -1,6 +1,7 @@
 #include "inventorymanagementwindow.h"
 #include "ui_inventorymanagementwindow.h"
 #include "utilities.h"
+#include "mainwindow.h"
 #include <QMessageBox>
 #include <QRegularExpression>
 #include <QValidator>
@@ -177,6 +178,14 @@ void InventoryManagementWindow::ClearInventoryManagementTabFields()
 
 void InventoryManagementWindow::on_tabWidget_currentChanged(int index)
 {
+    // Check the user access
+    if(index == 1 && MainWindow::access_collaborator != 1)
+    {
+        ui->tabWidget->setCurrentIndex(0);
+        QMessageBox::information(this, "Information", "You don't have access");
+        return;
+    }
+
     ui->lineEdit_inventoryManagement_filter->clear();
     ClearInventoryManagementTabFields();
     UpdateInventoryManagementTableWidget();

@@ -16,6 +16,7 @@ void DatabaseConnection::close()
 
 bool DatabaseConnection::open()
 {
+    // Init database configurations
     QString path = qApp->applicationDirPath();
     QString db = path + "/database/InventoryManagement.db";
     QFileInfo fileInfo(db);
@@ -159,4 +160,6 @@ int DatabaseConnection::createDatabase(QString databasePath)
         qDebug() << "Error to insert access type C into tb_access_type: " << query.lastError().text();
         return false;
     }
+
+    return true;
 }

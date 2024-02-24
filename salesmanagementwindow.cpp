@@ -1,6 +1,8 @@
 #include "salesmanagementwindow.h"
 #include "ui_salesmanagementwindow.h"
 #include "utilities.h"
+#include <iostream>
+#include <fstream>
 #include <QDateEdit>
 #include <QtSql>
 #include <QMessageBox>
@@ -44,6 +46,7 @@ SalesManagementWindow::SalesManagementWindow(QWidget *parent) :
     ShowAllSalesIntoTableWidget();
 }
 
+
 void SalesManagementWindow::ShowAllSalesIntoTableWidget()
 {
     // Prepare tables
@@ -52,8 +55,10 @@ void SalesManagementWindow::ShowAllSalesIntoTableWidget()
     utilities.CleanTableWidget(ui->tableWidget_productsSales);
 
     // Show all sales
+    DatabaseConnection dbConnection;
     if(dbConnection.open())
     {
+        // Build query
         QSqlQuery query;
         query.prepare("SELECT s.id, s.date, COALESCE(c.name, 'not found'), "
                       "printf('%.2f', s.total_value) "
@@ -73,10 +78,12 @@ void SalesManagementWindow::ShowAllSalesIntoTableWidget()
     }
 }
 
+
 SalesManagementWindow::~SalesManagementWindow()
 {
     delete ui;
 }
+
 
 void SalesManagementWindow::on_tableWidget_sales_itemSelectionChanged()
 {
@@ -89,6 +96,7 @@ void SalesManagementWindow::on_tableWidget_sales_itemSelectionChanged()
     }
 
     // Show sales products
+    DatabaseConnection dbConnection;
     if(dbConnection.open())
     {
         Utilities utilities;
@@ -115,6 +123,7 @@ void SalesManagementWindow::on_tableWidget_sales_itemSelectionChanged()
     }
 }
 
+
 void SalesManagementWindow::on_pushButton_filter_clicked()
 {
     // Check dates
@@ -125,6 +134,7 @@ void SalesManagementWindow::on_pushButton_filter_clicked()
     }
 
     // Filter sales
+    DatabaseConnection dbConnection;
     if(dbConnection.open())
     {
         // Block signals to ignore items selections changed
@@ -159,52 +169,79 @@ void SalesManagementWindow::on_pushButton_filter_clicked()
     }
 }
 
+
 void SalesManagementWindow::on_pushButton_allSales_clicked()
 {
     ShowAllSalesIntoTableWidget();
 }
 
+
 void SalesManagementWindow::on_pushButton_exportPdf_clicked()
 {
-    QString nameFile = ui->tableWidget_sales->item(ui->tableWidget_sales->currentRow(), 0)->text() + "_sale.pdf";
-    QString path = QDir::currentPath();
-
-    QString file = path + "/" + nameFile;
-
-    QPrinter printer;
-    printer.setOutputFormat(QPrinter::PdfFormat);
-    printer.setOutputFileName(file);
-
-    QPainter painter;
-    if(!painter.begin(&printer))
+    DatabaseConnection dbConnection;
+    if(dbConnection.open())
     {
-        QMessageBox::warning(this, "Error", "Unable to open pdf");
+        // Get current date
+        QDateTime currentDateTime = QDateTime::currentDateTime();
+
+        // Convert to string
+        QString currentDateTimeString = currentDateTime.toString("yyyy-MM-dd_hh_mm_ss");
+
+        // Build report file
+        std::string fileName = "report_" + currentDateTimeString.toStdString() + ".txt";
+        std::ofstream reportFile(fileName, std::ios::out);
+
+        // Open file
+        if (reportFile.is_open())
+        {
+            // Build query
+            QSqlQuery query;
+            query.prepare("SELECT s.id, s.date, c.name, printf('%.2f', s.total_value)"
+                          " FROM tb_sales s JOIN tb_collaborators c"
+                          " ON s.id_collaborator = c.id ORDER BY s.id");
+
+            // Execute query
+            if(query.exec())
+            {
+                while(query.next())
+                {
+                    // Get data
+                    int id = query.value(0).toInt();
+                    QString date = query.value(1).toString();
+                    QString name = query.value(2).toString();
+                    double totalValue = query.value(3).toDouble();
+
+                    // TODO: Escrever no relatóri
+                    reportFile << "sapo";
+                }
+            }
+
+            dbConnection.close();
+
+            // Close file
+            reportFile.close();
+
+            // Message box to inform that the file was created
+            QMessageBox::information(this, "Information", "The report was created");
+        }
+        else
+        {
+            QMessageBox::warning(this, "Error", "Error to create file");
+        }
     }
     else
     {
-        painter.drawText(25, 25, "Sale: " + ui->tableWidget_sales->item(ui->tableWidget_sales->currentRow(), 0)->text());
-        painter.drawText(100, 25, "Date: " + ui->tableWidget_sales->item(ui->tableWidget_sales->currentRow(), 1)->text());
-
-        for(int i = 0, line = 100 ; i < ui->tableWidget_productsSales->rowCount(); i++, line += 20)
-        {
-            painter.drawText(25, line, "Id: " + ui->tableWidget_productsSales->item(i, 0)->text());
-            painter.drawText(75, line, "Product Id: " + ui->tableWidget_productsSales->item(i, 1)->text());
-            painter.drawText(200, line, "Quantity: " + ui->tableWidget_productsSales->item(i, 2)->text());
-            painter.drawText(300, line, "Unitary Price: " + ui->tableWidget_productsSales->item(i, 3)->text());
-            painter.drawText(400, line, "Total Price: " + ui->tableWidget_productsSales->item(i, 4)->text());
-        }
-
-        painter.end();
-
-        QDesktopServices::openUrl(QUrl("file:///" + file));
+        QMessageBox::warning(this, "Error", "Unable to connect database to export information");
     }
 }
 
+
 void SalesManagementWindow::on_pushButton_removeSale_clicked()
 {
+    // Get current line
     int currentRow = ui->tableWidget_sales->currentRow();
 
-    // Sale invalid
+    // Check whether the sale is invalid
     if(currentRow < 0)
     {
         QMessageBox::warning(this, "Error", "Select a sale first");
@@ -212,27 +249,39 @@ void SalesManagementWindow::on_pushButton_removeSale_clicked()
     }
 
     // Remove sale
+    DatabaseConnection dbConnection;
     if(dbConnection.open())
     {
-        QMessageBox::StandardButton button = QMessageBox::question(this, "Remove", "Do you want to remove this sale?", QMessageBox::Yes | QMessageBox::No);
+        QMessageBox::StandardButton button = QMessageBox::question(this, "Remove",
+                                                                   "Do you want to remove this sale?",
+                                                                   QMessageBox::Yes | QMessageBox::No);
 
         if(button == QMessageBox::Yes)
         {
             // Block signals to ignore items selections changed
             ui->tableWidget_sales->blockSignals(true);
 
+            // Get sale id
             int idSale = ui->tableWidget_sales->item(currentRow, 0)->text().toInt();
+
+            // Build query
             QSqlQuery query;
             query.prepare("DELETE FROM tb_products_sales WHERE id_sale = " + QString::number(idSale));
 
+            // Execute query
             if(query.exec())
             {
+                // Build query
                 query.prepare("DELETE FROM tb_sales WHERE id = " + QString::number(idSale));
 
+                // Execute query
                 if(query.exec())
                 {
+                    // Update table widget
                     ShowAllSalesIntoTableWidget();
-                    QMessageBox::information(this, "Success", "Sale '" + QString::number(idSale) + "' removed with success");
+                    QMessageBox::information(this, "Success", "Sale '" +
+                                                                  QString::number(idSale) +
+                                                                  "' removed with success");
                 }
                 else
                 {

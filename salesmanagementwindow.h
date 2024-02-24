@@ -25,7 +25,6 @@ private slots:
 
 private:
     Ui::SalesManagementWindow *ui;
-    DatabaseConnection dbConnection;
     QIcon iconWindow;
     void ShowAllSalesIntoTableWidget();
 };

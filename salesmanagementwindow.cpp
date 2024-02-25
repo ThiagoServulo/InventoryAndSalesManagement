@@ -17,9 +17,8 @@ SalesManagementWindow::SalesManagementWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    Utilities utilities;
-
     // Window layout
+    QIcon iconWindow;
     iconWindow.addFile(":/images/sale_management.png");
     this->setWindowIcon(iconWindow);
     this->setWindowTitle("Sales Management");
@@ -36,6 +35,7 @@ SalesManagementWindow::SalesManagementWindow(QWidget *parent) :
     ui->dateEdit_final->setDate(today);
 
     // Configure products sales table
+    Utilities utilities;
     QStringList headerLabels = {"Product Id", "Quantity", "Unitary Price", "Total Price"};
     utilities.TableWidgetBasicConfigurations(ui->tableWidget_productsSales, headerLabels);
     utilities.CleanTableWidget(ui->tableWidget_productsSales);
@@ -65,6 +65,7 @@ void SalesManagementWindow::ShowAllSalesIntoTableWidget()
                       "FROM tb_sales s LEFT JOIN tb_collaborators c "
                       "ON s.id_collaborator = c.id ORDER BY s.id");
 
+        // Update table widget
         if(!utilities.QueryToUpdateTableWidget(&query, ui->tableWidget_sales))
         {
             QMessageBox::warning(this, "Error", "Unable to read sales from database");
@@ -87,9 +88,10 @@ SalesManagementWindow::~SalesManagementWindow()
 
 void SalesManagementWindow::on_tableWidget_sales_itemSelectionChanged()
 {
+    // Get current row
     int currentRow = ui->tableWidget_sales->currentRow();
 
-    // Check if is a valid row
+    // Check whether is a valid row
     if(currentRow < 0)
     {
         return;
@@ -105,11 +107,13 @@ void SalesManagementWindow::on_tableWidget_sales_itemSelectionChanged()
         // Get sale id
         int idSale = ui->tableWidget_sales->item(currentRow, 0)->text().toInt();
 
+        // Build query
         query.prepare("SELECT i.description, ps.quantity, printf('%.2f', ps.sale_price), "
                       "printf('%.2f', ps.quantity * ps.sale_price) "
                       "FROM tb_products_sales ps JOIN tb_inventory i ON ps.id_product = i.id "
                       "WHERE ps.id_sale = " + QString::number(idSale) + " ORDER BY ps.id");
 
+        // Update table widget
         if(!utilities.QueryToUpdateTableWidget(&query, ui->tableWidget_productsSales))
         {
             QMessageBox::warning(this, "Error", "Unable to read prducts of sales from database");
@@ -142,12 +146,15 @@ void SalesManagementWindow::on_pushButton_filter_clicked()
 
         Utilities utilities;
         QSqlQuery query;
+
+        // Build query
         query.prepare("SELECT s.id, s.date, c.name, printf('%.2f', s.total_value)"
                       " FROM tb_sales s JOIN tb_collaborators c "
                       "ON s.id_collaborator = c.id WHERE s.date BETWEEN '" +
                       ui->dateEdit_initial->text() + "' AND '" +
                       ui->dateEdit_final->text() + "' ORDER BY s.id");
 
+        // Update table widget
         if(!utilities.QueryToUpdateTableWidget(&query, ui->tableWidget_sales))
         {
             QMessageBox::warning(this, "Error", "Unable to read sales from database");
@@ -176,11 +183,20 @@ void SalesManagementWindow::on_pushButton_allSales_clicked()
 }
 
 
-void SalesManagementWindow::on_pushButton_exportPdf_clicked()
+void SalesManagementWindow::on_pushButton_export_clicked()
 {
     DatabaseConnection dbConnection;
     if(dbConnection.open())
     {
+        // Directory to save reports
+        QString directoryPath = "reports/";
+
+        // Create directory if it doesn't exist
+        if (!QDir(directoryPath).exists())
+        {
+            QDir().mkdir(directoryPath);
+        }
+
         // Get current date
         QDateTime currentDateTime = QDateTime::currentDateTime();
 
@@ -188,31 +204,66 @@ void SalesManagementWindow::on_pushButton_exportPdf_clicked()
         QString currentDateTimeString = currentDateTime.toString("yyyy-MM-dd_hh_mm_ss");
 
         // Build report file
-        std::string fileName = "report_" + currentDateTimeString.toStdString() + ".txt";
-        std::ofstream reportFile(fileName, std::ios::out);
+        std::string filePath = directoryPath.toStdString() + "report_" +
+                               currentDateTimeString.toStdString() + ".txt";
+        std::ofstream reportFile(filePath, std::ios::out);
 
         // Open file
         if (reportFile.is_open())
         {
             // Build query
-            QSqlQuery query;
-            query.prepare("SELECT s.id, s.date, c.name, printf('%.2f', s.total_value)"
+            QSqlQuery query1;
+            query1.prepare("SELECT s.id, s.date, c.name, printf('%.2f', s.total_value)"
                           " FROM tb_sales s JOIN tb_collaborators c"
                           " ON s.id_collaborator = c.id ORDER BY s.id");
 
             // Execute query
-            if(query.exec())
+            if(query1.exec())
             {
-                while(query.next())
-                {
-                    // Get data
-                    int id = query.value(0).toInt();
-                    QString date = query.value(1).toString();
-                    QString name = query.value(2).toString();
-                    double totalValue = query.value(3).toDouble();
+                // Write header
+                reportFile << "Report sales\n\n";
 
-                    // TODO: Escrever no relatóri
-                    reportFile << "sapo";
+                // Write elements
+                while(query1.next())
+                {
+                    // Get sale information
+                    int idSale = query1.value(0).toInt();
+                    QString date = query1.value(1).toString();
+                    QString collaborator = query1.value(2).toString();
+                    double totalValue = query1.value(3).toDouble();
+
+                    // Write elements
+                    reportFile << ("Sale id: " + std::to_string(idSale) + "\n");
+                    reportFile << ("Date: " + date.toStdString() + "\n");
+                    reportFile << ("Collaborator: " + collaborator.toStdString() + "\n");
+                    reportFile << ("Total sale: " + std::to_string(totalValue) + "\n");
+
+                    // Build query
+                    QSqlQuery query2;
+                    query2.prepare("SELECT i.description, ps.quantity, ps.sale_price "
+                                  "FROM tb_products_sales ps JOIN tb_inventory i ON ps.id_product = i.id "
+                                  "WHERE ps.id_sale = " + QString::number(idSale) + " ORDER BY ps.id");
+
+                    // Execute query
+                    if(query2.exec())
+                    {
+                        // Write header
+                        reportFile << "Products: \n";
+                        while(query2.next())
+                        {
+                            // Get products information
+                            QString product = query2.value(0).toString();
+                            int quantity = query2.value(1).toInt();
+                            double salePrice = query2.value(2).toDouble();
+
+                            // Write products
+                            reportFile << ("\tProduct: " + product.toStdString() + "\n");
+                            reportFile << ("\tQuantity: " + std::to_string(quantity) + "\n");
+                            reportFile << ("\tSale price: " + std::to_string(salePrice) + "\n\n");
+                        }
+                    }
+
+                    reportFile << "\n";
                 }
             }
 

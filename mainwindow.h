@@ -3,8 +3,6 @@
 
 #include <QMainWindow>
 #include <QTableWidget>
-#include <QtSql>
-#include "databaseconnection.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -15,14 +13,9 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    // Properties
-    QIcon lockedPadlock;
-    QIcon unlockedPadlock;
     static bool userLogged;
     static QString name_collaborator, username_collaborator;
     static int id_collaborator, access_collaborator;
-
-    // Functions
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
@@ -36,9 +29,13 @@ private slots:
     void on_pushButton_searchProduct_clicked();
     void on_pushButton_editProduct_clicked();
     void on_pushButton_removeProduct_clicked();
+    void on_actionAbout_triggered();
+    void on_actionExit_triggered();
 
 private:
     Ui::MainWindow *ui;
+    QIcon lockedPadlock;
+    QIcon unlockedPadlock;
     float CalculateTotalSale(QTableWidget *tableWidget, int column);
     void InitFieldsWindow();
     void UpdateProductQuantiy(int id_product, int quantity);

@@ -4,10 +4,7 @@
 #include <QDialog>
 #include "databaseconnection.h"
 
-namespace Ui
-{
-    class SalesManagementWindow;
-}
+namespace Ui { class SalesManagementWindow; }
 
 class SalesManagementWindow : public QDialog
 {

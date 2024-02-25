@@ -6,6 +6,7 @@
 #include "editproductfromsalewindow.h"
 #include "inventorymanagementwindow.h"
 #include "collaboratosmanagementwindow.h"
+#include "databaseconnection.h"
 #include <QMessageBox>
 
 // Globals variables
@@ -303,7 +304,10 @@ void MainWindow::on_pushButton_finalizeSale_clicked()
             // Check query return
             if(query.exec())
             {
+                // Build query
                 query.prepare("SELECT id FROM tb_sales ORDER BY id DESC LIMIT 1");
+
+                // Execute query
                 if(query.exec())
                 {
                     // Get sale id
@@ -371,6 +375,21 @@ void MainWindow::on_pushButton_searchProduct_clicked()
         return;
     }
 
+    // Check if the product id field is empty
+    if(ui->lineEdit_idProduct->text().isEmpty())
+    {
+        QMessageBox::information(this, "Error", "Insert the product id");
+        return;
+    }
+
+    // Check if the quantity is valid
+    if(ui->lineEdit_quantity->text().toInt() <= 0)
+    {
+        QMessageBox::information(this, "Error", "The quantity should be greater than 0");
+        return;
+    }
+
+    // Insert product
     InsertProductIntoTableWidget();
 }
 
@@ -490,5 +509,23 @@ void MainWindow::on_pushButton_removeProduct_clicked()
     {
         QMessageBox::information(this, "Error", "Select a product first");
     }
+}
+
+
+void MainWindow::on_actionAbout_triggered()
+{
+    // Build message
+    QString message = "This is free licensed software developed by Thiago Sérvulo Guimarães.\n"
+                      "The version you are currently using is 1.0.0.\n"
+                      "For further instructions on how to use the system, please refer to the documentation in the README.md file.";
+
+    QMessageBox::information(this, "About", message);
+}
+
+
+void MainWindow::on_actionExit_triggered()
+{
+    // Close application
+    this->close();
 }
 

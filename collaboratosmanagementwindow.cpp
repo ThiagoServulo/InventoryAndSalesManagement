@@ -77,29 +77,34 @@ CollaboratosManagementWindow::~CollaboratosManagementWindow()
 
 bool CollaboratosManagementWindow::CheckCollaboratorFields(QString name, QString telephone, QString accessType)
 {
+    // Fields should not be empty
     if(name == "" || telephone == "" || accessType == "")
     {
         return false;
     }
 
+    // Name must have more than 6 characters
     if(name.length() < 6)
     {
         QMessageBox::warning(this, "Error", "Name must have more than 6 characters");
         return false;
     }
 
+    // Telephone must have 11 characters
     if(telephone.length() != 11)
     {
         QMessageBox::warning(this, "Error", "Telephone must have 11 characters");
         return false;
     }
 
+    // The fields are valid
     return true;
 }
 
 
 void CollaboratosManagementWindow::on_pushButton_newCollaborator_save_clicked()
 {
+    // Get fields
     QString name = ui->lineEdit_newCollaborator_name->text();
     QString username = ui->lineEdit_newCollaborator_username->text();
     QString telephone = ui->lineEdit_newCollaborator_telephone->text();
@@ -142,6 +147,7 @@ void CollaboratosManagementWindow::on_pushButton_newCollaborator_save_clicked()
         QSqlQuery query;
         query.prepare("SELECT id FROM tb_access_type WHERE type = '" + accessType + "'");
 
+        // Execute query
         if(!query.exec())
         {
             QMessageBox::warning(this, "Error", "Unable to read access type table");
@@ -288,6 +294,7 @@ void CollaboratosManagementWindow::on_tableWidget_collaboratorsManagement_collab
         QSqlQuery query;
         query.prepare("SELECT name, username, telephone, access FROM tb_collaborators WHERE id = " + QString::number(id));
 
+        // Execute query
         if(query.exec())
         {
             // Get collaborator information
@@ -357,10 +364,13 @@ void CollaboratosManagementWindow::on_pushButton_collaboratorsManagement_filter_
             }
         }
 
+        // Clean line edit
         ui->lineEdit_collaboratorsManagement_filter->clear();
 
+        // Execute query
         if(query.exec())
         {
+            // Insert into table widget
             Utilities utilities;
             utilities.QueryToInsertFieldsIntoTableWidget(&query, ui->tableWidget_collaboratorsManagement_collaborators);
         }
@@ -383,6 +393,7 @@ void CollaboratosManagementWindow::on_pushButton_collaboratorsManagement_filter_
 
 void CollaboratosManagementWindow::on_pushButton_collaboratorsManagement_save_clicked()
 {
+    // Check whether the collaborator is selected
     if(ui->tableWidget_collaboratorsManagement_collaborators->currentRow() == -1)
     {
         QMessageBox::information(this, "Information", "Select a collaborator first");
@@ -391,6 +402,7 @@ void CollaboratosManagementWindow::on_pushButton_collaboratorsManagement_save_cl
 
     if(dbConnection.open())
     {
+        // Get fields
         int currentRow = ui->tableWidget_collaboratorsManagement_collaborators->currentRow();
         int id = ui->tableWidget_collaboratorsManagement_collaborators->item(currentRow, 0)->text().toInt();
         QString name = ui->lineEdit_collaboratorsManagement_name->text();
@@ -409,6 +421,7 @@ void CollaboratosManagementWindow::on_pushButton_collaboratorsManagement_save_cl
         QSqlQuery query;
         query.prepare("SELECT id FROM tb_access_type WHERE type = '" + accessType + "'");
 
+        // Execute query
         if(query.exec())
         {
             query.next();
@@ -426,6 +439,7 @@ void CollaboratosManagementWindow::on_pushButton_collaboratorsManagement_save_cl
                       telephone + "', access = " + QString::number(accessTypeId) +
                       " WHERE id = " + QString::number(id));
 
+        // Execute query
         if(query.exec())
         {
             // Update table widget
@@ -475,6 +489,7 @@ void CollaboratosManagementWindow::on_pushButton_collaboratorsManagement_remove_
             QSqlQuery query;
             query.prepare("DELETE FROM tb_collaborators WHERE id = " + QString::number(id));
 
+            // Execute query
             if(query.exec())
             {
                 ui->tableWidget_collaboratorsManagement_collaborators->removeRow(currentRow);
@@ -508,7 +523,56 @@ void CollaboratosManagementWindow::on_pushButton_newCollaborator_cancel_clicked(
 
 void CollaboratosManagementWindow::on_pushButton_collaboratorsManagement_seeSales_clicked()
 {
-    /// TODO: Fazer botão see sales
+    // Get current row
+    int currentRow = ui->tableWidget_collaboratorsManagement_collaborators->currentRow();
+
+    // Check if it is a valid row
+    if(currentRow == -1)
+    {
+        QMessageBox::information(this, "Information", "Select a collaborator first");
+        return;
+    }
+
+    if(dbConnection.open())
+    {
+        // Get collaborator id
+        int idCollaborator = ui->tableWidget_collaboratorsManagement_collaborators->item(currentRow, 0)->text().toInt();
+
+        // Reset collaborator's from database's password
+        QSqlQuery query;
+        query.prepare("SELECT id FROM tb_sales WHERE id_collaborator = " + QString::number(idCollaborator));
+
+        // Execute query
+        if(query.exec())
+        {
+            // Build message
+            QString message = "";
+            while(query.next())
+            {
+                message += " " + query.value(0).toString();
+            }
+
+            // Show sales
+            if(message == "")
+            {
+                QMessageBox::information(this, "Information", "This collaborator hasn't made any sales yet");
+            }
+            else
+            {
+                QMessageBox::information(this, "Information", "Collaborator's sales: " + message);
+            }
+        }
+        else
+        {
+            QMessageBox::warning(this, "Error", "Unable to get collaborator's sales from database");
+        }
+
+        dbConnection.close();
+    }
+    else
+    {
+        QMessageBox::warning(this, "Error", "Unable to connect database to get collaborats sales");
+    }
 }
 
 
@@ -537,6 +601,7 @@ void CollaboratosManagementWindow::on_pushButton_resetPassword_clicked()
             QSqlQuery query;
             query.prepare("UPDATE tb_collaborators SET password = '1234' WHERE id = " + QString::number(id));
 
+            // Execute query
             if(query.exec())
             {
                 QMessageBox::information(this, "Success", "Collaborator's password reseted with success");

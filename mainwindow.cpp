@@ -66,6 +66,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_pushButton_Block_clicked()
 {
+    // Check if user is logged
     if(!userLogged)
     {
         LoginWindow loginWindow;

@@ -321,15 +321,24 @@ color: #FFFFFF</string>
    <property name="text">
     <string>Inventory</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+I</string>
+   </property>
   </action>
   <action name="actionCollaborators">
    <property name="text">
     <string>Collaborators</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+C</string>
+   </property>
   </action>
   <action name="actionSales">
    <property name="text">
     <string>Sales</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
    </property>
   </action>
   <action name="actionExit">
@@ -340,6 +349,9 @@ color: #FFFFFF</string>
   <action name="actionAbout">
    <property name="text">
     <string>About</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+A</string>
    </property>
   </action>
  </widget>

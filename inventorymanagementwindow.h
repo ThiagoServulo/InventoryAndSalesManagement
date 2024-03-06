@@ -2,8 +2,6 @@
 #define INVENTORYMANAGEMENTWINDOW_H
 
 #include <QDialog>
-#include <QTableWidget>
-#include "databaseconnection.h"
 
 namespace Ui {
 class InventoryManagementWindow;
@@ -28,8 +26,6 @@ private slots:
 
 private:
     Ui::InventoryManagementWindow *ui;
-    DatabaseConnection dbConnection;
-    QIcon iconWindow;
     int ProductExists(int id);
     void UpdateInventoryManagementTableWidget();
     void ClearNewProductTabFields();

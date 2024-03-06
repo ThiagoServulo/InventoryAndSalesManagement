@@ -2,6 +2,7 @@
 #include "ui_inventorymanagementwindow.h"
 #include "utilities.h"
 #include "mainwindow.h"
+#include "databaseconnection.h"
 #include <QMessageBox>
 #include <QRegularExpression>
 #include <QValidator>
@@ -16,6 +17,7 @@ InventoryManagementWindow::InventoryManagementWindow(QWidget *parent) :
     ui->setupUi(this);
 
     // Window layout
+    QIcon iconWindow;
     iconWindow.addFile(":/images/inventory.png");
     this->setWindowIcon(iconWindow);
     this->setWindowTitle("Inventory Management");
@@ -46,11 +48,12 @@ InventoryManagementWindow::InventoryManagementWindow(QWidget *parent) :
     utilities.ConfigureRegexLineEdit(ui->lineEdit_inventoryManagement_supplier, 1);
 }
 
+
 InventoryManagementWindow::~InventoryManagementWindow()
 {
-    dbConnection.close();
     delete ui;
 }
+
 
 void InventoryManagementWindow::on_pushButton_newProduct_save_clicked()
 {
@@ -76,14 +79,17 @@ void InventoryManagementWindow::on_pushButton_newProduct_save_clicked()
     }
 
     // Insert new product
+    DatabaseConnection dbConnection;
     if(dbConnection.open())
     {
+        // Build query
         QSqlQuery query;
         query.prepare("INSERT INTO tb_inventory (id, description, supplier, quantity, purchase_price, sale_price) "
                       "VALUES (" + QString::number(id) + ", '" + description + "', '" + supplier + "', "
                       + QString::number(quantity) + ", " + QString::number(purchasePrice) + ", "
                       + QString::number(salePrice) + ")");
 
+        // Execute query
         if(!query.exec())
         {
             QMessageBox::warning(this, "Error", "Unable to save the product into database");
@@ -100,10 +106,11 @@ void InventoryManagementWindow::on_pushButton_newProduct_save_clicked()
     {
         QMessageBox::warning(this, "Error", "Unable to connect database to save new product");
     }
-
 }
 
-bool InventoryManagementWindow::CheckValidProduct(float purchasePrice, float salePrice, int quantity, QString description, QString supplier)
+
+bool InventoryManagementWindow::CheckValidProduct(float purchasePrice, float salePrice, int quantity,
+                                                  QString description, QString supplier)
 {
     // Check fields are not empty
     if(purchasePrice == 0 || salePrice == 0 || quantity == 0 || description == "" || supplier == "")
@@ -122,21 +129,27 @@ bool InventoryManagementWindow::CheckValidProduct(float purchasePrice, float sal
     return true;
 }
 
+
 int InventoryManagementWindow::ProductExists(int id)
 {
+    // Init status
     int status = -1;
 
+    DatabaseConnection dbConnection;
     if(dbConnection.open())
     {
+        // Build query
         QSqlQuery query;
         query.prepare("SELECT COUNT(*) FROM tb_inventory WHERE id = " + QString::number(id));
 
+        // Execute query
         if(!query.exec())
         {
             QMessageBox::warning(this, "Error", "Unable to read access type table");
         }
         else
         {
+            // Get status
             query.first();
             status = query.value(0).toInt();
         }
@@ -151,13 +164,16 @@ int InventoryManagementWindow::ProductExists(int id)
     return status;
 }
 
+
 void InventoryManagementWindow::on_pushButton_newProduct_cancel_clicked()
 {
     ClearNewProductTabFields();
 }
 
+
 void InventoryManagementWindow::ClearNewProductTabFields()
 {
+    // Clear fields
     ui->lineEdit_newProduct_id->clear();
     ui->lineEdit_newProduct_description->clear();
     ui->lineEdit_newProduct_purchasePrice->clear();
@@ -167,14 +183,17 @@ void InventoryManagementWindow::ClearNewProductTabFields()
     ui->lineEdit_newProduct_id->setFocus();
 }
 
+
 void InventoryManagementWindow::ClearInventoryManagementTabFields()
 {
+    // Clear fields
     ui->lineEdit_inventoryManagement_description->clear();
     ui->lineEdit_inventoryManagement_purchasePrice->clear();
     ui->lineEdit_inventoryManagement_quantity->clear();
     ui->lineEdit_inventoryManagement_salePrice->clear();
     ui->lineEdit_inventoryManagement_supplier->clear();
 }
+
 
 void InventoryManagementWindow::on_tabWidget_currentChanged(int index)
 {
@@ -186,18 +205,23 @@ void InventoryManagementWindow::on_tabWidget_currentChanged(int index)
         return;
     }
 
+    // Update table
     ui->lineEdit_inventoryManagement_filter->clear();
     ClearInventoryManagementTabFields();
     UpdateInventoryManagementTableWidget();
 }
 
+
 void InventoryManagementWindow::UpdateInventoryManagementTableWidget()
 {
+    DatabaseConnection dbConnection;
     if(dbConnection.open())
     {
+        // Build query
         QSqlQuery query;
         query.prepare("SELECT id, description FROM tb_inventory ORDER BY id");
 
+        // Use query to update table
         Utilities utilities;
         if(!utilities.QueryToUpdateTableWidget(&query, ui->tableWidget_inventoryManagement))
         {
@@ -212,24 +236,32 @@ void InventoryManagementWindow::UpdateInventoryManagementTableWidget()
     }
 }
 
+
 void InventoryManagementWindow::on_tableWidget_inventoryManagement_itemSelectionChanged()
 {
+    // Get current row
     int currentRow = ui->tableWidget_inventoryManagement->currentRow();
 
+    // Check if the row is valid
     if(currentRow == -1)
     {
         return;
     }
 
+    DatabaseConnection dbConnection;
     if(dbConnection.open())
     {
+        // Get product id
         int id = ui->tableWidget_inventoryManagement->item(currentRow, 0)->text().toInt();
 
+        // Build query
         QSqlQuery query;
         query.prepare("SELECT * FROM tb_inventory WHERE id = " + QString::number(id));
 
+        // Execute query
         if(query.exec())
         {
+            // Show product information
             query.first();
             ui->lineEdit_inventoryManagement_description->setText(query.value(1).toString());
             ui->lineEdit_inventoryManagement_supplier->setText(query.value(2).toString());
@@ -250,14 +282,11 @@ void InventoryManagementWindow::on_tableWidget_inventoryManagement_itemSelection
     }
 }
 
+
 void InventoryManagementWindow::on_pushButton_inventoryManagement_save_clicked()
 {
-    int id = ui->tableWidget_inventoryManagement->item(ui->tableWidget_inventoryManagement->currentRow(), 0)->text().toInt();
+    // Get description
     QString description = ui->lineEdit_inventoryManagement_description->text();
-    QString supplier = ui->lineEdit_inventoryManagement_supplier->text();
-    float purchasePrice = ui->lineEdit_inventoryManagement_purchasePrice->text().toFloat();
-    float salePrice = ui->lineEdit_inventoryManagement_salePrice->text().toFloat();
-    int quantity = ui->lineEdit_inventoryManagement_quantity->text().toInt();
 
     // Check selection
     if(description == "")
@@ -266,6 +295,14 @@ void InventoryManagementWindow::on_pushButton_inventoryManagement_save_clicked()
         return;
     }
 
+    // Get other fields
+    int id = ui->tableWidget_inventoryManagement->item(ui->tableWidget_inventoryManagement->currentRow(),
+                                                       0)->text().toInt();
+    QString supplier = ui->lineEdit_inventoryManagement_supplier->text();
+    float purchasePrice = ui->lineEdit_inventoryManagement_purchasePrice->text().toFloat();
+    float salePrice = ui->lineEdit_inventoryManagement_salePrice->text().toFloat();
+    int quantity = ui->lineEdit_inventoryManagement_quantity->text().toInt();
+
     // Check valid product
     if(!CheckValidProduct(purchasePrice, salePrice, quantity, description, supplier))
     {
@@ -273,19 +310,23 @@ void InventoryManagementWindow::on_pushButton_inventoryManagement_save_clicked()
     }
 
     // Update a product
+    DatabaseConnection dbConnection;
     if(dbConnection.open())
     {
         // Block signals to ignore items selections changed
         ui->tableWidget_inventoryManagement->blockSignals(true);
 
+        // Build query
         QSqlQuery query;
         query.prepare("UPDATE tb_inventory SET description = '" + description + "', supplier = '" +
                       supplier + "', quantity = " + QString::number(quantity) +
                       ", purchase_price = " + QString::number(purchasePrice) + ", sale_price = " +
                       QString::number(salePrice) + " WHERE id = " + QString::number(id));
 
+        // Execute query
         if(query.exec())
         {
+            // Update table
             ui->tableWidget_inventoryManagement->clearSelection();
             ClearInventoryManagementTabFields();
             UpdateInventoryManagementTableWidget();
@@ -307,6 +348,7 @@ void InventoryManagementWindow::on_pushButton_inventoryManagement_save_clicked()
     }
 }
 
+
 void InventoryManagementWindow::on_pushButton_inventoryManagement_remove_clicked()
 {
     // Check selection
@@ -317,17 +359,22 @@ void InventoryManagementWindow::on_pushButton_inventoryManagement_remove_clicked
     }
 
     // Remove product
+    DatabaseConnection dbConnection;
     if(dbConnection.open())
     {       
-        QMessageBox::StandardButton button = QMessageBox::question(this, "Remove", "Do you want to remove this product?", QMessageBox::Yes | QMessageBox::No);
+        QMessageBox::StandardButton button = QMessageBox::question(this, "Remove",
+                                                                   "Do you want to remove this product?",
+                                                                   QMessageBox::Yes | QMessageBox::No);
         if(button == QMessageBox::Yes)
         {
-            int id = ui->tableWidget_inventoryManagement->item(ui->tableWidget_inventoryManagement->currentRow(), 0)->text().toInt();
+            int id = ui->tableWidget_inventoryManagement->item(ui->tableWidget_inventoryManagement->currentRow(),
+                                                               0)->text().toInt();
             QSqlQuery query;
 
             // Check if it's possible to remove
             int quant = 0;
-            query.prepare("SELECT COUNT(*) FROM tb_products_sales WHERE id_product = " + QString::number(id));
+            query.prepare("SELECT COUNT(*) FROM tb_products_sales WHERE id_product = " +
+                          QString::number(id));
             if(query.exec())
             {
                 query.first();
@@ -339,17 +386,20 @@ void InventoryManagementWindow::on_pushButton_inventoryManagement_remove_clicked
             if(quant > 0)
             {
                 message = "Product quantity set to zero";
-                query.prepare("UPDATE tb_inventory SET quantity = 0 WHERE id = " + QString::number(id));
+                query.prepare("UPDATE tb_inventory SET quantity = 0 WHERE id = " +
+                              QString::number(id));
             }
             else
             {
                 message = "Product removed with success";
-                query.prepare("DELETE FROM tb_inventory WHERE id = " + QString::number(id));
+                query.prepare("DELETE FROM tb_inventory WHERE id = " +
+                              QString::number(id));
             }
 
             // Remove or update quantity
             if(query.exec())
             {
+                // Update table
                 ui->tableWidget_inventoryManagement->setCurrentCell(-1, -1);
                 ClearInventoryManagementTabFields();
                 UpdateInventoryManagementTableWidget();
@@ -369,13 +419,16 @@ void InventoryManagementWindow::on_pushButton_inventoryManagement_remove_clicked
     }
 }
 
+
 void InventoryManagementWindow::on_pushButton_inventoryManagement_search_clicked()
 {
+    DatabaseConnection dbConnection;
     if(dbConnection.open())
     {
         // Block signals to ignore items selections changed
         ui->tableWidget_inventoryManagement->blockSignals(true);
 
+        // Filter products at the table
         QSqlQuery query;
         if(ui->lineEdit_inventoryManagement_filter->text() == "")
         {
@@ -392,17 +445,21 @@ void InventoryManagementWindow::on_pushButton_inventoryManagement_search_clicked
         {
             if(ui->radioButton_inventoryManagement_id->isChecked())
             {
-                query.prepare("SELECT id, description FROM tb_inventory WHERE id = " + ui->lineEdit_inventoryManagement_filter->text());
+                query.prepare("SELECT id, description FROM tb_inventory WHERE id = " +
+                              ui->lineEdit_inventoryManagement_filter->text());
             }
             else
             {
-                query.prepare("SELECT id, description FROM tb_inventory WHERE description LIKE '%" + ui->lineEdit_inventoryManagement_filter->text() + "%'");
+                query.prepare("SELECT id, description FROM tb_inventory WHERE description LIKE '%" +
+                              ui->lineEdit_inventoryManagement_filter->text() + "%'");
             }
         }
 
+        // Clear fields
         ui->lineEdit_inventoryManagement_filter->clear();
         ClearInventoryManagementTabFields();
 
+        // Update table
         if(query.exec())
         {
             Utilities utilities;

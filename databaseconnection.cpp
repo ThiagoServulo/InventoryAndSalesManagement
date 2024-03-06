@@ -54,6 +54,18 @@ bool DatabaseConnection::isOpen()
 
 int DatabaseConnection::createDatabase(QString databasePath)
 {
+    // Create database directory
+    QString path = qApp->applicationDirPath();
+    QDir directory(path + "/database");
+    if(!directory.exists())
+    {
+        if (!directory.mkpath("."))
+        {
+            qDebug() << "Error to create directory for database";
+            return false;
+        }
+    }
+
     // Set database name
     database.setDatabaseName(databasePath);
 

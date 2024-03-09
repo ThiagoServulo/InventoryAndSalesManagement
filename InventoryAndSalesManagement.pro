@@ -9,7 +9,7 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    collaboratosmanagementwindow.cpp \
+    collaboratorsmanagementwindow.cpp \
     databaseconnection.cpp \
     definepasswordwindow.cpp \
     editproductfromsalewindow.cpp \
@@ -21,7 +21,7 @@ SOURCES += \
     utilities.cpp
 
 HEADERS += \
-    collaboratosmanagementwindow.h \
+    collaboratorsmanagementwindow.h \
     databaseconnection.h \
     definepasswordwindow.h \
     editproductfromsalewindow.h \
@@ -32,7 +32,7 @@ HEADERS += \
     utilities.h
 
 FORMS += \
-    collaboratosmanagementwindow.ui \
+    collaboratorsmanagementwindow.ui \
     definepasswordwindow.ui \
     editproductfromsalewindow.ui \
     inventorymanagementwindow.ui \

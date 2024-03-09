@@ -1,4 +1,4 @@
-#include "collaboratosmanagementwindow.h"
+#include "collaboratorsmanagementwindow.h"
 #include "ui_collaboratosmanagementwindow.h"
 #include "utilities.h"
 #include "mainwindow.h"

@@ -5,7 +5,7 @@
 #include "salesmanagementwindow.h"
 #include "editproductfromsalewindow.h"
 #include "inventorymanagementwindow.h"
-#include "collaboratosmanagementwindow.h"
+#include "collaboratorsmanagementwindow.h"
 #include "databaseconnection.h"
 #include <QMessageBox>
 

@@ -2,8 +2,10 @@
 #include "ui_collaboratosmanagementwindow.h"
 #include "utilities.h"
 #include "mainwindow.h"
+#include "databaseconnection.h"
 #include <QSql>
 #include <QMessageBox>
+#include <QTableWidget>
 
 CollaboratosManagementWindow::CollaboratosManagementWindow(QWidget *parent) :
     QDialog(parent),
@@ -14,12 +16,14 @@ CollaboratosManagementWindow::CollaboratosManagementWindow(QWidget *parent) :
     Utilities utilities;
 
     // Window layout
+    QIcon iconWindow;
     iconWindow.addFile(":/images/login.png");
     this->setWindowIcon(iconWindow);
     this->setWindowTitle("Collaborators Management");
     this->setFixedSize(644, 514);
 
     // Update combo box with the access type options
+    DatabaseConnection dbConnection;
     if(dbConnection.open())
     {
         QSqlQuery query;
@@ -48,7 +52,8 @@ CollaboratosManagementWindow::CollaboratosManagementWindow(QWidget *parent) :
 
     // Configure table widget
     QStringList headerLabels = {"Id", "Name", "Username"};
-    utilities.TableWidgetBasicConfigurations(ui->tableWidget_collaboratorsManagement_collaborators, headerLabels);
+    utilities.TableWidgetBasicConfigurations(ui->tableWidget_collaboratorsManagement_collaborators,
+                                             headerLabels);
 
     // Configure radio button
     ui->radioButton_collaboratorsManagement_idCollaborator->setChecked(true);
@@ -137,6 +142,7 @@ void CollaboratosManagementWindow::on_pushButton_newCollaborator_save_clicked()
     }
 
     // Save new collaborator
+    DatabaseConnection dbConnection;
     if(!dbConnection.open())
     {
         QMessageBox::warning(this, "Error", "Unable to connect database to save new collaborator");
@@ -182,26 +188,33 @@ void CollaboratosManagementWindow::on_pushButton_newCollaborator_save_clicked()
 
 int CollaboratosManagementWindow::UsernameExists(QString username)
 {
+    // Init status
     int status = -1;
 
+    DatabaseConnection dbConnection;
     if(dbConnection.open())
     {
+        // Build query
         QSqlQuery query;
         query.prepare("SELECT id FROM tb_collaborators WHERE username = '" + username + "'");
 
+        // Execute query
         if(!query.exec())
         {
             QMessageBox::warning(this, "Error", "Unable to read access type table");
         }
         else
         {
+            // Init quantity
             int quantity = 0;
 
+            //Check if the username already exists
             while(query.next())
             {
                 ++quantity;
             }
 
+            // Update status
             status = quantity;
         }
 
@@ -218,6 +231,7 @@ int CollaboratosManagementWindow::UsernameExists(QString username)
 
 void CollaboratosManagementWindow::ClearNewCollaboratorTabFields()
 {
+    // Clear fields
     ui->lineEdit_newCollaborator_name->clear();
     ui->lineEdit_newCollaborator_username->clear();
     ui->lineEdit_newCollaborator_telephone->clear();
@@ -228,10 +242,12 @@ void CollaboratosManagementWindow::ClearNewCollaboratorTabFields()
 
 void CollaboratosManagementWindow::ClearCollaboratorManagementTabFields(bool cleanFilterField)
 {
+    // Clear fields
     ui->lineEdit_collaboratorsManagement_name->clear();
     ui->lineEdit_collaboratorsManagement_telephone->clear();
     ui->comboBox_collaboratorsManagement_accessType->setCurrentIndex(-1);
 
+    // Clear filter field
     if(cleanFilterField)
     {
         ui->lineEdit_collaboratorsManagement_filter->clear();
@@ -241,12 +257,15 @@ void CollaboratosManagementWindow::ClearCollaboratorManagementTabFields(bool cle
 
 void CollaboratosManagementWindow::UpdateCollaboratorsManagementTableWidget()
 {
+    DatabaseConnection dbConnection;
     if(dbConnection.open())
     {
-        Utilities utilities;
+        // Build query
         QSqlQuery query;
         query.prepare("SELECT id, name, username FROM tb_collaborators WHERE username != 'admin' ORDER BY id");
 
+        // Update table
+        Utilities utilities;
         if(!utilities.QueryToUpdateTableWidget(&query, ui->tableWidget_collaboratorsManagement_collaborators))
         {
             QMessageBox::warning(this, "Error", "Unable to read collaborators from database");
@@ -275,7 +294,8 @@ void CollaboratosManagementWindow::on_tabWidget_currentChanged(int index)
     ui->tableWidget_collaboratorsManagement_collaborators->clearSelection();
 
     if(index == 1)
-    { 
+    {
+        // Update table
         UpdateCollaboratorsManagementTableWidget();
     }
 
@@ -286,13 +306,19 @@ void CollaboratosManagementWindow::on_tabWidget_currentChanged(int index)
 
 void CollaboratosManagementWindow::on_tableWidget_collaboratorsManagement_collaborators_itemSelectionChanged()
 {
+    DatabaseConnection dbConnection;
     if(dbConnection.open())
     {
+        // Get current row
         int currentRow = ui->tableWidget_collaboratorsManagement_collaborators->currentRow();
+
+        // Get collaborator id
         int id = ui->tableWidget_collaboratorsManagement_collaborators->item(currentRow, 0)->text().toInt();
 
+        // Build query
         QSqlQuery query;
-        query.prepare("SELECT name, username, telephone, access FROM tb_collaborators WHERE id = " + QString::number(id));
+        query.prepare("SELECT name, username, telephone, access FROM tb_collaborators WHERE id = " +
+                      QString::number(id));
 
         // Execute query
         if(query.exec())
@@ -303,7 +329,8 @@ void CollaboratosManagementWindow::on_tableWidget_collaboratorsManagement_collab
             ui->lineEdit_collaboratorsManagement_telephone->setText(query.value(2).toString());
 
             // Get collaborator access type
-            query.prepare("SELECT type FROM tb_access_type WHERE id = " + QString::number(query.value(3).toInt()));
+            query.prepare("SELECT type FROM tb_access_type WHERE id = " +
+                          QString::number(query.value(3).toInt()));
             if(query.exec())
             {
                 query.first();
@@ -330,9 +357,11 @@ void CollaboratosManagementWindow::on_tableWidget_collaboratorsManagement_collab
 
 void CollaboratosManagementWindow::on_pushButton_collaboratorsManagement_filter_clicked()
 {
+    // Clear filds and table
     ui->tableWidget_collaboratorsManagement_collaborators->clearSelection();
     ClearCollaboratorManagementTabFields(false);
 
+    DatabaseConnection dbConnection;
     if(dbConnection.open())
     {
         // Block signals to ignore items selections changed
@@ -345,22 +374,28 @@ void CollaboratosManagementWindow::on_pushButton_collaboratorsManagement_filter_
         {
             if(ui->radioButton_collaboratorsManagement_idCollaborator->isChecked())
             {
-                query.prepare("SELECT id, name, username FROM tb_collaborators WHERE username != 'admin' ORDER BY id");
+                query.prepare("SELECT id, name, username FROM tb_collaborators WHERE username "
+                              "!= 'admin' ORDER BY id");
             }
             else
             {
-                query.prepare("SELECT id, name, username FROM tb_collaborators WHERE username != 'admin' ORDER BY name");
+                query.prepare("SELECT id, name, username FROM tb_collaborators WHERE username "
+                              "!= 'admin' ORDER BY name");
             }
         }
         else
         {
             if(ui->radioButton_collaboratorsManagement_idCollaborator->isChecked())
             {
-                query.prepare("SELECT id, name, username FROM tb_collaborators WHERE username != 'admin' WHERE id = " + ui->lineEdit_collaboratorsManagement_filter->text());
+                query.prepare("SELECT id, name, username FROM tb_collaborators WHERE username "
+                              "!= 'admin' WHERE id = " +
+                              ui->lineEdit_collaboratorsManagement_filter->text());
             }
             else
             {
-                query.prepare("SELECT id, name, username FROM tb_collaborators WHERE username != 'admin' WHERE name LIKE '%" + ui->lineEdit_collaboratorsManagement_filter->text() + "%'");
+                query.prepare("SELECT id, name, username FROM tb_collaborators WHERE username "
+                              "!= 'admin' WHERE name LIKE '%" +
+                              ui->lineEdit_collaboratorsManagement_filter->text() + "%'");
             }
         }
 
@@ -372,7 +407,8 @@ void CollaboratosManagementWindow::on_pushButton_collaboratorsManagement_filter_
         {
             // Insert into table widget
             Utilities utilities;
-            utilities.QueryToInsertFieldsIntoTableWidget(&query, ui->tableWidget_collaboratorsManagement_collaborators);
+            utilities.QueryToInsertFieldsIntoTableWidget(&query,
+                                                         ui->tableWidget_collaboratorsManagement_collaborators);
         }
         else
         {
@@ -400,6 +436,7 @@ void CollaboratosManagementWindow::on_pushButton_collaboratorsManagement_save_cl
         return;
     }
 
+    DatabaseConnection dbConnection;
     if(dbConnection.open())
     {
         // Get fields
@@ -474,15 +511,18 @@ void CollaboratosManagementWindow::on_pushButton_collaboratorsManagement_remove_
         return;
     }
 
+    DatabaseConnection dbConnection;
     if(dbConnection.open())
     {
-        QMessageBox::StandardButton button = QMessageBox::question(this, "Remove", "Do you want to remove this collaborator?",
+        QMessageBox::StandardButton button = QMessageBox::question(this, "Remove",
+                                                                   "Do you want to remove this collaborator?",
                                                                    QMessageBox::Yes | QMessageBox::No);
         if(button == QMessageBox::Yes)
         {
             // Block signals to ignore items selections changed
             ui->tableWidget_collaboratorsManagement_collaborators->blockSignals(true);
 
+            // Get collaborator id
             int id = ui->tableWidget_collaboratorsManagement_collaborators->item(currentRow, 0)->text().toInt();
 
             // Remove collaborator from database
@@ -517,6 +557,7 @@ void CollaboratosManagementWindow::on_pushButton_collaboratorsManagement_remove_
 
 void CollaboratosManagementWindow::on_pushButton_newCollaborator_cancel_clicked()
 {
+    // Clear fields
     ClearNewCollaboratorTabFields();
 }
 
@@ -533,6 +574,7 @@ void CollaboratosManagementWindow::on_pushButton_collaboratorsManagement_seeSale
         return;
     }
 
+    DatabaseConnection dbConnection;
     if(dbConnection.open())
     {
         // Get collaborator id
@@ -588,9 +630,11 @@ void CollaboratosManagementWindow::on_pushButton_resetPassword_clicked()
         return;
     }
 
+    DatabaseConnection dbConnection;
     if(dbConnection.open())
     {
-        QMessageBox::StandardButton button = QMessageBox::question(this, "Remove", "Do you want to reset the collaborator's password?",
+        QMessageBox::StandardButton button = QMessageBox::question(this, "Remove",
+                                                                   "Do you want to reset the collaborator's password?",
                                                                    QMessageBox::Yes | QMessageBox::No);
         if(button == QMessageBox::Yes)
         {
@@ -619,4 +663,3 @@ void CollaboratosManagementWindow::on_pushButton_resetPassword_clicked()
         QMessageBox::warning(this, "Error", "Unable to connect database to reset password");
     }
 }
-

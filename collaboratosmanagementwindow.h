@@ -2,8 +2,6 @@
 #define COLLABORATOSMANAGEMENTWINDOW_H
 
 #include <QDialog>
-#include <QTableWidget>
-#include "databaseconnection.h"
 
 namespace Ui {
 class CollaboratosManagementWindow;
@@ -30,8 +28,6 @@ private slots:
 
 private:
     Ui::CollaboratosManagementWindow *ui;
-    QIcon iconWindow;
-    DatabaseConnection dbConnection;
     void UpdateCollaboratorsManagementTableWidget();
     void ClearNewCollaboratorTabFields();
     void ClearCollaboratorManagementTabFields(bool cleanFilterField);

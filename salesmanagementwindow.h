@@ -2,7 +2,6 @@
 #define SALESMANAGEMENTWINDOW_H
 
 #include <QDialog>
-#include "databaseconnection.h"
 
 namespace Ui { class SalesManagementWindow; }
 

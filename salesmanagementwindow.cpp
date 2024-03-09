@@ -1,15 +1,13 @@
 #include "salesmanagementwindow.h"
 #include "ui_salesmanagementwindow.h"
+#include "databaseconnection.h"
 #include "utilities.h"
 #include <iostream>
 #include <fstream>
 #include <QDateEdit>
 #include <QtSql>
 #include <QMessageBox>
-#include <QPrinter>
-#include <QPainter>
 #include <QDir>
-#include <QDesktopServices>
 
 SalesManagementWindow::SalesManagementWindow(QWidget *parent) :
     QDialog(parent),
@@ -30,8 +28,7 @@ SalesManagementWindow::SalesManagementWindow(QWidget *parent) :
 
     // Init with a date
     QDate today = QDate::currentDate();
-    QDate yesterday = today.addDays(-1);
-    ui->dateEdit_initial->setDate(yesterday);
+    ui->dateEdit_initial->setDate(today);
     ui->dateEdit_final->setDate(today);
 
     // Configure products sales table
@@ -151,8 +148,8 @@ void SalesManagementWindow::on_pushButton_filter_clicked()
         query.prepare("SELECT s.id, s.date, c.name, printf('%.2f', s.total_value)"
                       " FROM tb_sales s JOIN tb_collaborators c "
                       "ON s.id_collaborator = c.id WHERE s.date BETWEEN '" +
-                      ui->dateEdit_initial->text() + "' AND '" +
-                      ui->dateEdit_final->text() + "' ORDER BY s.id");
+                      ui->dateEdit_initial->text() + ":00:00:00' AND '" +
+                      ui->dateEdit_final->text() + ":23:59:59' ORDER BY s.id");
 
         // Update table widget
         if(!utilities.QueryToUpdateTableWidget(&query, ui->tableWidget_sales))

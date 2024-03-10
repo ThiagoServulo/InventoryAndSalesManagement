@@ -205,6 +205,9 @@ void SalesManagementWindow::on_pushButton_export_clicked()
                                currentDateTimeString.toStdString() + ".txt";
         std::ofstream reportFile(filePath, std::ios::out);
 
+        // Init sales quantity
+        int quantSales = 0;
+
         // Open file
         if (reportFile.is_open())
         {
@@ -217,12 +220,19 @@ void SalesManagementWindow::on_pushButton_export_clicked()
             // Execute query
             if(query1.exec())
             {
-                // Write header
-                reportFile << "Report sales\n\n";
-
                 // Write elements
                 while(query1.next())
                 {
+                    // Check sales quantity
+                    if(!quantSales)
+                    {
+                        // Write header
+                        reportFile << "Report sales\n\n";
+                    }
+
+                    // Increment sales quantity
+                    ++quantSales;
+
                     // Get sale information
                     int idSale = query1.value(0).toInt();
                     QString date = query1.value(1).toString();
@@ -266,10 +276,16 @@ void SalesManagementWindow::on_pushButton_export_clicked()
 
             dbConnection.close();
 
+            // Check sales quantity
+            if(!quantSales)
+            {
+                reportFile << "There are no sales";
+            }
+
             // Close file
             reportFile.close();
 
-            // Message box to inform that the file was created
+            // Show message box
             QMessageBox::information(this, "Information", "The report was created");
         }
         else

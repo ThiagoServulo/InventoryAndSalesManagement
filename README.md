@@ -120,6 +120,20 @@ After including all the products, you can finalize the sale by clicking the "Fin
 
 As mentioned earlier, to edit a product from a sale, you will use this window. Here, the fields ID product **(1)** and description **(2)** cannot be changed, so they are read-only. You can only modify the quantity **(3)** and sale price **(4)**. The new quantity should also be a valid value. After editing, click on the "Confirm" button **(5)** to confirm the changes or the "Cancel" button **(6)** to ignore the changes.
 
+## How to use the program
+
+To use the program you can download its source code and compile it using QT Creator, or simply run its executable. The "InventoryAndSalesManagement.exe" file, located in the executables folder, will run the application on your system and start a new database so that you have access to all the system's features. Always choose the most up-to-date version of the program available.
+
+## Versions
+
+### V1.0.1
+
+* Date: 2024-03-10. 
+* This is the fisrt version that contains all the functionalities describe in this document.
+
+## Author
+
+[@thiagoservulo](https://github.com/ThiagoServulo)
 
 
 [login_window]: images/screenshots/login_window.png

@@ -13,7 +13,6 @@
 int MainWindow::id_collaborator;
 QString MainWindow::name_collaborator;
 int MainWindow::access_collaborator;
-QString MainWindow::username_collaborator;
 bool MainWindow::userLogged;
 
 MainWindow::MainWindow(QWidget *parent)
@@ -72,6 +71,7 @@ void MainWindow::on_pushButton_Block_clicked()
         LoginWindow loginWindow;
         loginWindow.exec();
 
+        // Check user logged
         if(userLogged)
         {
             ui->pushButton_Block->setIcon(unlockedPadlock);
@@ -140,7 +140,8 @@ void MainWindow::InsertProductIntoTableWidget()
     if(dbConnection.open())
     {
         QSqlQuery query;
-        query.prepare("SELECT id, quantity, description, sale_price FROM tb_inventory WHERE id = " + ui->lineEdit_idProduct->text());
+        query.prepare("SELECT id, quantity, description, sale_price FROM tb_inventory WHERE id = " +
+                      ui->lineEdit_idProduct->text());
 
         if(query.exec())
         {
@@ -218,7 +219,8 @@ void MainWindow::UpdateProductQuantiy(int id_product, int quantity)
             int new_quantity = query.value(0).toInt() + quantity;
 
             // Update quantity at database
-            query.prepare("UPDATE tb_inventory SET quantity = " + QString::number(new_quantity) + " WHERE id = " + QString::number(id_product));
+            query.prepare("UPDATE tb_inventory SET quantity = " + QString::number(new_quantity) +
+                          " WHERE id = " + QString::number(id_product));
 
             // Check query status
             if(!query.exec())
@@ -250,11 +252,13 @@ void MainWindow::InitFieldsWindow()
 
 float MainWindow::CalculateTotalSale(QTableWidget *tableWidget, int column)
 {
+    // Init total
     float total = 0;
 
     // Add the value from each row
     for(int i = 0; i < tableWidget->rowCount(); i++)
     {
+        // Update total
         total += tableWidget->item(i, column)->text().toFloat();
     }
 
@@ -295,7 +299,8 @@ void MainWindow::on_pushButton_finalizeSale_clicked()
             // Get fields
             int id_collaborator = MainWindow::id_collaborator;
             float total = CalculateTotalSale(ui->tableWidget_listProducts, 4);
-            QString date = QDate::currentDate().toString("yyyy-MM-dd") +  QTime::currentTime().toString(":hh:mm:ss");
+            QString date = QDate::currentDate().toString("yyyy-MM-dd") +
+                           QTime::currentTime().toString(":hh:mm:ss");
 
             // Update tb_sales table
             QSqlQuery query;
@@ -335,7 +340,10 @@ void MainWindow::on_pushButton_finalizeSale_clicked()
                             return;
                         }
                     }
-                    QMessageBox::information(this, "Success", "Sale: '" + QString::number(id_sale) + "' inserted with success");
+
+                    QMessageBox::information(this, "Success", "Sale: '" +
+                                                                  QString::number(id_sale) +
+                                                                  "' inserted with success");
                 }
                 else
                 {
@@ -432,9 +440,11 @@ void MainWindow::on_pushButton_editProduct_clicked()
                 query.first();
 
                 // Check if the new quantity is valid
-                if((editProductFromSaleWindow->quantity > (quantity + query.value(0).toInt())) && (quantity < editProductFromSaleWindow->quantity))
+                if((editProductFromSaleWindow->quantity > (quantity + query.value(0).toInt())) &&
+                    (quantity < editProductFromSaleWindow->quantity))
                 {
-                    QMessageBox::information(this, "Error", "Invalid quantity. Maximum quantity available: " + QString::number(quantity + query.value(0).toInt()));
+                    QMessageBox::information(this, "Error", "Invalid quantity. Maximum quantity available: " +
+                                                                QString::number(quantity + query.value(0).toInt()));
                     dbConnection.close();
                     return;
                 }
@@ -458,12 +468,15 @@ void MainWindow::on_pushButton_editProduct_clicked()
         }
 
         // Update table widget
-        ui->tableWidget_listProducts->setItem(ui->tableWidget_listProducts->currentRow(), 2, new QTableWidgetItem(QString::number(editProductFromSaleWindow->salePrice)));
-        ui->tableWidget_listProducts->setItem(ui->tableWidget_listProducts->currentRow(), 3, new QTableWidgetItem(QString::number(editProductFromSaleWindow->quantity)));
+        ui->tableWidget_listProducts->setItem(ui->tableWidget_listProducts->currentRow(), 2,
+                                              new QTableWidgetItem(QString::number(editProductFromSaleWindow->salePrice)));
+        ui->tableWidget_listProducts->setItem(ui->tableWidget_listProducts->currentRow(), 3,
+                                              new QTableWidgetItem(QString::number(editProductFromSaleWindow->quantity)));
 
         // Update product total
         float total = editProductFromSaleWindow->quantity * editProductFromSaleWindow->salePrice;
-        ui->tableWidget_listProducts->setItem(ui->tableWidget_listProducts->currentRow(), 4, new QTableWidgetItem(QString::number(total)));
+        ui->tableWidget_listProducts->setItem(ui->tableWidget_listProducts->currentRow(), 4,
+                                              new QTableWidgetItem(QString::number(total)));
 
         // Update sale total
         total = CalculateTotalSale(ui->tableWidget_listProducts, 4);
@@ -489,8 +502,12 @@ void MainWindow::on_pushButton_removeProduct_clicked()
     // Check if is a valid product
     if(ui->tableWidget_listProducts->currentColumn() != -1)
     {
+        // Create message box
         QMessageBox::StandardButton option;
-        option = QMessageBox::question(this, "Remove", "Do you want to remove this product?", QMessageBox::Yes | QMessageBox::No);
+        option = QMessageBox::question(this, "Remove", "Do you want to remove this product?",
+                                       QMessageBox::Yes | QMessageBox::No);
+
+        // Check option selected
         if(option == QMessageBox::Yes)
         {
             // Update product quantity
@@ -518,8 +535,10 @@ void MainWindow::on_actionAbout_triggered()
     // Build message
     QString message = "This is free licensed software developed by Thiago Sérvulo Guimarães.\n"
                       "The version you are currently using is 1.0.0.\n"
-                      "For further instructions on how to use the system, please refer to the documentation in the README.md file.";
+                      "For further instructions on how to use the system, please refer "
+                      "to the documentation in the README.md file.";
 
+    // Show message box
     QMessageBox::information(this, "About", message);
 }
 

@@ -14,7 +14,7 @@ class MainWindow : public QMainWindow
 
 public:
     static bool userLogged;
-    static QString name_collaborator, username_collaborator;
+    static QString name_collaborator;
     static int id_collaborator, access_collaborator;
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
